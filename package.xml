@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
+
+  <name>CamScripts</name>
+
+  <description>desc jsut say what it does
+...NOT say FC</description>
+
+  <version>2024.8.5</version>
+
+  <date>2024-08-05</date>
+
+  <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
+
+  <license file="LICENSE">LGPL-2.1-or-later</license>
+
+  <url type="repository">(unknown remote)</url>
+
+  <url type="readme">(unknown remote)/-/raw/master/README.md</url>
+
+  <content>
+    <macro>
+      <name>first</name>
+      <description>some desc</description>
+    </macro>
+    <macro>
+      <name>Problem Solver 9000</name>
+      <description>Deletes all emails in your inbox</description>
+      <subdirectory>./</subdirectory>
+      <file>PS9000.FCMacro</file>
+    </macro>
+    <library>
+      <name>CamLibTbAdd</name>
+      <description>some desc</description>
+    </library>
+    <library>
+      <name>CamScripting</name>
+      <description>some desc</description>
+    </library>
+    <library>
+      <name>JobUtils</name>
+      <description>some desc</description>
+    </library>
+  </content>
+</package>
