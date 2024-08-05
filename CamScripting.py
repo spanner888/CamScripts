@@ -5,7 +5,7 @@
 
 # -*- coding: utf-8 -*-
 # ***************************************************************************
-# *   Copyright (c) 2024 spanner888 via https://forum.freecad.org/          *
+# *   Copyright (c) 2024 spanner888 <spanner888@usabledevices.com>          *
 # *                                                                         *
 # *   This file is a supplement to the FreeCAD CAx development system.      *
 # *   This program is free software; you can redistribute it and/or modify  *

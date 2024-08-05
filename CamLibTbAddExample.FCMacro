@@ -4,23 +4,13 @@
 # Use addon mgr dev mode:
 # https://wiki.freecad.org/Std_AddonMgr
 # https://wiki.freecad.org/Package_Metadata
-#       - create fc macro meta
-#       - add custom git repo
-#       CamScripting = dependancy CHK *** JobUtils is NOT for this file!!
-#           >>>>BUT THE WAY CamScripting is written DOES IMPORT JobUtils
-#           >>>>>>>>>>>>...split in TWO - CamJU & CamLibTbAdd
-#    depends ...autoinstall???
 
-# MOVE bulk of licence to MY lib CamScripting ...here is MY code
-# ...so bare min FC macro contrib stuff
-#       ...which will give plenty info/doco links...
+# LICENSE: LGPL-2.1
+# need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
+YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
 
-# move ALL 4 files to OWN DIR ...new git repo
-# **NB FC macro suggested naming ..CamScripting ok-ish as scripts cover MOST CAM features
-#     ie Job, Ops, Tools, gcode & sanity output...just not EVERY Op & Dressup ATM
 
-# this approach to reloading an import,
-# allows edited library updates, without close/reopen FC.
+# allow edited library updates, without close/reopen FC.
 from importlib import reload
 import CamLibTbAdd
 reload(CamLibTbAdd)
@@ -33,9 +23,9 @@ reload(CamLibTbAdd)
 #   russ/???
 
 # DESC script to add many ToolBits into CAM Tool Library
+# Details and how to use in README.MD
 
-
-# TODO just DOC: if TB FILE already exists will be overwritten
+# TODO #1: the FC patch re extra ATTRIB {not shape props} in TB
 
 # TODO  doc use of getAllToolShapes(shape_names) & getToolShapeProps(shape_name_dir, shape_name):
 # TODO need give each TB unique name - eg the CHANGING param, like dia as prefix
@@ -45,28 +35,12 @@ reload(CamLibTbAdd)
 # TODO  import tools & bulk create tb & add to current library
 # TODO  option to add TC-tb to JobX
 
+# TODO just DOC: LIMITATIONS:
+            if TB FILE already exists will be overwritten
+# FIXME FIXME or LIMITATION: - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
 
 
 
-# FIXME FIXME - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
-
-# -----------------------------------------------------------------------
-# Doco/instructions:
-    # Set desired....ops, TC & which TC for which Job
-    #
-    # script does everything
-    # comment out/remove...
-    # No need to create document or load any workbench.
-    # Script creates an empty document, if no document already open,
-    #   no changes are made to the document.
-
-    # ToolBits are added to the current Tool Library.
-    # Existing Toolbit file of same name will be overwritten.
-    # Existing Tools in Library will NOT be overwritten,
-    #     a new Tool will be added with same or partially same properties.
-    #
-
-# -----------------------------------------------------------------------
 # Three examples on adding a Default, One or a list of Tools to current Library.
 
 # Add single example default endmill to current Library.
@@ -116,23 +90,6 @@ CamLibTbAdd.processUserToolInput(shape_name = "endmill",
 # Slitting Saws 70000
 # WoodRouters   90000
 
-
-
-
-# related FreeCAD CAM Terminology:
-    # ToolBitLibrary: provides way to manage many libraries each with many Tools
-    #   all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
-    #   Each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
-    # Tool-Bit = a cutting tool, with defined Shape properties,
-    #       including a property for the underlying Tool-Shape file
-    #       & other Tool-bit Properties such as number of flutes.
-    #       The Tool-Bit shape is used in Operations and Simulators to
-    #       "cut" the stock material to desired shape & size.
-    # Tool-Shape file contains a sketch profile of cutting tool,
-    #   with default Paramatised shape dimensions,
-    #   that are updated from Tool-Bit properties.
-    # Job-ToolController has properties for Rapids, Feeds, Speed
-    #   and contains copy of the Tool-Bit used with all the specific sizes/properties.
 
 # fyi ie not used here, but of interest: ShamanTcler CandL "Very BETA" code to:
 # "read CSV tool bit descriptions and create FreeCad JSON tool bit files.

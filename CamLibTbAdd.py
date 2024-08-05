@@ -1,7 +1,5 @@
 # TODO licence/macro info
 
-
-
 import os
 import sys
 # this is python module, not a FC module
