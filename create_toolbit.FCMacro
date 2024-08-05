@@ -1,0 +1,145 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# Use addon mgr dev mode:
+# https://wiki.freecad.org/Std_AddonMgr
+# https://wiki.freecad.org/Package_Metadata
+#       - create fc macro meta
+#       - add custom git repo
+#       CamScripting = dependancy CHK *** JobUtils is NOT for this file!!
+#           >>>>BUT THE WAY CamScripting is written DOES IMPORT JobUtils
+#           >>>>>>>>>>>>...split in TWO - CamJU & CamLibTbAdd
+#    depends ...autoinstall???
+
+# MOVE bulk of licence to MY lib CamScripting ...here is MY code
+# ...so bare min FC macro contrib stuff
+#       ...which will give plenty info/doco links...
+
+# move ALL 4 files to OWN DIR ...new git repo
+# **NB FC macro suggested naming ..CamScripting ok-ish as scripts cover MOST CAM features
+#     ie Job, Ops, Tools, gcode & sanity output...just not EVERY Op & Dressup ATM
+
+# this approach to reloading an import,
+# allows edited library updates, without close/reopen FC.
+from importlib import reload
+import CamLibTbAdd
+reload(CamLibTbAdd)
+
+
+# Code derived from or inspired by:
+# FC toolbit-attributes.py & several more CAM-Path modules
+# FreeCAD forum users:
+#   onekk code: onekk_path_tools_2021-12-15
+#   russ/???
+
+# DESC script to add many ToolBits into CAM Tool Library
+
+
+# TODO just DOC: if TB FILE already exists will be overwritten
+
+# TODO  doc use of getAllToolShapes(shape_names) & getToolShapeProps(shape_name_dir, shape_name):
+# TODO need give each TB unique name - eg the CHANGING param, like dia as prefix
+# Example of user boboxx tool name convention: 2F-D6.35-L31.076, see issue:12823
+
+
+# TODO  import tools & bulk create tb & add to current library
+# TODO  option to add TC-tb to JobX
+
+
+
+
+# FIXME FIXME - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
+
+# -----------------------------------------------------------------------
+# Doco/instructions:
+    # Set desired....ops, TC & which TC for which Job
+    #
+    # script does everything
+    # comment out/remove...
+    # No need to create document or load any workbench.
+    # Script creates an empty document, if no document already open,
+    #   no changes are made to the document.
+
+    # ToolBits are added to the current Tool Library.
+    # Existing Toolbit file of same name will be overwritten.
+    # Existing Tools in Library will NOT be overwritten,
+    #     a new Tool will be added with same or partially same properties.
+    #
+
+# -----------------------------------------------------------------------
+# Three examples on adding a Default, One or a list of Tools to current Library.
+
+# Add single example default endmill to current Library.
+CamLibTbAdd.processUserToolInput()
+
+# If BOTH dia_max & dia_inc are greater than zero,
+# then create range of tools from:
+#     dia to dia_max, incrementing dia by dia_inc
+# Else, ONLY create ONE TB of this dia in current library.
+
+# Add SINGLE Tool 6.35 mm dia to current library
+CamLibTbAdd.processUserToolInput(shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 6.35,
+                                dia_max = 0,
+                                dia_inc = 0)
+
+
+# TEST all empty combos of tb_XXXX, missing Dia...=default??
+
+# Add range of Tools from 8.2 mm dia to <= 9.0, incrementing dia by 0.2mm
+CamLibTbAdd.processUserToolInput(shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 8.2,
+                                dia_max = 9.0,
+                                dia_inc = 0.2)
+# -----------------------------------------------------------------------
+
+
+###################################################################
+###################################################################
+# MY tool#s for each shape_name type: base# + 100*dia
+# Main libs be library.temptoollow contain may contain lots of drills etc,
+#   then on occasion MERGE different tools into NEW lib for specific purpose/design.
+#   ...& no tool number clashes forcing auto # change & interferring with #dia*100 scheme.
+# Default - either no#, or 1-50
+# Drills        10000   # 4x0 allows for dia up to 99.99 mm
+# Endmills      20000
+# Ballend       30000
+# Bullnose      40000
+# Chamfers      50000
+# PCB_mills     60000
+# Slitting Saws 70000
+# WoodRouters   90000
+
+
+
+
+# related FreeCAD CAM Terminology:
+    # ToolBitLibrary: provides way to manage many libraries each with many Tools
+    #   all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
+    #   Each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
+    # Tool-Bit = a cutting tool, with defined Shape properties,
+    #       including a property for the underlying Tool-Shape file
+    #       & other Tool-bit Properties such as number of flutes.
+    #       The Tool-Bit shape is used in Operations and Simulators to
+    #       "cut" the stock material to desired shape & size.
+    # Tool-Shape file contains a sketch profile of cutting tool,
+    #   with default Paramatised shape dimensions,
+    #   that are updated from Tool-Bit properties.
+    # Job-ToolController has properties for Rapids, Feeds, Speed
+    #   and contains copy of the Tool-Bit used with all the specific sizes/properties.
+
+# fyi ie not used here, but of interest: ShamanTcler CandL "Very BETA" code to:
+# "read CSV tool bit descriptions and create FreeCad JSON tool bit files.
+# In the "test" directory you will find:
+#     WhitesideBitData.xlsx, Data provided by the Whiteside Machine Company https://www.whitesiderouterbits.com/
+#     test2.csv the data above formatted as a csv file
+# "https://github.com/ShamanTcler/FreeCadToolBitImport
+# above code does not use any FreeCAD imports/code, it directly reads/writes json files.
+###################################################################
+###################################################################

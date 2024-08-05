@@ -1,0 +1,218 @@
+# TODO licence/macro info
+
+
+
+import os
+import sys
+# this is python module, not a FC module
+from pathlib import Path as osPath
+
+import FreeCAD
+import Path
+import Path.Tool.Gui.BitLibrary as PathToolBitLibraryGui
+import Path.Base.PropertyBag as PathPropertyBag
+import Path.Base.Util as PathUtil
+
+from PySide.QtCore import Qt
+import numpy as np
+
+
+
+if False:
+    Path.Log.setLevel(Path.Log.Level.DEBUG, Path.Log.thisModule())
+    Path.Log.trackModule(Path.Log.thisModule())
+else:
+    Path.Log.setLevel(Path.Log.Level.INFO, Path.Log.thisModule())
+
+
+###################################################################
+def getToolShapeProps(shape_name_dir, shape_name):
+        doc = FreeCAD.openDocument(shape_name_dir + shape_name + ".fcstd", False)
+        parameters = dict()
+        attributes = dict()
+        for o in doc.Objects:
+            if PathPropertyBag.IsPropertyBag(o):
+                idx=0
+                for p in (o.Proxy.getCustomProperties()):     # sorted()
+                    grp = o.getGroupOfProperty(p)
+                    typ = o.getTypeIdOfProperty(p)
+                    ttp = PathPropertyBag.getPropertyTypeName(typ)
+                    val = PathUtil.getProperty(o, p)
+                    dsc = o.getDocumentationOfProperty(p)
+
+                    idx+=1
+                    if grp == "Shape":
+                        parameter = {p: val}
+                        parameters.update(parameter)
+                    elif grp == "Attributes":
+                        attribute = {p: val}
+                        attributes.update(attribute)
+                    else:
+                        FreeCAD.Console.PrintWarning(
+                            "Shape type {} for shape_name: {} is unknown, ignoring.\n"
+                            .format(grp, shape_name))
+
+                # Default TB file 'shape' prop ALL include ".fcstd"
+                attrs = {'shape': shape_name + ".fcstd",     # match FC tool shape_name filename
+                         "name": shape_name,                 # your choice
+                         "parameter": parameters,
+                         "attribute": attributes
+                    }
+
+                FreeCAD.closeDocument(doc.Name)
+                return attrs
+
+
+def getAllToolShapes(shape_names):
+    props = dict()
+    for i, fname in enumerate(shape_names):
+        # FreeCAD.Console.PrintMessage("fname: {}\tshape_name_dir:{}\n".format(fname, shape_name_dir))
+        props, attrs = getToolShapeProps(shape_name_dir, fname)
+    return attrs
+
+
+def full_path(filename):
+    # Parse out the name of the file and write the structure
+    loc, file = os.path.split(filename)
+    fname = os.path.splitext(file)[0]
+    fullpath = "{}{}{}.fctb".format(loc, os.path.sep, fname)
+    return fullpath, fname
+
+
+# derived from FC BitLibrary.py
+def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
+    fullpath, fname = full_path(filename)
+    Path.Log.debug("filename: {} shape_full_path_fname: {} fullpath: {}".format(filename, shape_full_path_fname, fullpath))
+
+    library.temptool = Path.Tool.Bit.ToolBitFactory().CreateFromAttrs(attrs, name=attrs["name"], path=shape_full_path_fname)
+
+    library.temptool.Label = fname
+    library.temptool.Proxy.saveToFile(library.temptool, fullpath)
+
+
+def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr):
+    tp = tool_props["parameter"]
+
+    if PathToolBitLibraryGui.checkWorkingDir():
+        workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
+
+        tb_full_path_nr_name = workingdir + "/Bit/" + tool_props["name"] + ".fctb"
+
+        shape_full_path_fname = workingdir + "/Shape/" + shape_name + ".fcstd"
+        shape_full_path_fname_as_path = osPath(shape_full_path_fname)
+        if shape_full_path_fname_as_path.is_file():
+            shape_full_path_fname_attrs =getToolShapeProps(workingdir + "/Shape/", shape_name)
+            params = shape_full_path_fname_attrs["parameter"]
+
+            new_tool_params = tool_props["parameter"]
+            print("Adding ToolBit Shape: {} Name: {}, #{}, Dia: {}"
+                  .format(shape_name, tool_props['name'],
+                          tb_nr,
+                          new_tool_params['Diameter']
+                          )
+                )
+            toolBitNew(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
+
+            library.temptool = None
+            artifacts = FreeCAD.ActiveDocument.findObjects(Label=tool_props['name'])
+            for o in artifacts:
+                FreeCAD.ActiveDocument.removeObject(o.Name)
+
+            for row in range(library.toolModel.rowCount()):
+                # print (row, tb_nr, library.toolModel.item(row,0).text(), int(library.toolModel.item(row,0).text()))
+                if int(library.toolModel.item(row,0).text()) == tb_nr:
+                    FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
+                                                 .format(tb_nr, tool_props["name"]))
+
+            # add tool to the model , ie current CAM Library & save Library
+            try:
+                fullpath, fname = full_path(tb_full_path_nr_name)
+                tool = Path.Tool.Bit.Declaration(fullpath)
+            except Exception as e:
+                Path.Log.error(e)
+                return
+
+            library.toolModel.appendRow(library.factory._tool_add(tb_nr, tool, fullpath))
+            library.librarySave()
+        else:
+            print("Shapefile does not exist: {}".format(shape_full_path_fname))
+    else:
+        FreeCAD.Console.PrintWarning(">>>PathToolBitLibraryGui.checkWorkingDir() could not find user writable CAM working directory, macro exiting!\n\n")
+
+
+# TODO: this bulk creation work ONLY for tool "Diameter", pass in prop to change as string??
+def addToolListToCurrentLibrary(library, shape_name, dia_list,
+                                tb_base_name, tb_base_nr, tb_nr_inc,
+                                tool_props):
+    params = tool_props["parameter"]
+    for d in dia_list:
+        tb_nr = int(tb_base_nr + tb_nr_inc * d)
+        params["Diameter"] = str(round(d, 3)) + " mm"
+        tool_props["parameter"].update(params)
+
+        # Set my dia based numbering prefix. If not required, only set = tb_base_name
+        tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
+        # print("\tCreating: {}".format(tool_props["name"]))
+        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr)
+
+
+#TODO IMPORT at least csv
+def importToolCsv():
+    # import expect need set EVERY tool data via
+    addToolToCurrentLibrary(endmill_tool_props, tb_nr)
+    # THEN set individ props, like #Flutes, shank dia, material........
+
+
+def processUserToolInput(shape_name="endmill",
+                        tb_base_name="default_em",
+                        tb_base_nr=20000,
+                        tb_nr_inc=100,
+                        dia=8.2,
+                        dia_max=0,
+                        dia_inc=0):
+    # FIXME review @least location of this "rule" & other TB name rules
+    tb_nr = tb_base_nr + dia * tb_nr_inc
+
+    # FIXME move dict to be module/global var once in Lib!!!
+
+    # need any document open, no changes are made.
+    if FreeCAD.ActiveDocument == None:
+        doc = FreeCAD.newDocument()
+
+    # Need to create dict for EACH known prop names FOR EVERY SHAPE TYPE that will be created.
+    # NB 'name' is set to my default naming scheme for a SINGLE tool of dia (see about a dozen lines up)
+    # Also this dictionary matches that used by FreeCAD for ToolBit
+    endmill_tool_props = {'shape': shape_name + '.fcstd', 'name': str(int(round(tb_nr))) + tb_base_name,
+                                'parameter': {'CuttingEdgeHeight': '30.5 mm',
+                                                'Diameter': str(dia) + ' mm',
+                                                'Length': '50.0 mm',
+                                                'ShankDiameter': '6.0 mm'},
+                                'attribute': {'Chipload': '0.01 mm',
+                                                'Flutes': 4,
+                                                'Material': 'HSS',
+                                                'SpindleDirection': 'Forward'}
+                                }
+
+    library = PathToolBitLibraryGui.ToolBitLibrary()
+    workingdir = None
+
+    if dia > 0:
+        if dia_max > 0 and dia_inc > 0:
+
+            dia_list = np.arange(dia, dia_max, dia_inc)
+            print("ToolBit diameters to be created: ", dia_list)
+
+            # CHOOSE to create many ToolBits & add to current library.
+            addToolListToCurrentLibrary(library, shape_name, dia_list,
+                                        tb_base_name, tb_base_nr, tb_nr_inc,
+                                        endmill_tool_props)
+        else:
+            # create ONE ToolBit with diameter = dia
+            addToolToCurrentLibrary(library, shape_name, endmill_tool_props, tb_nr)
+    else:
+        print("Tool diameter must be number greater than zero.")
+
+    print("...finished.\n")
+
+
+#####################################################################
