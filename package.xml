@@ -19,6 +19,21 @@
   <url type="readme">(unknown remote)/-/raw/master/README.md</url>
 
   <content>
+    <library>
+      <name>CamLibTbAdd</name>
+      <description>some desc</description>
+      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
+    </library>
+    <library>
+      <name>CamScripting</name>
+      <description>some desc</description>
+      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
+    </library>
+    <library>
+      <name>JobUtils</name>
+      <description>Path workbench utility functions to aid in job and tool controller scripting.</description>
+      <maintainer email="russ4262@gmail.com">russ4262</maintainer>
+    </library>
     <macro>
       <name>first</name>
       <description>some desc</description>
@@ -26,20 +41,12 @@
     <macro>
       <name>Problem Solver 9000</name>
       <description>Deletes all emails in your inbox</description>
+      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
+      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
       <subdirectory>./</subdirectory>
       <file>PS9000.FCMacro</file>
+      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
     </macro>
-    <library>
-      <name>CamLibTbAdd</name>
-      <description>some desc</description>
-    </library>
-    <library>
-      <name>CamScripting</name>
-      <description>some desc</description>
-    </library>
-    <library>
-      <name>JobUtils</name>
-      <description>some desc</description>
-    </library>
   </content>
+
 </package>
