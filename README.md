@@ -1,9 +1,27 @@
 https://wiki.freecad.org/Package_Metadata
 Tags: CAM, Library, ToolBits, Bulk, Create
-Tags: CAM, All, Job, Operations, Library, ToolControllers, ToolBits, Materials, Speeds, Feeds, Sanity, Report, Gcode
+Tags: CAM, All, Job, Operations, Library, ToolControllers, ToolBits, Materials, Calculate, Speeds, Feeds, Sanity, Report, Gcode
 spanner888@usabledevices.com
 
-# Title
+addon mgr - gui seems "v incomplete"
+    ...doing most data by hand
+    BUT NOT ALL showing in addon mgr-dev mode
+addon mgr - suggest read meta from "main" file ...gues style like JobUtils
+but doesn't the XML override???
+
+addon mgr CAN show readme & images......
+so xml = search/sort & prob fallback if readme not found??
+
+TODO - before/after...or just say empty before screen shot of Lib TB
+TODO - screen shot of EXPANDED Job tree
+TODO - MAYBE code snippet/full console output
+
+
+
+# CAM scripting all features complete end to end process
+
+The included libraries and FreeCAD macros provide examples of all CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode and calculate Spindle RPM from Tool and Stock material properties. Many key properties are set to provide realistic FreeCAD Job and gcode.
+
 
 desc one liner or more?
 >>>DECIDE - 1 or TWO releases...but refer each other!!!!!
@@ -11,18 +29,13 @@ desc one liner or more?
 Fully automated creation of:
 One or many ToolBits and add to current Tool Library.
 
-script 1: CamLibTbAddExample.FCMacro Provides {four/Five WIHT IMPORT??} examples of single and bulk creation of ToolBits and adding to the current Library.
+script 1: CamLibTbAddExample.FCMacro Provides {four/Five WIHT IMPORT??} examples of single and bulk creation of ToolBits and adding to the current tool Library.
 
 There is also one support example to retrieve properties & attributes of all shape files in FC Tool- Shape directory. This enables a user to script any property of any existing shape.
 
 This script uses the provided CamLibTbAdd.py library to streamline the example code.
 
-script 2:
-
-ATM:CamScripting
-??
-Cam End-End Process
-    FullProcess
+script 2: CamFullProcessExample.FcMacro
 
 Uses the JobUtils library by @Russ4262 to demonstrate a wide range of FreeCAD CAM features.
 It also adds examples that:
@@ -32,7 +45,7 @@ b) calculate Spindle RPM from material-machinabilty and tool data. This is a sim
 **MACHINABILITY/SF RPM**
 
 here/below:
-Example 1-4 all JobUtils. #4 is extended by adding setting TC properties & to desireed Op.
+Example 1-4 all JobUtils. #4 is extended by adding setting TC properties & to desired Op.
 Examples 5 & 6 are from included CamScripting....
 Examples are all compiled together in one script, to show how a typical start to end order that a FreeCAD might be fully automated.
 
@@ -138,6 +151,87 @@ Creates and saves a CAM Sanity Job check report.
 Creates and saves gcode for the job.
 
 Note: First execution time using CamLibTbAddExample.FCMacro and it's two libraries can be up to 10 times longer eg 40 seconds, vs 4 seconds on my 12 year old laptop.
+
+#Example output
+
+
+![CamLibTbAdd before - after populated library tool table](./CamLibTbAdd before - after populated library tool table.png)
+
+```
+19:38:25  Adding ToolBit Shape: endmill Name: 20820default_em, #20820.0, Dia: 8.2 mm
+19:38:25  ...finished.
+19:38:25
+19:38:25  Adding ToolBit Shape: endmill Name: 20635em, #20635.0, Dia: 6.35 mm
+19:38:25  ...finished.
+19:38:25
+19:38:25  ToolBit diameters to be created:  [8.2 8.4 8.6 8.8 9. ]
+19:38:25  Adding ToolBit Shape: endmill Name: 820_em, #20820, Dia: 8.2 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 840_em, #20840, Dia: 8.4 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 860_em, #20860, Dia: 8.6 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 880_em, #20880, Dia: 8.8 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 900_em, #20900, Dia: 9.0 mm
+19:38:25  ...finished.
+```
+
+
+![CamFullProcessExample](./CamFullProcessExample.png)
+
+```
+19:43:01  Job Utilities 2024-02-25 module imported
+19:43:01  --------------------------------------------------------------------------------
+19:43:01  Example 1 JobUtils: New doc & Job, optionaly clear report/python panes.
+			 Active document is Test_JobUtils with Job object
+19:43:06  Example 2 JobUtils: Add profile operation to specified job.
+			 adding profile operation using top face, Face6.
+19:43:06  Example 3 JobUtils: Add profile operation & Boundary Dressup to specified job.
+		 adding profile operation
+19:43:06  adding boundary dressup on profile operation
+19:43:06  --------------------------------------------------------------------------------
+19:43:06  Example 4 JobUtils: Add ToolControllers to Job-Tools & desired Operation.
+		 JobUtils... Available tool files:
+19:43:06       1 ::   5mm_Endmill
+19:43:06       2 ::   5mm_Drill
+19:43:06       3 ::   6mm_Ball_End
+19:43:06       4 ::   6mm_Bullnose
+19:43:06       5 ::   60degree_Vbit
+19:43:06       6 ::   45degree_chamfer
+19:43:06       7 ::   slittingsaw
+19:43:06       8 ::   probe
+19:43:06       9 ::   5mm-thread-cutter
+19:43:06       20820.0 ::   20820default_em
+19:43:06       20635.0 ::   20635em
+19:43:06       20820 ::   820_em
+19:43:06       20840 ::   840_em
+19:43:06       20860 ::   860_em
+19:43:06       20880 ::   880_em
+19:43:06       20900 ::   900_em
+19:43:06
+19:43:06  Add TC using toolname: 880_em and set h/v feeds & spindle speed.
+19:43:11  	Set profile_op.ToolController to above TC+user scripted settings
+19:43:11  Add TC using tool#: 20840 and set h/v feeds & spindle speed.
+19:43:11  	Set profile_op1.ToolController to above TC+user scripted settings
+19:43:15  --------------------------------------------------------------------------------
+19:43:15  Example 5 CamScripting: Machinability & SpindleSpeed RPM calculation:
+		 Retrieved Stock Material SurfaceSpeeds & tc1 Diameter
+			in common base Units of mm/s & mm, to Calculate cutting RPM
+19:43:15  		HSS: 2916.67 mm/s, CBD: 6483.33 mm/s, TC1 dia: 8.8 mm
+19:43:15  	**Calculated** RPM for HSS tool is 6330.0 RPM
+19:43:15  	formula: SurfaceSpeed / (Diameter * math.pi)
+19:43:15  	NB: FreeCAD Units are all normalised in metric, so SurfaceSpeed*1000 is not required.
+19:43:15  Calculated SpindleSpeed RPM has not been set in ToolController SpindleSpeed.
+19:43:15  You can do this manualy, or uncomment code in line below this print statement in the macro.
+19:43:15  --------------------------------------------------------------------------------
+19:43:15  Example 6 CamScripting: Create & save: CAM Sanity check report & Postprocessed gcode.
+		 Processing file outputs: Sanity Job common errors report & PostProcess Gcode
+19:43:16  Sanity check report written to: /home/spanner888/Documents/cam_sanity/sanity_auto.html
+19:43:16
+19:43:17  Post Processor: script_module postprocessing...
+19:43:17  Done postprocessing.
+19:43:17  File written to /home/spanner888/Documents/_source/_APPS/FC_wkly_38334/squashfs-root/appd_mlappy/Test_JobUtils1_Job_ju_created____0.ngc
+19:43:19  --------------------------------------------------------------------------------
+```
+
+
 
 # Terminology
 ## FreeCAD CAM Tools/Bits/Shapes/Library Job-TC ++ for ju - Ops/materials/SF...

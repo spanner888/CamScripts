@@ -3,7 +3,7 @@
 
   <name>CamScripts</name>
 
-  <description>desc jsut say what it does
+  <description>desc just say what it does
 ...NOT say FC</description>
 
   <version>2024.8.5</version>
@@ -21,31 +21,37 @@
   <content>
     <library>
       <name>CamLibTbAdd</name>
-      <description>some desc</description>
+      <description>Library to create & add one or many ToolBits to current Library.</description>
+      <file>CamLibTbAdd.py</file>
+      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
       <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
     </library>
     <library>
       <name>CamScripting</name>
-      <description>some desc</description>
+      <description>Library to automate all CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode and calculate Spindle RPM from Tool and Stock material properties.  Many key properties are set to provide realistic FreeCAD Job and gcode.</description>
       <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
+      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
+      <file>CamScripting.py</file>
     </library>
     <library>
       <name>JobUtils</name>
       <description>Path workbench utility functions to aid in job and tool controller scripting.</description>
+      <file>JobUtils.py</file>
       <maintainer email="russ4262@gmail.com">russ4262</maintainer>
     </library>
     <macro>
-      <name>first</name>
-      <description>some desc</description>
+      <name>CamLibTbAddExample</name>
+      <description>Example code to use CamLibTbAdd library to create & add one or many ToolBits to current Library.</description>
+      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
+      <file>CamLibTbAddExample.FcMacro</file>
+      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
     </macro>
     <macro>
-      <name>Problem Solver 9000</name>
-      <description>Deletes all emails in your inbox</description>
+      <name>CamFullProcessExample</name>
+      <description>All CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode and calculate Spindle RPM from Tool and Stock material properties.</description>
       <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
-      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
-      <subdirectory>./</subdirectory>
-      <file>PS9000.FCMacro</file>
-      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
+      <tag>CAM, All, Job, Operations, Library, ToolControllers, ToolBits, Materials, Calculate, Speeds, Feeds, Sanity, Report, Gcode</tag>
+      <file>CamFullProcessExample.FcMacro</file>
     </macro>
   </content>
 
