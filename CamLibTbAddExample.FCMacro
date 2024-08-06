@@ -1,13 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Use addon mgr dev mode:
-# https://wiki.freecad.org/Std_AddonMgr
-# https://wiki.freecad.org/Package_Metadata
-
 # LICENSE: LGPL-2.1
 # need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
-YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
+# YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
 
 
 # allow edited library updates, without close/reopen FC.
@@ -25,6 +21,8 @@ reload(CamLibTbAdd)
 # DESC script to add many ToolBits into CAM Tool Library
 # Details and how to use in README.MD
 
+# TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
+
 # TODO #1: the FC patch re extra ATTRIB {not shape props} in TB
 
 # TODO  doc use of getAllToolShapes(shape_names) & getToolShapeProps(shape_name_dir, shape_name):
@@ -36,22 +34,17 @@ reload(CamLibTbAdd)
 # TODO  option to add TC-tb to JobX
 
 # TODO just DOC: LIMITATIONS:
-            if TB FILE already exists will be overwritten
-# FIXME FIXME or LIMITATION: - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
+#           if TB FILE already exists will be overwritten
+#           FIXME FIXME or LIMITATION: - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
 
 
 
 # Three examples on adding a Default, One or a list of Tools to current Library.
 
-# Add single example default endmill to current Library.
+# Example 1. Add single example default endmill to current Library.
 CamLibTbAdd.processUserToolInput()
 
-# If BOTH dia_max & dia_inc are greater than zero,
-# then create range of tools from:
-#     dia to dia_max, incrementing dia by dia_inc
-# Else, ONLY create ONE TB of this dia in current library.
-
-# Add SINGLE Tool 6.35 mm dia to current library
+# Example 2. Add SINGLE Tool 6.35 mm dia to current library
 CamLibTbAdd.processUserToolInput(shape_name = "endmill",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
@@ -63,7 +56,9 @@ CamLibTbAdd.processUserToolInput(shape_name = "endmill",
 
 # TEST all empty combos of tb_XXXX, missing Dia...=default??
 
-# Add range of Tools from 8.2 mm dia to <= 9.0, incrementing dia by 0.2mm
+# Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
+#   But only If BOTH dia_max & dia_inc are greater than zero,
+#            Else: ONLY create ONE TB of this dia in current library.
 CamLibTbAdd.processUserToolInput(shape_name = "endmill",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
@@ -72,6 +67,29 @@ CamLibTbAdd.processUserToolInput(shape_name = "endmill",
                                 dia_max = 9.0,
                                 dia_inc = 0.2)
 # -----------------------------------------------------------------------
+
+
+
+# Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
+# By default this example is disabled. 
+# Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
+# These can be used to create different types of ToolBits above.
+# Get FreeCAD Default shape directory & list of shape names in dir.
+getDefaultShapeAttrs = False
+if getDefaultShapeAttrs:
+    shapeDir, shape_names = CamLibTbAdd.getDefaultShapes()
+    print(shapeDir, shape_names)
+
+    # Get all the shape properties and other attributes for each shpe.
+    attrs = CamLibTbAdd.getAllToolShapes(shapeDir, shape_names)
+
+    for k, v in attrs.items():
+        print(v)
+        print()
+
+
+
+
 
 
 ###################################################################

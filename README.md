@@ -11,15 +11,49 @@ desc one liner or more?
 Fully automated creation of:
 One or many ToolBits and add to current Tool Library.
 
-script#2 fetaures
+script 1: CamLibTbAddExample.FCMacro Provides {four/Five WIHT IMPORT??} examples of single and bulk creation of ToolBits and adding to the current Library.
 
-script#2 Can, and as released, does test the newly created ToolBits from the Library, {say all below AGAIN...or "through all the above steps."}
-    by adding to a Job, updating Speeds and Feeds, assigning to Operations, creating and saving both a CAM Sanity report and the gcode.
+There is also one support example to retrieve properties & attributes of all shape files in FC Tool- Shape directory. This enables a user to script any property of any existing shape.
+
+This script uses the provided CamLibTbAdd.py library to streamline the example code.
+
+script 2:
+
+ATM:CamScripting
+??
+Cam End-End Process
+    FullProcess
+
+Uses the JobUtils library by @Russ4262 to demonstrate a wide range of FreeCAD CAM features.
+It also adds examples that:
+a) complete fully scripted CAM Job creation from start to end, including setting many properties for Job, Operations, ToolControllers and running Sanity & Postprocessing the gcode
+b) calculate Spindle RPM from material-machinabilty and tool data. This is a simple example of early design work by Material and CAM workbench developers.
+
+**MACHINABILITY/SF RPM**
+
+here/below:
+Example 1-4 all JobUtils. #4 is extended by adding setting TC properties & to desireed Op.
+Examples 5 & 6 are from included CamScripting....
+Examples are all compiled together in one script, to show how a typical start to end order that a FreeCAD might be fully automated.
+
+Script appear long at first glance but well over half the content is support for setting properties, printing some Example header information and licence etc.
+The actual code to go from creating a moderately complicated Job, set a lot of properties for Job, Operations, ToolControllers and to run Sanity & Postprocess is relatively short.
+
+The script uses the provided CamScripting.py library and also JobUtils.py (written by Russ4262) library to streamline the example code.
+
+This script also can be used to test the newly created ToolBits from the CamLibTbAddExample.FCMacro script.
+
+Sanity report and the gcode.
 
 Job, Ops, ToolBits and add to current Tool Library, gcode & sanity output...just not EVERY Op & Dressup ATM
 
 ++Key properties are set, including Job..., Op-TC
 The ToolController for each Operation and key properties.....
+
+Features of JobUtils that are not demonstrated here are:
+set_job_origin_to_point
+
+How to use each example is in [Doco/instructions/Usage]
 
 ## Speeds and Feeds Demo.
 New Materials Machinability model is used to set Job-Stock material, then retreive Machinability SurfaceSpeeds.
@@ -29,7 +63,7 @@ This a demonstration of the very early work to design Speeds and Feeds for FreeC
 In future the ToolController material, might be set via a "new Material", depending on how we all decide to progress Speeds and Feeds.
 
 
-# Installation &
+# Installation & Doco/instructions/Usage
 
 Install via the Addon manager in the macros section.
 
@@ -57,7 +91,7 @@ All examples show how to set all standard EndMill properties.
 add example ...if so cahnge wording above.
 
 # -----------------------------------------------------------------------
-# Doco/instructions:
+# Doco/instructions/Usage:
     # Set desired....ops, TC & which TC for which Job
     #
     # script does everything
@@ -74,9 +108,19 @@ add example ...if so cahnge wording above.
 
 # -----------------------------------------------------------------------
 
-Example 1. Adds one Toolbit to the current library.
-Example 2.
-Example 3.
+# Example 1. Add single example default endmill to current Library.
+
+# Example 2. Add SINGLE Tool 6.35 mm dia to current library
+
+# Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
+#   But only If BOTH dia_max & dia_inc are greater than zero,
+#            Else: ONLY create ONE TB of this dia in current library.
+
+# Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
+# By default this example is disabled. 
+# Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
+# These can be used to create different types of ToolBits above.
+# Get FreeCAD Default shape directory & list of shape names in dir.
 
 At present, customising the ToolBit or Library Tool numbering schemes will require editing the CamLibTbAdd Libray.
 

@@ -24,6 +24,20 @@ else:
 
 
 ###################################################################
+def getDefaultShapes():
+	# will FAIL if user never created ToolBit from a shape!!
+	shapeDir = Path.Preferences.lastPathToolShape()
+	shapeDir = shapeDir.replace("/", os.path.sep)
+	# Make sure the path ends with a separator
+	if shapeDir[-1] != os.path.sep:
+		shapeDir += os.path.sep
+
+	# ATM only gets default FreeCAD Tools/Shape dir, not your User Tools/Shape dir.
+	shape_names = [os.path.splitext(f)[0] for f in os.listdir(shapeDir)]
+
+	return shapeDir, shape_names
+
+
 def getToolShapeProps(shape_name_dir, shape_name):
         doc = FreeCAD.openDocument(shape_name_dir + shape_name + ".fcstd", False)
         parameters = dict()
@@ -61,11 +75,15 @@ def getToolShapeProps(shape_name_dir, shape_name):
                 return attrs
 
 
-def getAllToolShapes(shape_names):
+def getAllToolShapes(shape_name_dir, shape_names):
     props = dict()
+    attrs = dict()
+    idx=0
     for i, fname in enumerate(shape_names):
         # FreeCAD.Console.PrintMessage("fname: {}\tshape_name_dir:{}\n".format(fname, shape_name_dir))
-        props, attrs = getToolShapeProps(shape_name_dir, fname)
+        props = getToolShapeProps(shape_name_dir, fname)
+        attrs.update({idx: props})
+        idx += 1
     return attrs
 
 
@@ -99,7 +117,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr):
         shape_full_path_fname = workingdir + "/Shape/" + shape_name + ".fcstd"
         shape_full_path_fname_as_path = osPath(shape_full_path_fname)
         if shape_full_path_fname_as_path.is_file():
-            shape_full_path_fname_attrs =getToolShapeProps(workingdir + "/Shape/", shape_name)
+            shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
@@ -138,7 +156,6 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr):
         FreeCAD.Console.PrintWarning(">>>PathToolBitLibraryGui.checkWorkingDir() could not find user writable CAM working directory, macro exiting!\n\n")
 
 
-# TODO: this bulk creation work ONLY for tool "Diameter", pass in prop to change as string??
 def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props):

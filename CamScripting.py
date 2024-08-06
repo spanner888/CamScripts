@@ -157,7 +157,7 @@ class tc_props:
 # and also set user defined TC properties.
 def addTc(job, tcProps, byNr=False):
     tc = None
-    print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
+    #print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
 
     try:
         if byNr:
@@ -278,16 +278,12 @@ def calcRpm(tc, SurfaceSpeedCarbide, SurfaceSpeedHSS):
         .format(tc.Tool.Material, round(q(rpm).getValueAs('1/min'), 1)))
     # print()
     print("\tformula: SurfaceSpeed / (Diameter * math.pi)")
-    print("\tNB: FreeCAD Units are all normalised in metric,")
-    print("\t  so the usual SurfaceSpeed*1000 is not required.")
-    print("-"*80)
+    print("\tNB: FreeCAD Units are all normalised in metric, so SurfaceSpeed*1000 is not required.")
 
     # print()
-    print("Neither of the calculated SpindleSpeeds for HSS or Carbide \
-    have been set as ToolController SpindleSpeed")
-    print("You can do this manualy, or uncomment the EXAMPLE code \
-    below this print statement within the macro code.")
-
+    print("Calculated SpindleSpeed RPM has not been set in ToolController SpindleSpeed.")
+    print("You can do this manualy, or uncomment code in line below this print statement in the macro.")
+    #TODO read print above - code to sert calc rpm in TC
     return rpm
 
 

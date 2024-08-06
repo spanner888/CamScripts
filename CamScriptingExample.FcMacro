@@ -41,7 +41,7 @@
 # TEST EVERY props imperial & dif units????
 
 # TODO just DOC: LIMITATIONS:
-            Only one Job in a document. Changing this should be possible, but requires either changing JobUtils or moving JobUtils code to CamScripting and changing.
+#            Only one Job in a document. Changing this should be possible, but requires either changing JobUtils or moving JobUtils code to CamScripting and changing.
 # FIXME FIXME or LIMITATION: - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
 
 
@@ -55,6 +55,12 @@
 #    Add specified Tools from Library to Job as ToolControllers
 #    Set specified ToolController properties (Feeds & SpindleSpeed)
 #    Set each Job Operation to desired ToolController
+
+
+
+# TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
+
+
 
 # TODO **LINK to recent github/forum feeds/speeds calc discuss
 
@@ -79,7 +85,7 @@ from PySide import QtGui
 # --------------------------------------------------------------------------
 clear_console_pane = True
 clear_report_pane = True
-print_machinability = True
+print_machinability = False
 
 # ---------------------------------------------------------
 # JOB properties & defaults
@@ -134,63 +140,72 @@ tcProps2.spindleSpeed = 5678.9
 # USER settings END ========================================================
 # --------------------------------------------------------------------------
 
+# ----------------------------------------
+# Output/Documentation helpers
+exampleNr = 1
+prefix = "JobUtils:"
 
+def printExPrefix(exampleNr, prefix="", ExampleDesc="", topRow=False, bottomRow=False):
+    if topRow:
+        print("-"*80)
+    print("Example", exampleNr, prefix, ExampleDesc, end = ' ')
+    exampleNr += 1
+    if bottomRow:
+        print("-"*80)
+    return exampleNr
+#----------------------------------------
 
-
-# ---------------------------------------------------------
-# Create new document, add new Job, optionaly clear report and python panes.
+#---------------------------------------------------------
+ExampleDesc="New doc & Job, optionaly clear report/python panes.\n\t\t\t"
+exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
 doc, job = CamScripting.initDocJob(j_props, clear_console_pane, clear_report_pane)
 
-print("-"*80)
-print("JobUtils...", end = ' ')
-
-# Add a profile operation to the specified job
+ExampleDesc="Add profile operation to specified job.\n\t\t\t"
+exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=False, bottomRow=False)
 profile_op = CamScripting.add_profile_op(job)
 
-# Add a profile operation and Boundary Dressup to the specified job
+ExampleDesc="Add profile operation & Boundary Dressup to specified job.\n\t\t"
+exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=False, bottomRow=False)
 # NOTE: Dia of TC MUST position tool INSIDE the limiting boundary, else no gcode nor message!!
 # SEE: JobUtil test_01(): xNeg": 4.0,  # Ensure 2.5mm radius of default 5mm bit ...ditto yNeg prop.
 # Can see boundary visualy in FC by making Stock under DressupPathBoundary op visible!!
 profile_op1, dressup1 = CamScripting.add_profile_op_with_boundary_dressup(job)
-print("-"*80)
 # ---------------------------------------------------------
 
 
 # ---------------------------------------------------------
-print("-"*80)
+ExampleDesc="Add ToolControllers to Job-Tools & desired Operation.\n\t\t"
+exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
 toolNames = CamScripting.printAvailableLibraryTools()
 
 # Add Tools into Job as ToolControllers AFTER ALL operations,
 #   to avoid script pausing for user input to select desired ToolController.
 # This also reduces chance of error, as above sets SAME TC for ALL operations.
-print(job.Name, tcProps1.bitName, False)
 tc1 = CamScripting.addTc(job, tcProps1, byNr=False)
 print("\tSet profile_op.ToolController to above TC+user scripted settings")
 profile_op.ToolController = tc1
 
-print(job.Name, tcProps2.lib_tool_nr, True)
 tc2 = CamScripting.addTc(job, tcProps2, byNr=True)
 print("\tSet profile_op1.ToolController to above TC+user scripted settings")
 profile_op1.ToolController = tc2
-
-print("-"*80)
 
 # recompute document
 JobUtils._set_visibility_and_view(doc, job)
 JobUtils.FreeCAD.ActiveDocument.recompute()
 # ---------------------------------------------------------
 
-
 # ---------------------------------------------------------
 # FIXME machinability code is a mess
-print("="*80)
+prefix = "CamScripting:"
+ExampleDesc="Machinability & SpindleSpeed RPM calculation:\n\t\t"
+exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
 stk = doc.getObject("Stock")
 SurfaceSpeedCarbide, SurfaceSpeedHSS = CamScripting.get_mat_machinability(doc, stk, printing=print_machinability)
 
-print("Retrieved Stock Material SurfaceSpeeds & tc1 Diameter to Calculate cutting RPM")
+print("Retrieved Stock Material SurfaceSpeeds & tc1 Diameter\n\
+\t\t\tin common base Units of mm/s & mm, to Calculate cutting RPM")
 print("\t\tHSS: {}, CBD: {}, TC1 dia: {}"
-      .format(SurfaceSpeedCarbide, SurfaceSpeedHSS, tc1.Tool.Diameter))
-print("="*80)
+      .format(SurfaceSpeedHSS, SurfaceSpeedCarbide, tc1.Tool.Diameter))
 
 # CALCULATE & print RPM
 rpm = CamScripting.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
@@ -198,7 +213,8 @@ rpm = CamScripting.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
 
 
 # ---------------------------------------------------------
-print("-"*80)
+ExampleDesc="Create & save: CAM Sanity check report & Postprocessed gcode.\n\t\t"
+exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
 CamScripting.saveSanityreport(job, sanity_report)
 CamScripting.postProcSaveGcode(job.PostProcessorOutputFile)
 print("-"*80)
