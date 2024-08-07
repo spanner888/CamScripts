@@ -1,0 +1,120 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# LICENSE: LGPL-2.1
+# need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
+# YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
+
+
+# allow edited library updates, without close/reopen FC.
+from importlib import reload
+import CamLibTbAdd
+reload(CamLibTbAdd)
+
+
+# Code derived from or inspired by:
+# FC toolbit-attributes.py & several more CAM-Path modules
+# FreeCAD forum users:
+#   onekk code: onekk_path_tools_2021-12-15
+#   russ/???
+
+# DESC script to add many ToolBits into CAM Tool Library
+# Details and how to use in README.MD
+
+# TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
+
+# TODO #1: the FC patch re extra ATTRIB {not shape props} in TB
+
+# TODO  doc use of getAllToolShapes(shape_names) & getToolShapeProps(shape_name_dir, shape_name):
+# TODO need give each TB unique name - eg the CHANGING param, like dia as prefix
+# Example of user boboxx tool name convention: 2F-D6.35-L31.076, see issue:12823
+
+
+# TODO  import tools & bulk create tb & add to current library
+# TODO  option to add TC-tb to JobX
+
+# TODO just DOC: LIMITATIONS:
+#           if TB FILE already exists will be overwritten
+#           FIXME FIXME or LIMITATION: - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
+
+
+
+# Three examples on adding a Default, One or a list of Tools to current Library.
+
+# Example 1. Add single example default endmill to current Library.
+CamLibTbAdd.processUserToolInput()
+
+# Example 2. Add SINGLE Tool 6.35 mm dia to current library
+CamLibTbAdd.processUserToolInput(shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 6.35,
+                                dia_max = 0,
+                                dia_inc = 0)
+
+
+# TEST all empty combos of tb_XXXX, missing Dia...=default??
+
+# Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
+#   But only If BOTH dia_max & dia_inc are greater than zero,
+#            Else: ONLY create ONE TB of this dia in current library.
+CamLibTbAdd.processUserToolInput(shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 8.2,
+                                dia_max = 9.0,
+                                dia_inc = 0.2)
+# -----------------------------------------------------------------------
+
+
+
+# Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
+# By default this example is disabled. 
+# Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
+# These can be used to create different types of ToolBits above.
+# Get FreeCAD Default shape directory & list of shape names in dir.
+getDefaultShapeAttrs = False
+if getDefaultShapeAttrs:
+    shapeDir, shape_names = CamLibTbAdd.getDefaultShapes()
+    print(shapeDir, shape_names)
+
+    # Get all the shape properties and other attributes for each shpe.
+    attrs = CamLibTbAdd.getAllToolShapes(shapeDir, shape_names)
+
+    for k, v in attrs.items():
+        print(v)
+        print()
+
+
+
+
+
+
+###################################################################
+###################################################################
+# MY tool#s for each shape_name type: base# + 100*dia
+# Main libs be library.temptoollow contain may contain lots of drills etc,
+#   then on occasion MERGE different tools into NEW lib for specific purpose/design.
+#   ...& no tool number clashes forcing auto # change & interferring with #dia*100 scheme.
+# Default - either no#, or 1-50
+# Drills        10000   # 4x0 allows for dia up to 99.99 mm
+# Endmills      20000
+# Ballend       30000
+# Bullnose      40000
+# Chamfers      50000
+# PCB_mills     60000
+# Slitting Saws 70000
+# WoodRouters   90000
+
+
+# fyi ie not used here, but of interest: ShamanTcler CandL "Very BETA" code to:
+# "read CSV tool bit descriptions and create FreeCad JSON tool bit files.
+# In the "test" directory you will find:
+#     WhitesideBitData.xlsx, Data provided by the Whiteside Machine Company https://www.whitesiderouterbits.com/
+#     test2.csv the data above formatted as a csv file
+# "https://github.com/ShamanTcler/FreeCadToolBitImport
+# above code does not use any FreeCAD imports/code, it directly reads/writes json files.
+###################################################################
+###################################################################
