@@ -24,6 +24,13 @@ More detail and background is in [Machinability & RPM].
 # Installation & Doco/instructions/Usage
 
 how to install ....
+Before in addon repo
+add my repo ...
+
+after in addon repo - addon manager...
+
+Manual - wiki link
+
 
 `CamLibTbAddExample.FCMacro`
 
