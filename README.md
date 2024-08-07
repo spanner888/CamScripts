@@ -18,7 +18,8 @@ TODO - MAYBE code snippet/full console output
 
 
 
-# CAM scripting all features complete end to end process
+# FreeCAD CAM process end to end scripting
+scripting all features complete end to end process
 
 The included libraries and FreeCAD macros provide examples of all CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode and calculate Spindle RPM from Tool and Stock material properties. Many key properties are set to provide realistic FreeCAD Job and gcode.
 
@@ -103,37 +104,35 @@ All examples show how to set all standard EndMill properties.
 ??How to get for other shapes <<<HAVE CODE FOR THAT in the lib????
 add example ...if so cahnge wording above.
 
-# -----------------------------------------------------------------------
 # Doco/instructions/Usage:
-    # Set desired....ops, TC & which TC for which Job
-    #
-    # script does everything
-    # comment out/remove...
-    # No need to create document or load any workbench.
-    # Script creates an empty document, if no document already open,
-    #   no changes are made to the document.
+Set desired....ops, TC & which TC for which Job
 
-    # ToolBits are added to the current Tool Library.
-    # Existing Toolbit file of same name will be overwritten.
-    # Existing Tools in Library will NOT be overwritten,
-    #     a new Tool will be added with same or partially same properties.
-    #
+script does everything
+comment out/remove...
+No need to create document or load any workbench.
+Script creates an empty document, if no document already open,
+  no changes are made to the document.
 
-# -----------------------------------------------------------------------
+ToolBits are added to the current Tool Library.
+Existing Toolbit file of same name will be overwritten.
+Existing Tools in Library will NOT be overwritten,
+    a new Tool will be added with same or partially same properties.
 
-# Example 1. Add single example default endmill to current Library.
 
-# Example 2. Add SINGLE Tool 6.35 mm dia to current library
 
-# Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
-#   But only If BOTH dia_max & dia_inc are greater than zero,
-#            Else: ONLY create ONE TB of this dia in current library.
+## Example 1. Add single example default endmill to current Library.
 
-# Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
-# By default this example is disabled. 
-# Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
-# These can be used to create different types of ToolBits above.
-# Get FreeCAD Default shape directory & list of shape names in dir.
+## Example 2. Add SINGLE Tool 6.35 mm dia to current library
+
+## Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
+   But only If BOTH dia_max & dia_inc are greater than zero,
+           Else: ONLY create ONE TB of this dia in current library.
+
+## Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
+By default this example is disabled.
+Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
+These can be used to create different types of ToolBits above.
+Get FreeCAD Default shape directory & list of shape names in dir.
 
 At present, customising the ToolBit or Library Tool numbering schemes will require editing the CamLibTbAdd Libray.
 
@@ -238,19 +237,19 @@ Note: First execution time using CamLibTbAddExample.FCMacro and it's two librari
 so sev sections????
 
 # related FreeCAD CAM Terminology:
-    # ToolBitLibrary: provides way to manage many libraries each with many Tools
-    #   all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
-    #   Each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
-    # Tool-Bit = a cutting tool, with defined Shape properties,
-    #       including a property for the underlying Tool-Shape file
-    #       & other Tool-bit Properties such as number of flutes.
-    #       The Tool-Bit shape is used in Operations and Simulators to
-    #       "cut" the stock material to desired shape & size.
-    # Tool-Shape file contains a sketch profile of cutting tool,
-    #   with default Paramatised shape dimensions,
-    #   that are updated from Tool-Bit properties.
-    # Job-ToolController has properties for Rapids, Feeds, Speed
-    #   and contains copy of the Tool-Bit used with all the specific sizes/properties.
+ToolBitLibrary: provides way to manage many libraries each with many Tools
+  all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
+  Each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
+Tool-Bit = a cutting tool, with defined Shape properties,
+      including a property for the underlying Tool-Shape file
+      & other Tool-bit Properties such as number of flutes.
+      The Tool-Bit shape is used in Operations and Simulators to
+      "cut" the stock material to desired shape & size.
+Tool-Shape file contains a sketch profile of cutting tool,
+  with default Paramatised shape dimensions,
+  that are updated from Tool-Bit properties.
+Job-ToolController has properties for Rapids, Feeds, Speed
+  and contains copy of the Tool-Bit used with all the specific sizes/properties.
 
 #### References
 * FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
