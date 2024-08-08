@@ -1,14 +1,24 @@
 study MD features+syntax - refine this!!
 
+review 1st read me for missing stuff
+    even if just some console output ...SNIPPETS???
+
 # FreeCAD CAM scripting
 
 Scripting all features of FreeCAD CAM for a complete end to end process:
+
 * bulk import Tool Data to populate FreeCAD Tool Library
+
 * create Job, Operations, ToolControllers
+
 * set wide range properties
+
 * assign ToolController to Operation
+
 * use Tool & Material material-machinability cutting properties to calculate Spindle RPM
+
 * create and save Sanity report to check for common errors
+
 * postprocess Job to create and save gcode
 
 Every item in the two images below was created by the two attached scripts: `CamLibTbAddExample.FCMacro` and `CamFullProcessExample.FcMacro`.
@@ -21,9 +31,8 @@ The early work using the new Materials Workbench to add default group of "Machin
 
 More detail and background is in [Machinability & RPM].
 
-# Installation & Doco/instructions/Usage
+# Installation
 
-how to install ....
 Before in addon repo
 add my repo ...
 
@@ -36,20 +45,54 @@ Manual - wiki link
 
 `CamFullProcessExample.FcMacro`.
 
-How to run.....
 
-3x libraries:
-first JU....
 
-2 additonal libraries...
-CamScripting Library extend Tool bulk creation, RPM calculation, Sanity report and postprocessing to create gcode.
+# How to use
 
-More details on each script is in the following sections.
+1. Required FreeCAD version:
 
-# Example       ??top level or under Install
-One example file is provided for each library, each containing several examples.
+A very recent development version of FreeCAD to run the Machionability RPM example for example FreeCAD revision 38314 or later.
+
+If not, then Stable Version: 0.21.2.33771 (Git) works for the Creation of Job, Operations and TC, but not the Machionability RPM example.
+
+2. Set FreeCAD macro directory.
+
+Because the scripts and library files are supplied in a directory, the FreeCAD macro utility much be set to use that directory, as shown below:
+
+![Select Macro directory](./images/Select Macro directory.png)
+
+If after setting the Macro directory and running one of the macros, you get an error in the report pane, like that shown below:
+
+```
+    .....
+    shiboken2/files.dir/shibokensupport/feature.py", line 139, in _import
+    return original_import(name, *args, **kwarg
+At present not all ToolBit properties are return when using Example 4. s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    <class 'ModuleNotFoundError'>: No module named 'CamLibTbAdd'
+```
+
+Then try restarting FreeCAD to fix the issue.
+
+3. Select CAM workbench and create a test library
+
+Open CAM wb.
+
+Create and empty Tool Table in your library so that tests ToolBits do not interfere with your "good" ToolBits.
+
+![CamLibTbAdd before - empty library tool table](./images/CamLibTbAdd before - empty library tool table.png)
+
+If the CAM - ToolBit Library editor menu is greyed out, then you need to open or create any FreeCAD document. That document will not be changed.
+
+4. Run default example scripts, or reconfigure and run.
+
+The follwing sections briefly discuss each of the examples. Note by default all example except 4th in the first script will run.
+
+One example script file is provided for each library, each containing several examples.
 
 Both example files provide full automation, ie once user has set desired properties and actions, running each script requires no further user interaction.
+
+# Example       ??top level or under Install
 
 ## CamLibTbAdd Library
 
@@ -63,10 +106,23 @@ Both example files provide full automation, ie once user has set desired propert
 
 ### Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
 By default this example is disabled.
-Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
-These can be used to create different types of ToolBits above.
-Get FreeCAD Default shape directory & list of shape names in dir.
+Change the value of the line:
 
+    ```getDefaultShapeAttrs = False```
+
+to
+
+    ```getDefaultShapeAttrs = True```
+
+and save the macro to run this example. Then the shape dictionaries output in report pane can be used to create different types of ToolBits above.
+
+An example is shown below:
+
+```
+{'shape': 'v-bit.fcstd', 'name': 'v-bit', 'parameter': {'CuttingEdgeAngle': 90.0 deg, 'CuttingEdgeHeight': 1.0 mm, 'Diameter': 10.0 mm, 'Length': 20.0 mm, 'ShankDiameter': 5.0 mm, 'TipDiameter': 1.0 mm}, 'attribute': {'Chipload': 0.0 mm, 'Flutes': 0, 'Material': 'HSS'}}
+```
+
+The output above includes all properties in the default shapes, as a patch suggested to fix missing properties has been applied locally. Details of the issue and a suggested fix have been submitted in FreeCAD/FreeCAD#15637.
 
 ![Example 1 new Library ToolBits](./images/Example 1 after running CamLibTbAdd.png)
 
@@ -81,6 +137,7 @@ so sev sections WITH Example NUMBERING????
 
 ++Note: These example/steps require preconditions to work. The easiest was ensure the preconditions are met is to run the entire script.??????
 
+## Changing to suit your needs
 How to edit scripts and the libraries....
 1. changing properties
 2. add/remove calls to create TB, or add Operation to Job etc.
@@ -88,6 +145,11 @@ How to edit scripts and the libraries....
 
 related FreeCAD CAM Terminology: ??just brief sentence& link?? [Machinability & RPM]
 .......
+
+## Limitations & Issues
+
+
+See the github repo issues for latest information.
 
 # Credits????
 The two scripts and
@@ -123,6 +185,17 @@ This is also demonstrated in Tool catalogs by all of the footnotes and asterix a
 
 These catalogs usually state that the data is "starting values" or some "maximum values" and maybe other
 
+## Credits????
+The two scripts containing examples each kept simple by use of a related library.
+
+The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by Russ..
+Excelent example code is provided in this library in the Test## functions.
+Those exapmles have been included here and extended with many other features to give the full scripted end to end CAM process.
+
+??++ He also worked on CAM changes to make scripting have less user intervention to answer dialogs...???
+
+Path and Material developers and forum users including Russ, onekk, CSV guy...
+
 ## References
 * FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
 * JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
@@ -131,7 +204,8 @@ These catalogs usually state that the data is "starting values" or some "maximum
 # Release notes:
 
 * V0.1  2024-08-08:  Initial release
-    * really short key features ...mostly setting how to do for next releases!!!
+    * Initial release, 2 scripts/macros with 3 libraries and support information.
+    * Scripting all features of FreeCAD CAM for a complete end to end process
 
 ## License
 LGPL-2.1-or-later (see [LICENSE](LICENSE))

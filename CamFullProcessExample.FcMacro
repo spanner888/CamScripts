@@ -56,6 +56,34 @@
 #    Set specified ToolController properties (Feeds & SpindleSpeed)
 #    Set each Job Operation to desired ToolController
 
+# FIXME & TODOs: convert fixmes to repo ISSUES!!!
+
+# FIXME extra windows left open = VIEWS of the 1x doc. so need close views (happens z4 #? views & lappy1x view)
+    # v = doc.getObject("fc_22dev_38314:3") ...but no method to close
+    # code from:CAM/Path/Main/Sanity/ImageBuilder.py
+    # mw = FreeCADGui.getMainWindow()
+    # windows = mw.getWindows()
+    # toRemove = windows[1]
+    # run abovein FC py console, then:
+    # windows
+    # [BadType, View3DInventor, View3DInventor]
+    # ..with left over doc/view AND with new empty doc+view!!!!
+    # HOWEVER: while looking about code...added code to display sanity report in browser
+    #   and the extra views dissapeared!!!!
+    # even worse issue gone after comment out sanity-> browser
+    #   .....add confident had NOT made code changes...only docs lately!!!
+    # ??Is this sideeffect syncing pyc files??? ie aobve chg forced recompile here, so OK & vice versa
+    # have added to st ignore
+    # NB the [BadType, View3DInventor, View3DInventor] issue still there.
+
+    # later after fixing all the syncs ran on lappy EXTRA VIEW LEFT...pyc NOT updated!!!
+    # tried force pyc rebuils ...no change to pyc but error gone.
+
+1x fail in 2nd readme.
+wonderign if create view can return obj...so can destry correct one.....
+esle try create each with unique name - eg for type view/image creating!!
+DO end up with 2+ obj same name ...so might be deleting WWRRONG view ...hence finish with :4 etc
+else try use obj name, not label??
 
 
 # TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
@@ -69,14 +97,14 @@
 import FreeCAD
 import Materials
 
-# Scripting Path workbench  https://forum.freecad.org/viewtopic.php?t=33328
-import JobUtils
-
-# this approach to reloading an import,
+# Extending JobUtils Lib examples to create complete end-end Job
 # allows edited library updates, without close/reopen FC.
 from importlib import reload
 import CamScripting
 reload(CamScripting)
+
+# Scripting Path workbench  https://forum.freecad.org/viewtopic.php?t=33328
+import JobUtils
 
 from PySide import QtGui
 

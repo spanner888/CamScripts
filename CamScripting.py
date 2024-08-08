@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# FIXME: via below =nonsense if add email elsewhere
-
 # -*- coding: utf-8 -*-
 # ***************************************************************************
 # *   Copyright (c) 2024 spanner888 <spanner888@usabledevices.com>          *
@@ -32,6 +30,7 @@ import Materials
 import JobUtils
 from PySide import QtGui
 import math
+import webbrowser
 
 # ###################################################################
 # Functions using JobUtils Library
@@ -302,6 +301,7 @@ def saveSanityreport(job, sanity_report):
             fp.write(html)
     print("Sanity check report written to: {}\n".format(sanity_report))
 
+    webbrowser.open_new_tab(sanity_report)
 
 def postProcSaveGcode(postProcessorOutputFile):
     users_current_policy = Path.Preferences.defaultOutputPolicy()
@@ -354,19 +354,7 @@ def postProcSaveGcode(postProcessorOutputFile):
 
 
 
-# Current Stable Version: 0.21.2.33771 (Git) works for the Creation of JOb, Operations and TC, 
-# but materials module is not available.
-# NB ...also need that very recent commit with machinining_props "SurfaceSpeedCarbide", "SurfaceSpeedHSS"
 
-# Oldest ver I have is & which runs ju code:
-#       create_ code ALSO runs OK!!!!
-#     OS: Debian GNU/Linux 12 (bookworm) (XFCE/xfce)
-# Word size of FreeCAD: 64-bit
-# Version: 0.22.0dev.37898 (Git) AppImage
-# Build type: Release
-# Branch: main
-# Hash: 308013fb975ec3bf0dc5cb616ef76a4095e71cc5
-# Python 3.11.9, Qt 5.15.13, Coin 4.0.2, Vtk 9.2.6, OCC 7.7.2
 
 
 
