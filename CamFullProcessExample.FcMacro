@@ -79,11 +79,11 @@
     # later after fixing all the syncs ran on lappy EXTRA VIEW LEFT...pyc NOT updated!!!
     # tried force pyc rebuils ...no change to pyc but error gone.
 
-1x fail in 2nd readme.
-wonderign if create view can return obj...so can destry correct one.....
-esle try create each with unique name - eg for type view/image creating!!
-DO end up with 2+ obj same name ...so might be deleting WWRRONG view ...hence finish with :4 etc
-else try use obj name, not label??
+# 1x fail in 2nd readme.
+# wonderign if create view can return obj...so can destry correct one.....
+# esle try create each with unique name - eg for type view/image creating!!
+# DO end up with 2+ obj same name ...so might be deleting WWRRONG view ...hence finish with :4 etc
+# else try use obj name, not label??
 
 
 # TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!

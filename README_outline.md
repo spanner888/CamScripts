@@ -21,15 +21,9 @@ Scripting all features of FreeCAD CAM for a complete end to end process:
 
 * postprocess Job to create and save gcode
 
-Every item in the two images below was created by the two attached scripts: `CamLibTbAddExample.FCMacro` and `CamFullProcessExample.FcMacro`.
+All of the ToolBits were created and added to the Library shown in the left hand image below by `CamLibTbAddExample.FCMacro` and every item in the right hand image was created by `CamFullProcessExample.FcMacro`. An extensive number of properties were also set.
 
-![CamFullProcessExample Tools&Tree](./images/CamFullProcessExample Tools&Tree scaled.png)
-
-Not shown in above images are calculated Spindle RPM, the Sanity check report and the created gcode.
-
-The early work using the new Materials Workbench to add default group of "Machining" materials that have "Machinability" properties is also demonstrated in the second script `CamFullProcessExample.FcMacro`.
-
-More detail and background is in [Machinability & RPM].
+ ![CamFullProcessExample Tools&Tree](./images/CamFullProcessExample Tools&Tree scaled.png)
 
 # Installation
 
@@ -86,25 +80,43 @@ If the CAM - ToolBit Library editor menu is greyed out, then you need to open or
 
 4. Run default example scripts, or reconfigure and run.
 
-The follwing sections briefly discuss each of the examples. Note by default all example except 4th in the first script will run.
+The following sections briefly discuss each of the examples. Note by default all example except 4th in the first script will run.
 
 One example script file is provided for each library, each containing several examples.
 
 Both example files provide full automation, ie once user has set desired properties and actions, running each script requires no further user interaction.
 
-# Example       ??top level or under Install
 
-## CamLibTbAdd Library
+REDUCE to KISS/short generic - each example is on command call to the associated library, complete wtih example properties, either in the function call, or in variables prior.
+>>>>>MAYBE EVEN THE **entire** SECTION MUCH SHORTER...keep the intro stuff, but shorten if poss, maybe skip some images??
+You can run the examples as is, or modify the properties to suit your needs.
+++Notes in the code.
+In `CamFullProcessExample.FcMacro`, there is a fair bit of output printing that can be removed, if not required.
+Also if you you remove features, be aware that later code might be dependant upon those outputs and fail. Sometimes you may be able to adjust the later code. For example removing one operation will cause related property value setting and assing a ToolController to fail.
 
-### Example 1. Add single example default endmill to current Library.
+????How to edit scripts and the libraries....
+1. changing properties
+2. add/remove calls to create TB, or add Operation to Job etc.
+3. ...tailor libraries...
 
-### Example 2. Add SINGLE Tool 6.35 mm dia to current library
+related FreeCAD CAM Terminology: ??just brief sentence& link?? [Machinability & RPM]
+.......
 
-### Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
+
+
+
+
+CamLibTbAdd Library
+
+Example 1. Add single example default endmill to current Library.
+
+Example 2. Add SINGLE Tool 6.35 mm dia to current library
+
+Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
    But only If BOTH dia_max & dia_inc are greater than zero,
            Else: ONLY create ONE TB of this dia in current library.
 
-### Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
+Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
 By default this example is disabled.
 Change the value of the line:
 
@@ -128,27 +140,20 @@ The output above includes all properties in the default shapes, as a patch sugge
 
 ???+FC report outout
 
-## FreeCAD CAM Tools/Bits/Shapes/Library Job-TC ++ for ju - Ops/materials/SF...
+
+FreeCAD CAM Tools/Bits/Shapes/Library Job-TC ++ for ju - Ops/materials/SF...
+
+CHANGE TO ABOVE KISS FORMAT/DETAILS!!!!
 so sev sections WITH Example NUMBERING????
 
 ![Example 2 Cam Full Process](./images/CamFullProcessExample.png)
 
 ???+FC report outout
 
-++Note: These example/steps require preconditions to work. The easiest was ensure the preconditions are met is to run the entire script.??????
-
-## Changing to suit your needs
-How to edit scripts and the libraries....
-1. changing properties
-2. add/remove calls to create TB, or add Operation to Job etc.
-3. ...tailor libraries...
-
-related FreeCAD CAM Terminology: ??just brief sentence& link?? [Machinability & RPM]
-.......
 
 ## Limitations & Issues
 
-
+SEVERAL ALREADY ABOVE ...just remove the section????
 See the github repo issues for latest information.
 
 # Credits????
