@@ -1,25 +1,15 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+# TEST code on current stable & doc in macro supported ver info
+
 # TODO licence/macro info
-
-# Use addon mgr dev mode:
-#       - create fc macro meta
-#       - add custom git repo
-#       *** JobUtils AND CamScripting/CamJU {**CHK IF CamTools is DEPEND!!!} are BOTH dependancies
-#           >>>>BUT THE WAY CamScripting is written DOES IMPORT JobUtils
-#           >>>>>>>>>>>>...split in TWO - CamJU & CamTools
-#
-# MOVE bulk of licence to MY lib CamScripting ...here is MY code
-# ...so bare min FC macro contrib stuff
-#       ...which will give plenty info/doco links...
-
-# https://wiki.freecad.org/Std_AddonMgr
-# https://wiki.freecad.org/Package_Metadata
-
 
 # process FIXME, TODO, TEST ++++ ++ sanity
 
+# TODO Package_Metadata AND in each file??
+# https://wiki.freecad.org/Std_AddonMgr
+# https://wiki.freecad.org/Package_Metadata
 
 # addon mgr wants/requires a FOLDER...to gather icon, licence, readme/help.......
 # ...which prob good for me to help org as git repo....
@@ -28,17 +18,8 @@
 # Adding macro to WIKI: https://wiki.freecad.org/Macro_Template
 # Adding to Addon Mgr   https://wiki.freecad.org/Add_Workbench_to_Addon_Manager
 
-# https://github.com/FreeCAD/FreeCAD-macros?tab=readme-ov-file
-# >>>Addon mamanger dev mode - gives gui to create addon/macro metadata
-# spanner888@usabledevices.com
 
-# start the macro name with the type of object it's working on, e.g. use ViewRotation instead of RotateView
-# other=> CamToolCreation.FcMacro
-# here => CamToolsMaterialsAutomation.FcMacro
-
-
-# TEST code on current stable & doc in macro supported ver info
-
+# TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
 # TODO chk order correct & no steps missing...SHORTEN???
 #    USE existing Tool Library tools ...CAM Toobits & add to current/last used
 #       all code actually to test the code that does above in bulk<<<SEP promotion of this!!!
@@ -49,13 +30,6 @@
 #    Add specified Tools from Library to Job as ToolControllers
 #    Set specified ToolController properties (Feeds & SpindleSpeed)
 #    Set each Job Operation to desired ToolController
-
-# FIXME & TODOs: convert fixmes to repo ISSUES!!!
-
-
-
-# TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
-
 
 # TODO chekc if can remove more imports here!!!!
 import FreeCAD
@@ -100,9 +74,8 @@ j_props.hRapid = '400/60 mm/s'
 j_props.vRapid = '150/60 mm/s'
 # ---------------------------------------------------------
 
-# FIXME path to cross platform default///else detect plat...
+# FIXME make below empty default, then test if empty and prompt user to set!!
 sanity_report = '/home/spanner888/Documents/cam_sanity/sanity_auto.html'
-
 
 # JOB-TC & TB properties/defaults.
 # Add one set of props for each TC/TB
@@ -131,6 +104,7 @@ tcProps2.spindleSpeed = 5678.9
 # --------------------------------------------------------------------------
 # USER settings END ========================================================
 # --------------------------------------------------------------------------
+
 
 # ----------------------------------------
 # Output/Documentation helpers
@@ -187,11 +161,16 @@ JobUtils.FreeCAD.ActiveDocument.recompute()
 # ---------------------------------------------------------
 
 # ---------------------------------------------------------
-# FIXME machinability code is a mess
+# set some example printing vars & print header for RPM calc example
 prefix = "CamScripting:"
 ExampleDesc="Machinability & SpindleSpeed RPM calculation:\n\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
+
+# Get the stock object of desired CAM-Job
 stk = doc.getObject("Stock")
+
+# Get HSS & Carbide Surface Speeds.
+# Note: Not tested with Material that has no SurfaceSpeedCarbide and SurfaceSpeedHSS
 SurfaceSpeedCarbide, SurfaceSpeedHSS = CamScripting.get_mat_machinability(doc, stk, printing=print_machinability)
 
 print("Retrieved Stock Material SurfaceSpeeds & tc1 Diameter\n\
@@ -199,15 +178,25 @@ print("Retrieved Stock Material SurfaceSpeeds & tc1 Diameter\n\
 print("\t\tHSS: {}, CBD: {}, TC1 dia: {}"
       .format(SurfaceSpeedHSS, SurfaceSpeedCarbide, tc1.Tool.Diameter))
 
-# CALCULATE & print RPM
+# CALCULATE & print RPM,
+# ONLY for SurfaceSpeed TYPE that matches Tool material type
+# ATM Tool material type retreived from ToolController.Tool.Material
+# Does not yet apply a new Material to Tools and then use that material type.
 rpm = CamScripting.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
 # ---------------------------------------------------------
 
 
 # ---------------------------------------------------------
+# set some example printing vars & print header for
+#   Sanity report and postprocess/save gcode example
 ExampleDesc="Create & save: CAM Sanity check report & Postprocessed gcode.\n\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
+
 CamScripting.saveSanityreport(job, sanity_report)
+
 CamScripting.postProcSaveGcode(job.PostProcessorOutputFile)
+
+# print trailing "line" to complete block outline of this example.
 print("-"*80)
+print("CamFullProcessExample.FcMacro finished.")
 # ---------------------------------------------------------
