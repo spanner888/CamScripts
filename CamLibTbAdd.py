@@ -182,7 +182,7 @@ def processUserToolInput(shape_name="endmill",
                         tb_base_name="default_em",
                         tb_base_nr=20000,
                         tb_nr_inc=100,
-                        dia=8.2,
+                        dia=8.12,           # Odd size so less likely to clash with existing TB
                         dia_max=0,
                         dia_inc=0):
     # FIXME review @least location of this "rule" & other TB name rules
