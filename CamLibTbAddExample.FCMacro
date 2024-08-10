@@ -23,24 +23,14 @@ reload(CamLibTbAdd)
 
 # TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
 
-# TODO #1: the FC patch re extra ATTRIB {not shape props} in TB
-
-# TODO  doc use of getAllToolShapes(shape_names) & getToolShapeProps(shape_name_dir, shape_name):
 # TODO need give each TB unique name - eg the CHANGING param, like dia as prefix
 # Example of user boboxx tool name convention: 2F-D6.35-L31.076, see issue:12823
-
 
 # TODO  import tools & bulk create tb & add to current library
 # TODO  option to add TC-tb to JobX
 
-# TODO just DOC: LIMITATIONS:
-#           if TB FILE already exists will be overwritten
-#           FIXME FIXME or LIMITATION: - biggie specify UNITS so imperial tools can be specified in NATIVE/imperial units
-
-
 
 # Three examples on adding a Default, One or a list of Tools to current Library.
-
 # Example 1. Add single example default endmill to current Library.
 CamLibTbAdd.processUserToolInput()
 

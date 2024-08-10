@@ -108,8 +108,6 @@ def initDocJob(job_props, clear_console_pane, clear_report_pane):
 
     # -----------------------------------------------------------------
     # now apply your JOB properties/defaults
-    # TODO cater for MANY jobs - will require editing JobUtil lib code,
-    # &/or moving here+edit, so can add Job into current doc, without creating new doc.
     job.Label = job_props.jobname
     job.PostProcessor = job_props.postProcessor
     # job.PostProcessor = "refactored_grbl"
@@ -282,7 +280,7 @@ def calcRpm(tc, SurfaceSpeedCarbide, SurfaceSpeedHSS):
     # print()
     print("Calculated SpindleSpeed RPM has not been set in ToolController SpindleSpeed.")
     print("You can do this manualy, or uncomment code in line below this print statement in the macro.")
-    #TODO read print above - code to sert calc rpm in TC
+    #TODO read print above - code to set calc rpm in TC
     return rpm
 
 
