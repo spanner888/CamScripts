@@ -1,5 +1,8 @@
 study MD features+syntax - refine this!!
 
+FIXME: numbering for "2. Set FreeCAD macro directory."
+    ..& subsequent all = 1 !!!! <<<in ReText!!!
+
 review 1st read me for missing stuff
     even if just some console output ...SNIPPETS???
 
@@ -26,6 +29,19 @@ All of the ToolBits were created and added to the Library shown in the left hand
  ![CamFullProcessExample Tools&Tree](./images/CamFullProcessExample Tools&Tree scaled.png)
 
 # Installation
+
+??4th = +github repo in
+Select Menu - Preferences - Addon Manager: Then to "Custom Repositories" add github repo
+???will this dump all into current macro dir...if so recommend create dir & set FC Macro dir to that dir first.
+
+3 methods - addon manager (not yet avail)
+    https://wiki.freecad.org/Addon#Information_for_developers
+     add macro to Macros recipes page...automatically be picked up by Addon manager
+    https://wiki.freecad.org/Macros_recipes
+
+file copy
+zip <<<<<<<<attached to forum = zip...or never attach forum  only link??
+![FreeCAD wiki Installing macros](https://wiki.freecad.org/How_to_install_macros#Installing_macros)
 
 Before in addon repo
 add my repo ...
@@ -102,6 +118,28 @@ Also if you you remove features, be aware that later code might be dependant upo
 related FreeCAD CAM Terminology: ??just brief sentence& link?? [Machinability & RPM]
 .......
 
+## Example output
+
+![Example 1 new Library ToolBits](./images/Example 1 after running CamLibTbAdd.png)
+
+![CamLibTbAdd before - after populated library tool table](./CamLibTbAdd before - after populated library tool table.png)
+
+
+```
+19:38:25  Adding ToolBit Shape: endmill Name: 20820default_em, #20820.0, Dia: 8.2 mm
+19:38:25  ...finished.
+19:38:25
+19:38:25  Adding ToolBit Shape: endmill Name: 20635em, #20635.0, Dia: 6.35 mm
+19:38:25  ...finished.
+19:38:25
+19:38:25  ToolBit diameters to be created:  [8.2 8.4 8.6 8.8 9. ]
+19:38:25  Adding ToolBit Shape: endmill Name: 820_em, #20820, Dia: 8.2 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 840_em, #20840, Dia: 8.4 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 860_em, #20860, Dia: 8.6 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 880_em, #20880, Dia: 8.8 mm
+19:38:25  Adding ToolBit Shape: endmill Name: 900_em, #20900, Dia: 9.0 mm
+19:38:25  ...finished.
+```
 
 
 
@@ -136,20 +174,69 @@ An example is shown below:
 
 The output above includes all properties in the default shapes, as a patch suggested to fix missing properties has been applied locally. Details of the issue and a suggested fix have been submitted in FreeCAD/FreeCAD#15637.
 
-![Example 1 new Library ToolBits](./images/Example 1 after running CamLibTbAdd.png)
-
-???+FC report outout
-
-
 FreeCAD CAM Tools/Bits/Shapes/Library Job-TC ++ for ju - Ops/materials/SF...
 
 CHANGE TO ABOVE KISS FORMAT/DETAILS!!!!
 so sev sections WITH Example NUMBERING????
 
+## Example output
+
 ![Example 2 Cam Full Process](./images/CamFullProcessExample.png)
 
-???+FC report outout
-
+```
+19:43:01  Job Utilities 2024-02-25 module imported
+19:43:01  --------------------------------------------------------------------------------
+19:43:01  Example 1 JobUtils: New doc & Job, optionaly clear report/python panes.
+			 Active document is Test_JobUtils with Job object
+19:43:06  Example 2 JobUtils: Add profile operation to specified job.
+			 adding profile operation using top face, Face6.
+19:43:06  Example 3 JobUtils: Add profile operation & Boundary Dressup to specified job.
+		 adding profile operation
+19:43:06  adding boundary dressup on profile operation
+19:43:06  --------------------------------------------------------------------------------
+19:43:06  Example 4 JobUtils: Add ToolControllers to Job-Tools & desired Operation.
+		 JobUtils... Available tool files:
+19:43:06       1 ::   5mm_Endmill
+19:43:06       2 ::   5mm_Drill
+19:43:06       3 ::   6mm_Ball_End
+19:43:06       4 ::   6mm_Bullnose
+19:43:06       5 ::   60degree_Vbit
+19:43:06       6 ::   45degree_chamfer
+19:43:06       7 ::   slittingsaw
+19:43:06       8 ::   probe
+19:43:06       9 ::   5mm-thread-cutter
+19:43:06       20820.0 ::   20820default_em
+19:43:06       20635.0 ::   20635em
+19:43:06       20820 ::   820_em
+19:43:06       20840 ::   840_em
+19:43:06       20860 ::   860_em
+19:43:06       20880 ::   880_em
+19:43:06       20900 ::   900_em
+19:43:06
+19:43:06  Add TC using toolname: 880_em and set h/v feeds & spindle speed.
+19:43:11  	Set profile_op.ToolController to above TC+user scripted settings
+19:43:11  Add TC using tool#: 20840 and set h/v feeds & spindle speed.
+19:43:11  	Set profile_op1.ToolController to above TC+user scripted settings
+19:43:15  --------------------------------------------------------------------------------
+19:43:15  Example 5 CamScripting: Machinability & SpindleSpeed RPM calculation:
+		 Retrieved Stock Material SurfaceSpeeds & tc1 Diameter
+			in common base Units of mm/s & mm, to Calculate cutting RPM
+19:43:15  		HSS: 2916.67 mm/s, CBD: 6483.33 mm/s, TC1 dia: 8.8 mm
+19:43:15  	**Calculated** RPM for HSS tool is 6330.0 RPM
+19:43:15  	formula: SurfaceSpeed / (Diameter * math.pi)
+19:43:15  	NB: FreeCAD Units are all normalised in metric, so SurfaceSpeed*1000 is not required.
+19:43:15  Calculated SpindleSpeed RPM has not been set in ToolController SpindleSpeed.
+19:43:15  You can do this manualy, or uncomment code in line below this print statement in the macro.
+19:43:15  --------------------------------------------------------------------------------
+19:43:15  Example 6 CamScripting: Create & save: CAM Sanity check report & Postprocessed gcode.
+		 Processing file outputs: Sanity Job common errors report & PostProcess Gcode
+19:43:16  Sanity check report written to: /home/spanner888/Documents/cam_sanity/sanity_auto.html
+19:43:16
+19:43:17  Post Processor: script_module postprocessing...
+19:43:17  Done postprocessing.
+19:43:17  File written to /home/spanner888/Documents/_source/_APPS/FC_wkly_38334/squashfs-root/appd_mlappy/Test_JobUtils1_Job_ju_created____0.ngc
+19:43:19  --------------------------------------------------------------------------------
+```
 
 ## Limitations & Issues
 
@@ -166,8 +253,22 @@ Excelent example code is provided in this library in the Test## functions.
 
 Path and Material developers and forum users including Russ, onekk, CSV guy...
 
-
 # Background informatiion
+
+## FreeCAD CAM Terminology:
+ToolBitLibrary: provides way to manage many libraries each with many Tools
+  all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
+  Each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
+Tool-Bit = a cutting tool, with defined Shape properties,
+      including a property for the underlying Tool-Shape file
+      & other Tool-bit Properties such as number of flutes.
+      The Tool-Bit shape is used in Operations and Simulators to
+      "cut" the stock material to desired shape & size.
+Tool-Shape file contains a sketch profile of cutting tool,
+  with default Paramatised shape dimensions,
+  that are updated from Tool-Bit properties.
+Job-ToolController has properties for Rapids, Feeds, Speed
+  and contains copy of the Tool-Bit used with all the specific sizes/properties.
 
 ## Machinability & RPM
 
@@ -176,6 +277,10 @@ The early work using the new Materials Workbench to add default group of "Machin
 Spindle RPM is calculated, by retreiving ToolController material type of HSS or Carbide and then retreiving the corresponding HSS or Carbide surfaceSpeed from the Material data of the Job-Stock, which would be inherited from the design object.
 
 Note "ToolController material type" is an existing ToolController property and is not a "new Material", but maybe in future, [follow or join the design process]()
+
+??This a demonstration of the very early work to design Speeds and Feeds for FreeCAD. SEE XXXXX
+In future the ToolController material, might be set via a "new Material", depending on how we all decide to progress Speeds and Feeds.
+
 
 Note: The cutting machinability data and calculated RPM are real, usable values, but are not yet matched with background information on the expected machine capability and limitations. For example is the cutting machine:
 * a very rigid milling machine, with 20kW spindle @20,000 RPM (as seen in many tool catalogs)
@@ -189,6 +294,11 @@ Implied by above is the need to adapt the cutting parameters such as Spindle RPM
 This is also demonstrated in Tool catalogs by all of the footnotes and asterix and appendix that provide some guidance on how to change the cutting parameters for a wide variety of situations.
 
 These catalogs usually state that the data is "starting values" or some "maximum values" and maybe other
+
+## References
+* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
+* JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
+...all the materials
 
 ## Credits????
 The two scripts containing examples each kept simple by use of a related library.
@@ -211,6 +321,34 @@ Path and Material developers and forum users including Russ, onekk, CSV guy...
 * V0.1  2024-08-08:  Initial release
     * Initial release, 2 scripts/macros with 3 libraries and support information.
     * Scripting all features of FreeCAD CAM for a complete end to end process
+
+* V0.1  2024-08-16: Initial release
+                    - creates start to finish FreeCAD CAM process
+                    - 2 scripts/macros, 3 libraries & support information.
+
+* V0.1  2024-08-16: Initial release
+            - creates start to finish FreeCAD CAM process
+            - 2 scripts/macros, 3 libraries & support information.
+
+* V0.1  2024-08-16:
+            - Initial release
+            - creates start to finish FreeCAD CAM process
+            - 2 scripts/macros, 3 libraries & support information.
+
+* V0.1  2024-08-16:
+            - Initial release
+            - creates start to finish FreeCAD CAM process
+            - 2 scripts/macros, 3 libraries & support information.
+
+* V0.1  2024-08-16:
+            - Initial release
+            - creates start to finish FreeCAD CAM process
+            - 2 scripts/macros, 3 libraries & support information.
+
+* V0.1  2024-08-16:
+            - Initial release
+            - creates start to finish FreeCAD CAM process
+            - 2 scripts/macros, 3 libraries & support information.
 
 ## License
 LGPL-2.1-or-later (see [LICENSE](LICENSE))
