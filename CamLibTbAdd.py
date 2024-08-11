@@ -112,7 +112,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
     tp = tool_props["parameter"]
 
     ### >>>    NOW USE THE NE TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
-    tb_name = get_tb_name_template(tb_name_rules, tb_nr, tool_props)
+    tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
 
     if PathToolBitLibraryGui.checkWorkingDir():
         workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
@@ -202,6 +202,7 @@ def processUserToolInput(tb_name_rules,
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
 
+    # FIXME user should not be editing this here ...should be in euser example code!!
     # Need to create dict for EACH known prop names FOR EVERY SHAPE TYPE that will be created.
     # NB 'name' is set to my default naming scheme for a SINGLE tool of dia (see about a dozen lines up)
     # Also this dictionary matches that used by FreeCAD for ToolBit
@@ -239,7 +240,7 @@ def processUserToolInput(tb_name_rules,
     print("...finished.\n")
 
 
-def get_tb_name_template(tb_name_rules, tb_nr, tool_props):
+def create_tb_name(tb_name_rules, tb_nr, tool_props):
     # TODO cope/warn about duplicate order#s
     segs_nested = dict()
     for k, v in tb_name_rules.items():
@@ -247,13 +248,27 @@ def get_tb_name_template(tb_name_rules, tb_nr, tool_props):
             s2 = {v["order"]: {k:v}}
             segs_nested.update(s2)
 
+    # sort, so can collate all the parts on TB name in Users desired order
     od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
 
     # now iterate od_segs_nested dict
     tb_name_template = ""
+    tb_prop_val = None
     for k, v in od_segs_nested.items():
         for k1, v1 in v.items():
-            tb_name_template += v1["sep_left"] + "[" + k1 + "]" + v1["abbrev"] + v1["sep_r"]
+            if v1["ptype"] == "TbShape":
+                tp = tool_props["parameter"]
+                # what if that prop not exist???
+                tb_prop_val = tp[k1]
+            elif v1["ptype"] == "TbAttributes":
+                ta = tool_props["attribute"]
+                # what if that prop not exist???
+                tb_prop_val = ta[k1]
+            else:
+                print("ToolBit property type is not 'Shape' or 'Attributes', but is: ", v1["ptype"])
+
+            # FIXME cater for None??
+            tb_name_template += v1["sep_left"] + str(tb_prop_val) + v1["abbrev"] + v1["sep_r"]
         # print("==>", tb_name_template)
 
     return tb_name_template

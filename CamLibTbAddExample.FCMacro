@@ -24,7 +24,7 @@ reload(CamLibTbAdd)
 
 # Example of user boboxx tool name convention: 2F-D6.35-L31.076, see issue:12823
 
-tb_naming_rules = {"shapename"         :{"ptype": "added_macro_prop",
+tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                   "pref_name": "",
                                   "abbrev": "",
                                   "sep_left": "_",
