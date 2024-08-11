@@ -51,7 +51,7 @@ from PySide import QtGui
 # --------------------------------------------------------------------------
 clear_console_pane = True
 clear_report_pane = True
-print_machinability = FalseOdd size so less likely to clash with existing TB
+print_machinability = False     # Odd size so less likely to clash with existing TB
 
 # ---------------------------------------------------------
 # JOB properties & defaults
