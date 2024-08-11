@@ -206,7 +206,9 @@ def processUserToolInput(tb_name_rules,
     # Need to create dict for EACH known prop names FOR EVERY SHAPE TYPE that will be created.
     # NB 'name' is set to my default naming scheme for a SINGLE tool of dia (see about a dozen lines up)
     # Also this dictionary matches that used by FreeCAD for ToolBit
-    endmill_tool_props = {'shape': shape_name + '.fcstd', 'name': str(int(round(tb_nr))) + tb_base_name,
+
+                                                            # 'name': str(int(round(tb_nr))) + tb_base_name,
+    endmill_tool_props = {'shape': shape_name + '.fcstd', 'name': tb_base_name,
                                 'parameter': {'CuttingEdgeHeight': '30.5 mm',
                                                 'Diameter': str(dia) + ' mm',
                                                 'Length': '50.0 mm',
@@ -264,12 +266,16 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                 ta = tool_props["attribute"]
                 # what if that prop not exist???
                 tb_prop_val = ta[k1]
+            elif v1["ptype"] == "added_macro_prop":
+                # if k == 'shapename' or k = 'base_name':
+                tb_prop_val = k
             else:
-                print("ToolBit property type is not 'Shape' or 'Attributes', but is: ", v1["ptype"])
+                print("ToolBit property type is not 'TbShape' \
+                    or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
 
             # FIXME cater for None??
             tb_name_template += v1["sep_left"] + str(tb_prop_val) + v1["abbrev"] + v1["sep_r"]
-        # print("==>", tb_name_template)
+        print("==>", tb_name_template)
 
     return tb_name_template
 
