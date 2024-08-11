@@ -113,6 +113,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
 
     ### >>>    NOW USE THE NE TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
     tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
+    tool_props["name"] = tb_name
 
     if PathToolBitLibraryGui.checkWorkingDir():
         workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
@@ -274,8 +275,15 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                     or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
 
             # FIXME cater for None??
+            # FIXME what is the _3 at then end OF EVERY TB NAME???? eg: _9.0 mmD_4F_3
+            # FIXME and the space between dia# & 'mm'
+            # TODO add My numbering tb_nr <<is it already calc from dia etc here???
+            #       or only use tb_nr for the Library T#??
+            # TODO
+            # if the order# =1 SKIP adding v1["sep_left"]
+            #     unless prepending my tb_nr
             tb_name_template += v1["sep_left"] + str(tb_prop_val) + v1["abbrev"] + v1["sep_r"]
-        print("==>", tb_name_template)
+    # print("==>", tb_name_template)
 
     return tb_name_template
 
