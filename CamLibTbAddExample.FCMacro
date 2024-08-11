@@ -21,21 +21,200 @@ reload(CamLibTbAdd)
 # DESC script to add many ToolBits into CAM Tool Library
 # Details and how to use in README.MD
 
-# TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
 
-# TODO need give each TB unique name - eg the CHANGING param, like dia as prefix
 # Example of user boboxx tool name convention: 2F-D6.35-L31.076, see issue:12823
+
+tb_naming_rules = {"shapename"         :{"ptype": "added_macro_prop",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "_",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "base_name"         :{"ptype": "added_macro_prop",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "_",
+                                  "sep_r": "",
+                                  "order": 3
+                                },
+             "Chipload"         :{"ptype": "TbAttributes",
+                                  "pref_name": "",
+                                  "abbrev": "CL",
+                                  "sep_left": "_",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "Flutes"           :{"ptype": "TbAttributes",
+                                  "pref_name": "",
+                                  "abbrev": "F",
+                                  "sep_left": "_",
+                                  "sep_r": "",
+                                  "order": 2
+                                },
+             "Material"         :{"ptype": "TbAttributes",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "SpindleDirection" :{"ptype": "TbAttributes",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "SpindlePower"     :{"ptype": "TbAttributes",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "BladeThickness"   :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "CapDiameter"      :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "CapHeight"        :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "Crest"            :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "cuttingAngle"     :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "deg",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "CuttingEdgeAngle" :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "CuttingEdgeHeight":{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "Chipload"         :{"ptype": "TbAttributes",
+                                  "pref_name": "",
+                                  "abbrev": "CL",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "Diameter"         :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "D",
+                                  "sep_left": "_",
+                                  "sep_r": "",
+                                  "order": 1
+                                },
+             "FlatRadius"       :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "Length"           :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "L",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "NeckDiameter"     :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "ND",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "NeckHeight"       :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "NH",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "NeckLength"       :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "NL",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "ShankDiameter"    :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "DS",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "TipAngle"         :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "TipDiameter"      :{"ptype": "TbShape",
+                                  "pref_name": "",
+                                  "abbrev": "",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                },
+             "Chipload"         :{"ptype": "TbAttributes",
+                                  "pref_name": "",
+                                  "abbrev": "CL",
+                                  "sep_left": "",
+                                  "sep_r": "",
+                                  "order": 0
+                                }
+        }
+
+# tb_name_templ = CamLibTbAdd.get_tb_name_template(tb_naming_rules)
+# print("boboxx tool name convention:\n2F-D6.35-L31.076")
+# print(tb_name_templ)
 
 # TODO  import tools & bulk create tb & add to current library
 # TODO  option to add TC-tb to JobX
 
-
 # Three examples on adding a Default, One or a list of Tools to current Library.
 # Example 1. Add single example default endmill to current Library.
-CamLibTbAdd.processUserToolInput()
+CamLibTbAdd.processUserToolInput(tb_naming_rules)
 
 # Example 2. Add SINGLE Tool 6.35 mm dia to current library
-CamLibTbAdd.processUserToolInput(shape_name = "endmill",
+CamLibTbAdd.processUserToolInput(tb_naming_rules,
+                                 shape_name = "endmill",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
                                 tb_nr_inc = 100,
@@ -49,7 +228,8 @@ CamLibTbAdd.processUserToolInput(shape_name = "endmill",
 # Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc
 #   But only If BOTH dia_max & dia_inc are greater than zero,
 #            Else: ONLY create ONE TB of this dia in current library.
-CamLibTbAdd.processUserToolInput(shape_name = "endmill",
+CamLibTbAdd.processUserToolInput(tb_naming_rules,
+                                 shape_name = "endmill",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
                                 tb_nr_inc = 100,
@@ -61,7 +241,7 @@ CamLibTbAdd.processUserToolInput(shape_name = "endmill",
 
 
 # Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.
-# By default this example is disabled. 
+# By default this example is disabled.
 # Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
 # These can be used to create different types of ToolBits above.
 # Get FreeCAD Default shape directory & list of shape names in dir.

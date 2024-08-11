@@ -14,6 +14,8 @@ import Path.Base.Util as PathUtil
 from PySide.QtCore import Qt
 import numpy as np
 
+import collections
+
 
 
 if False:
@@ -106,8 +108,11 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     library.temptool.Proxy.saveToFile(library.temptool, fullpath)
 
 
-def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr):
+def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
     tp = tool_props["parameter"]
+
+    ### >>>    NOW USE THE NE TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
+    tb_name = get_tb_name_template(tb_name_rules, tb_nr, tool_props)
 
     if PathToolBitLibraryGui.checkWorkingDir():
         workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
@@ -158,7 +163,8 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr):
 
 def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
-                                tool_props):
+                                tool_props,
+                                tb_name_rules):
     params = tool_props["parameter"]
     for d in dia_list:
         tb_nr = int(tb_base_nr + tb_nr_inc * d)
@@ -168,23 +174,25 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
         # print("\tCreating: {}".format(tool_props["name"]))
-        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr)
+        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules)
 
 
 #TODO IMPORT at least csv
 def importToolCsv():
     # import expect need set EVERY tool data via
-    addToolToCurrentLibrary(endmill_tool_props, tb_nr)
+    addToolToCurrentLibrary(endmill_tool_props, tb_nr, tb_name_rules)
     # THEN set individ props, like #Flutes, shank dia, material........
 
 
-def processUserToolInput(shape_name="endmill",
-                        tb_base_name="default_em",
-                        tb_base_nr=20000,
-                        tb_nr_inc=100,
-                        dia=8.12,           # Odd size so less likely to clash with existing TB
-                        dia_max=0,
-                        dia_inc=0):
+def processUserToolInput(tb_name_rules,
+                         shape_name="endmill",
+                         tb_base_name="default_em",
+                         tb_base_nr=20000,
+                         tb_nr_inc=100,
+                         dia=8.12,           # Odd size so less likely to clash with existing TB
+                         dia_max=0,
+                         dia_inc=0
+                        ):
     # FIXME review @least location of this "rule" & other TB name rules
     tb_nr = tb_base_nr + dia * tb_nr_inc
 
@@ -220,14 +228,34 @@ def processUserToolInput(shape_name="endmill",
             # CHOOSE to create many ToolBits & add to current library.
             addToolListToCurrentLibrary(library, shape_name, dia_list,
                                         tb_base_name, tb_base_nr, tb_nr_inc,
-                                        endmill_tool_props)
+                                        endmill_tool_props,
+                                        tb_name_rules)
         else:
             # create ONE ToolBit with diameter = dia
-            addToolToCurrentLibrary(library, shape_name, endmill_tool_props, tb_nr)
+            addToolToCurrentLibrary(library, shape_name, endmill_tool_props, tb_nr, tb_name_rules)
     else:
         print("Tool diameter must be number greater than zero.")
 
     print("...finished.\n")
 
+
+def get_tb_name_template(tb_name_rules, tb_nr, tool_props):
+    # TODO cope/warn about duplicate order#s
+    segs_nested = dict()
+    for k, v in tb_name_rules.items():
+        if v["order"] > 0:
+            s2 = {v["order"]: {k:v}}
+            segs_nested.update(s2)
+
+    od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
+
+    # now iterate od_segs_nested dict
+    tb_name_template = ""
+    for k, v in od_segs_nested.items():
+        for k1, v1 in v.items():
+            tb_name_template += v1["sep_left"] + "[" + k1 + "]" + v1["abbrev"] + v1["sep_r"]
+        # print("==>", tb_name_template)
+
+    return tb_name_template
 
 #####################################################################
