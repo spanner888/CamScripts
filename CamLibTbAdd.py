@@ -27,17 +27,18 @@ else:
 
 ###################################################################
 def getDefaultShapes():
-	# will FAIL if user never created ToolBit from a shape!!
-	shapeDir = Path.Preferences.lastPathToolShape()
-	shapeDir = shapeDir.replace("/", os.path.sep)
-	# Make sure the path ends with a separator
-	if shapeDir[-1] != os.path.sep:
-		shapeDir += os.path.sep
+    # FIXME will FAIL if user never created ToolBit from a shape!!
+    # FIXME also fails if NO SHAPES ...ie FC has not copied to user dir
+    shapeDir = Path.Preferences.lastPathToolShape()
+    shapeDir = shapeDir.replace("/", os.path.sep)
+    # Make sure the path ends with a separator
+    if shapeDir[-1] != os.path.sep:
+        shapeDir += os.path.sep
 
-	# ATM only gets default FreeCAD Tools/Shape dir, not your User Tools/Shape dir.
-	shape_names = [os.path.splitext(f)[0] for f in os.listdir(shapeDir)]
+    # ATM only gets default FreeCAD Tools/Shape dir, not your User Tools/Shape dir.
+    shape_names = [os.path.splitext(f)[0] for f in os.listdir(shapeDir)]
 
-	return shapeDir, shape_names
+    return shapeDir, shape_names
 
 
 def getToolShapeProps(shape_name_dir, shape_name):
@@ -77,7 +78,7 @@ def getToolShapeProps(shape_name_dir, shape_name):
                 return attrs
 
 
-def getAllToolShapes(shape_name_dir, shape_names):
+def getAllToolShapeProps(shape_name_dir, shape_names):
     props = dict()
     attrs = dict()
     idx=0
@@ -240,10 +241,12 @@ def processUserToolInput(tb_name_rules,
     else:
         print("Tool diameter must be number greater than zero.")
 
-    print("...finished.\n")
+    # print("...finished.\n")
 
 
 def create_tb_name(tb_name_rules, tb_nr, tool_props):
+    q = FreeCAD.Units.Quantity
+
     # TODO cope/warn about duplicate order#s
     segs_nested = dict()
     for k, v in tb_name_rules.items():
@@ -261,18 +264,31 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
         for k1, v1 in v.items():
             if v1["ptype"] == "TbShape":
                 tp = tool_props["parameter"]
-                # what if that prop not exist???
-                tb_prop_val = tp[k1]
+                # FIXME what if that prop not exist???
+                # TEST for str props - eg Material, SpindleDirection
+                # test units, or add another control in in tb_name_rules??
+                #   ++ float for all EXCEPT int for Flutes ?others?
+                tb_prop_val = q(tp[k1]).Value
             elif v1["ptype"] == "TbAttributes":
+                # Chipload is only number attribute, others are text
                 ta = tool_props["attribute"]
-                # what if that prop not exist???
-                tb_prop_val = ta[k1]
+                if ta == "Chipload":
+                    # what if that prop not exist???
+                    tb_prop_val = q(ta[k1]).Value
+                else:
+                    # what if that prop not exist???
+                    tb_prop_val = q(ta[k1]).toStr()
+
             elif v1["ptype"] == "added_macro_prop":
                 # if k == 'shapename' or k = 'base_name':
                 tb_prop_val = k
             else:
                 print("ToolBit property type is not 'TbShape' \
                     or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
+
+            # TODO TODO really showcase TB sev Shape types & sev NAME RULES
+                        ## maybe auto create with Range of Flutes....
+                        ## ++bulk import
 
             # FIXME cater for None??
             # FIXME what is the _3 at then end OF EVERY TB NAME???? eg: _9.0 mmD_4F_3
