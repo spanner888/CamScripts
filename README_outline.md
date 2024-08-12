@@ -1,3 +1,11 @@
+TWO sep release 1x end-end as EXAMPLE ...but note can use toolbits from....
+sep MAJOR = bulk create/import...
+    >>>ESP when "last" effort got 20K views...but sidetracked from the TB import/create!!!
+...so split all the files apart....
+    START WITH same repo...but dir for each
+    BECASUE in GH/FC macros ONExdir .....???? try/maybe
+
+
 study MD features+syntax - refine this!!
 
 FIXME: numbering for "2. Set FreeCAD macro directory."

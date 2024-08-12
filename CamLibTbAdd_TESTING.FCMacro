@@ -103,3 +103,5 @@ for data_dict in data_list:
   # ie tool/shape type => property set wich attempt to read...
   # ID some mandatory for each type???
   # If prop NOT mandatory then need default val <> 0 can't have 0 mm for Tool!!!
+  # TODO TODO TODO TODO create easy way USER create EACH default TB type
+  #   eg 1x py file/type????
