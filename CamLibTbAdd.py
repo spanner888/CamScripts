@@ -276,13 +276,13 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
             elif v1["ptype"] == "TbAttributes":
                 # Chipload  & SpindlePower=Float, Flutes=Integer, Material & SpindleDirection=text
                 ta = tool_props["attribute"]
-                if ta == "Chipload" or ta == "SpindlePower":
+                if k1 == "Chipload" or k1 == "SpindlePower":
                     try:
                         tb_prop_val = q(ta[k1]).Value
                     except KeyError:
                         # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                         pass
-                elif ta == "Flutes":
+                elif k1 == "Flutes":
                     try:
                         tb_prop_val = round(q(ta[k1]).Value)
                     except KeyError:
