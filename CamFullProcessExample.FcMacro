@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# TEST code on current stable & doc in macro supported ver info
-
 # TODO licence/macro info
+
+# TEST code on current stable & doc in macro supported ver info
+# FIXME test for odd props like in vbits, ballend etc
 
 # process FIXME, TODO, TEST ++++ ++ sanity
 
@@ -19,7 +20,7 @@
 # Adding to Addon Mgr   https://wiki.freecad.org/Add_Workbench_to_Addon_Manager
 
 
-# TODO TODO TODO CLEARLY MARK EACH EXAMOPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
+# TODO TODO TODO CLEARLY MARK EACH EXAMPLE START IN BOTH FILES **and** PRINT "EXAMPLE#+DESC" HEADER IN OUTPUT!!!!
 # TODO chk order correct & no steps missing...SHORTEN???
 #    USE existing Tool Library tools ...CAM Toobits & add to current/last used
 #       all code actually to test the code that does above in bulk<<<SEP promotion of this!!!

@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+
+import CamLibTbAdd
+from importlib import reload
+reload(CamLibTbAdd)
+
+# FIXME test for odd props like in vbits, ballend etc
+
+# Examples of many Toobits, with a specified range of diameters.
+# Example rules to define how a TB name is created are included from seperate files.
+# The rules are not complicated, # but they are long
+# and so seperated into seperate files that require importing as shown.
+
+print("Example 5. User boboxx Example: 2F-D6.35-L31.076, FC issue:12823")
+import naming_rules.boboxx_naming_rules as boboxx
+CamLibTbAdd.processUserToolInput(boboxx.boboxx_naming_rules,
+                                 shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 8.2,
+                                dia_max = 9.0,
+                                dia_inc = 0.2)
+print("\t...Example 5 finished.\n")
+# -----------------------------------------------------------------------
+
+import naming_rules.test_mixed as rules
+print("Example 6. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
+print("testing Float/int/str TbAttributes, ie Chipload, Flutes, Material, SpindleDirection, SpindlePower")
+#   But only If BOTH dia_max & dia_inc are greater than zero,
+#            Else: ONLY create ONE TB of this dia in current library.
+CamLibTbAdd.processUserToolInput(rules.tb_naming_rules,
+                                 shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 8.2,
+                                dia_max = 9.0,
+                                dia_inc = 0.2)
+print("\t...Example 6 finished.\n")
+# -----------------------------------------------------------------------
