@@ -295,8 +295,10 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                         # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                         pass
             elif v1["ptype"] == "added_macro_prop":
-                # if k == 'shapename' or k = 'base_name':
-                tb_prop_val = k
+                if k == 'shapename':
+                    tb_prop_val = tool_props['shape']
+                if k == 'base_name':
+                    tb_prop_val = tool_props['name']
             else:
                 print("ToolBit property type is not 'TbShape' \
                     or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
