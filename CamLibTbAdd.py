@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # TODO licence/macro info
 
 import os
@@ -128,10 +130,10 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
-            print("Adding ToolBit Shape: {} Name: {}, #{}, Dia: {}"
-                  .format(shape_name, tool_props['name'],
-                          tb_nr,
-                          new_tool_params['Diameter']
+            print("Adding ToolBit Shape: {}, Dia: {} Name: {}"
+                  .format(shape_name,
+                          new_tool_params['Diameter'],
+                          tool_props['name']
                           )
                 )
             toolBitNew(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
@@ -243,10 +245,15 @@ def processUserToolInput(tb_name_rules,
 
     # print("...finished.\n")
 
-
+# Use rules with "order" > 0 and some tool_props
+# to join segment data & seperators to create each tb name.
+# TODO tb_nr should be redundant now - REMOVE.
 def create_tb_name(tb_name_rules, tb_nr, tool_props):
     q = FreeCAD.Units.Quantity
-
+    tp = tool_props["parameter"]
+    # Save TB dia to calc TB# later
+    t_dia = q(tp["Diameter"]).Value
+    
     # TODO cope/warn about duplicate order#s
     segs_nested = dict()
     for k, v in tb_name_rules.items():
@@ -304,6 +311,11 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                     tb_prop_val = tool_props['shape']
                 if keyname == 'base_name':
                     tb_prop_val = tool_props['name']
+                if keyname == "t_auto_number":
+                    base_nr = v1["tb_base_nr"]
+                    dia_multiplier = v1["tb_dia_mult"]
+                    #TODO change or alt approach: change base_nr to be # that is prepended instead of added, then can insert seperator to highlight dia.
+                    tb_prop_val = base_nr + dia_multiplier * t_dia
             else:
                 print("ToolBit property type is not 'TbShape' \
                     or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
@@ -323,7 +335,7 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
 
             # only add l/r seperators of value exists
             if len(str(tb_prop_val)) > 0:
-                tb_name_template += v1["sep_left"] + str(tb_prop_val) + v1["abbrev"] + v1["sep_r"]
+                tb_name_template += v1["sep_left"] + v1["abbrev_left"] + str(tb_prop_val) + v1["abbrev_r"] + v1["sep_r"]
             # print("\t\t==>", k1, tb_name_template)
 
     return tb_name_template

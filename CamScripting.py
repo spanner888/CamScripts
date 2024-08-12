@@ -238,7 +238,6 @@ def get_mat_machinability(doc, mat_obj, printing=False):
         if "SurfaceSpeedHSS" in props:
             m_ss_hss = q(props["SurfaceSpeedHSS"]).UserString
             found_machinining_prop = True
-            # SurfaceSpeedHSS = q(props["SurfaceSpeedHSS"]).Value
             SurfaceSpeedHSS = q(props["SurfaceSpeedHSS"])
             if printing:
                 print("\tSurfaceSpeedHSS:     ", m_ss_hss)
@@ -300,6 +299,7 @@ def saveSanityreport(job, sanity_report):
     print("Sanity check report written to: {}\n".format(sanity_report))
 
     webbrowser.open_new_tab(sanity_report)
+
 
 def postProcSaveGcode(postProcessorOutputFile):
     users_current_policy = Path.Preferences.defaultOutputPolicy()
