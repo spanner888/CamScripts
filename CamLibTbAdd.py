@@ -17,7 +17,7 @@ from PySide.QtCore import Qt
 import numpy as np
 
 import collections
-
+import csv
 
 
 if False:
@@ -340,4 +340,69 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
 
     return tb_name_template
 
+
+
+# --- csv -----------------------------
+# From user imm https://forum.freecadweb.org/viewtopic.php?f=15&t=59856&start=50
+# -- any numeric value that can be converted to float is converted to float.
+
+def fitem(item):
+    item.strip()
+    try:
+        item = float(item)
+    except ValueError:
+        pass
+    return item
+
+# -- takes a header list and row list converts it into a dict.
+# Numeric values converted to float in the row list wherever possible.
+def row_convert(h, a):
+    b = []
+    for x in a:
+        b.append(fitem(x))
+    k = iter(h)
+    it = iter(b)
+    res_dct = dict(zip(k, it))
+    return res_dct
+
+def load_data(dataFile, print_csv_file_names=False):
+    import os
+    p = os.path.dirname(__file__)
+    filename = p + '/' + dataFile
+
+    if print_csv_file_names:
+        print('load_data csv file: ', filename)
+
+    data_dict = []
+
+    # https://stackoverflow.com/questions/12468179/unicodedecodeerror-utf8-codec-cant-decode-byte-0x9c
+    # To fix error on windows 7, UnicodeDecodeError: 'charmap' codec can't decode byte 0x9d in position 3701:
+    # character maps to <undefined>
+    import codecs
+    with codecs.open(filename, 'r', encoding='utf-8', errors='ignore') as csvin:
+        # with open(filename, 'r') as csvin:
+        alist = list(csv.reader(csvin))
+        firstLine = True
+        for a in alist:
+            if firstLine:
+                # a  ['# -- null line below --'] 1
+                # a =  [] 0
+                # a =  ['# -- whitespace line below --'] 1
+                # a =  ['   '] 1
+                # a =  ['# -- comments here --'] 1
+                # a =  ['# Diameters across top'] 1
+                # counts are of # items in this row
+                if len(a) == 0: continue  # noqa: E701
+                if len(a) == 1:
+                    continue  # noqa: E701
+                else:
+                    h = a  # becomes header LIST
+
+                    firstLine = False
+            else:
+                data_dict.append(row_convert(h, a))
+
+    return data_dict
+
 #####################################################################
+
