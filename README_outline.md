@@ -4,7 +4,7 @@ sep MAJOR = bulk create/import...
 ...so split all the files apart....
     START WITH same repo...but dir for each
     BECASUE in GH/FC macros ONExdir .....???? try/maybe
-
+BUT = MORE annoy to user as FC macro needs dir change........
 
 study MD features+syntax - refine this!!
 
@@ -32,7 +32,7 @@ Scripting all features of FreeCAD CAM for a complete end to end process:
 
 * postprocess Job to create and save gcode
 
-All of the ToolBits were created and added to the Library shown in the left hand image below by `CamLibTbAddExample.FCMacro` and every item in the right hand image was created by `CamFullProcessExample.FcMacro`. An extensive number of properties were also set.
+All of the ToolBits were created and added to the Library shown in the left hand image below by `CamTbAddExample.FCMacro` and every item in the right hand image was created by `CamFullProcessExample.FcMacro`. An extensive number of properties were also set.
 
 ++anotyher file???
 +++++++ the TB bulk creation is highly usefull in creating {??or importing??} TB and with a bit of community testing & refinement be ready for serious use. This tool only requires you to specify the tool or range of tool properties you need and any naming rules. There are a lot of settings, so this needs care and it would be safer to create and activate a test CAM Tool Table in your current Library before executing this script.
@@ -64,7 +64,7 @@ after in addon repo - addon manager...
 Manual - wiki link
 
 
-`CamLibTbAddExample.FCMacro`
+`CamTbAddExample.FCMacro`
 
 `CamFullProcessExample.FcMacro`.
 
@@ -86,13 +86,15 @@ Because the scripts and library files are supplied in a directory, the FreeCAD m
 
 If after setting the Macro directory and running one of the macros, you get an error in the report pane, like that shown below:
 
+
+>>>UPDATE BELOW DUE TO FILE RENAMES!!!!!!!!!!!!!!!1
 ```
     .....
     shiboken2/files.dir/shibokensupport/feature.py", line 139, in _import
     return original_import(name, *args, **kwarg
 At present not all ToolBit properties are return when using Example 4. s)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    <class 'ModuleNotFoundError'>: No module named 'CamLibTbAdd'
+    <class 'ModuleNotFoundError'>: No module named 'CamTbAddLib'
 ```
 
 Then try restarting FreeCAD to fix the issue.

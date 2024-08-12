@@ -77,19 +77,27 @@ def getToolShapeProps(shape_name_dir, shape_name):
                     }
 
                 FreeCAD.closeDocument(doc.Name)
-                return attrs
+                return shape_name, attrs
 
 
 def getAllToolShapeProps(shape_name_dir, shape_names):
     props = dict()
     attrs = dict()
-    idx=0
     for i, fname in enumerate(shape_names):
         # FreeCAD.Console.PrintMessage("fname: {}\tshape_name_dir:{}\n".format(fname, shape_name_dir))
-        props = getToolShapeProps(shape_name_dir, fname)
-        attrs.update({idx: props})
-        idx += 1
+        shape_name, props = getToolShapeProps(shape_name_dir, fname)
+        attrs.update({shape_name: props})
     return attrs
+
+
+# Get all users available shape_names & all properties of each shape.
+def getAllAvailUserShapeDetails():
+    shapeDir, shape_names = getDefaultShapes()
+
+    # Get all the shape properties and other attributes for each shpe.
+    attrs = getAllToolShapeProps(shapeDir, shape_names)
+
+    return shape_names, attrs
 
 
 def full_path(filename):
@@ -206,7 +214,7 @@ def processUserToolInput(tb_name_rules,
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
 
-    # FIXME user should not be editing this here ...should be in euser example code!!
+    # FIXME user should not be editing this here ...should be in user example code!!
     # Need to create dict for EACH known prop names FOR EVERY SHAPE TYPE that will be created.
     # NB 'name' is set to my default naming scheme for a SINGLE tool of dia (see about a dozen lines up)
     # Also this dictionary matches that used by FreeCAD for ToolBit
@@ -354,6 +362,7 @@ def fitem(item):
         pass
     return item
 
+
 # -- takes a header list and row list converts it into a dict.
 # Numeric values converted to float in the row list wherever possible.
 def row_convert(h, a):
@@ -365,6 +374,10 @@ def row_convert(h, a):
     res_dct = dict(zip(k, it))
     return res_dct
 
+
+# Uses header row as dictionary keys & each same row-column cell as values.
+# Ignores empty(ish) rows at top of file
+# Returns list of dictionaries for each row with "col-name: cell-value" pairs
 def load_data(dataFile, print_csv_file_names=False):
     import os
     p = os.path.dirname(__file__)
@@ -403,6 +416,6 @@ def load_data(dataFile, print_csv_file_names=False):
                 data_dict.append(row_convert(h, a))
 
     return data_dict
-
+# -------------------------------------
 #####################################################################
 

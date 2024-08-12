@@ -39,8 +39,8 @@ import Materials
 # Extending JobUtils Lib examples to create complete end-end Job
 # allows edited library updates, without close/reopen FC.
 from importlib import reload
-import CamScripting
-reload(CamScripting)
+import CamScriptingLib
+reload(CamScriptingLib)
 
 # Scripting Path workbench  https://forum.freecad.org/viewtopic.php?t=33328
 import JobUtils
@@ -56,7 +56,7 @@ print_machinability = False     # Odd size so less likely to clash with existing
 
 # ---------------------------------------------------------
 # JOB properties & defaults
-j_props = CamScripting.job_props()
+j_props = CamScriptingLib.job_props()
 
 j_props.jobname = "Job_ju_created"
 j_props.postProcessor = "grbl"
@@ -81,7 +81,7 @@ sanity_report = '/home/spanner888/Documents/cam_sanity/sanity_auto.html'
 # JOB-TC & TB properties/defaults.
 # Add one set of props for each TC/TB
 # ---------------------------------------------------------
-tcProps1 = CamScripting.tc_props()
+tcProps1 = CamScriptingLib.tc_props()
 
 tcProps1.bitName = "880_em"
 # tcProps2.lib_tool_nr =        # Adding this TC by name, not number
@@ -92,7 +92,7 @@ tcProps1.vfeed = '100 mm/min'
 tcProps1.spindleSpeed = 5000.0
 # ---------------------------------------------------------
 # ---------------------------------------------------------
-tcProps2 = CamScripting.tc_props()
+tcProps2 = CamScriptingLib.tc_props()
 
 tcProps2.bitName = ""
 tcProps2.lib_tool_nr = 20840
@@ -125,34 +125,34 @@ def printExPrefix(exampleNr, prefix="", ExampleDesc="", topRow=False, bottomRow=
 #---------------------------------------------------------
 ExampleDesc="New doc & Job, optionaly clear report/python panes.\n\t\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
-doc, job = CamScripting.initDocJob(j_props, clear_console_pane, clear_report_pane)
+doc, job = CamScriptingLib.initDocJob(j_props, clear_console_pane, clear_report_pane)
 
 ExampleDesc="Add profile operation to specified job.\n\t\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=False, bottomRow=False)
-profile_op = CamScripting.add_profile_op(job)
+profile_op = CamScriptingLib.add_profile_op(job)
 
 ExampleDesc="Add profile operation & Boundary Dressup to specified job.\n\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=False, bottomRow=False)
 # NOTE: Dia of TC MUST position tool INSIDE the limiting boundary, else no gcode nor message!!
 # SEE: JobUtil test_01(): xNeg": 4.0,  # Ensure 2.5mm radius of default 5mm bit ...ditto yNeg prop.
 # Can see boundary visualy in FC by making Stock under DressupPathBoundary op visible!!
-profile_op1, dressup1 = CamScripting.add_profile_op_with_boundary_dressup(job)
+profile_op1, dressup1 = CamScriptingLib.add_profile_op_with_boundary_dressup(job)
 # ---------------------------------------------------------
 
 
 # ---------------------------------------------------------
 ExampleDesc="Add ToolControllers to Job-Tools & desired Operation.\n\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
-toolNames = CamScripting.printAvailableLibraryTools()
+toolNames = CamScriptingLib.printAvailableLibraryTools()
 
 # Add Tools into Job as ToolControllers AFTER ALL operations,
 #   to avoid script pausing for user input to select desired ToolController.
 # This also reduces chance of error, as above sets SAME TC for ALL operations.
-tc1 = CamScripting.addTc(job, tcProps1, byNr=False)
+tc1 = CamScriptingLib.addTc(job, tcProps1, byNr=False)
 print("\tSet profile_op.ToolController to above TC+user scripted settings")
 profile_op.ToolController = tc1
 
-tc2 = CamScripting.addTc(job, tcProps2, byNr=True)
+tc2 = CamScriptingLib.addTc(job, tcProps2, byNr=True)
 print("\tSet profile_op1.ToolController to above TC+user scripted settings")
 profile_op1.ToolController = tc2
 
@@ -163,7 +163,7 @@ JobUtils.FreeCAD.ActiveDocument.recompute()
 
 # ---------------------------------------------------------
 # set some example printing vars & print header for RPM calc example
-prefix = "CamScripting:"
+prefix = "CamScriptingLib:"
 ExampleDesc="Machinability & SpindleSpeed RPM calculation:\n\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
 
@@ -172,7 +172,7 @@ stk = doc.getObject("Stock")
 
 # Get HSS & Carbide Surface Speeds.
 # Note: Not tested with Material that has no SurfaceSpeedCarbide and SurfaceSpeedHSS
-SurfaceSpeedCarbide, SurfaceSpeedHSS = CamScripting.get_mat_machinability(doc, stk, printing=print_machinability)
+SurfaceSpeedCarbide, SurfaceSpeedHSS = CamScriptingLib.get_mat_machinability(doc, stk, printing=print_machinability)
 
 print("Retrieved Stock Material SurfaceSpeeds & tc1 Diameter\n\
 \t\t\tin common base Units of mm/s & mm, to Calculate cutting RPM")
@@ -183,7 +183,7 @@ print("\t\tHSS: {}, CBD: {}, TC1 dia: {}"
 # ONLY for SurfaceSpeed TYPE that matches Tool material type
 # ATM Tool material type retreived from ToolController.Tool.Material
 # Does not yet apply a new Material to Tools and then use that material type.
-rpm = CamScripting.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
+rpm = CamScriptingLib.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
 # ---------------------------------------------------------
 
 
@@ -193,9 +193,9 @@ rpm = CamScripting.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
 ExampleDesc="Create & save: CAM Sanity check report & Postprocessed gcode.\n\t\t"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
 
-CamScripting.saveSanityreport(job, sanity_report)
+CamScriptingLib.saveSanityreport(job, sanity_report)
 
-CamScripting.postProcSaveGcode(job.PostProcessorOutputFile)
+CamScriptingLib.postProcSaveGcode(job.PostProcessorOutputFile)
 
 # print trailing "line" to complete block outline of this example.
 print("-"*80)

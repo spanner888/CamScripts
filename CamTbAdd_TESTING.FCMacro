@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import CamLibTbAdd
+import CamTbAddLib
 from importlib import reload
-reload(CamLibTbAdd)
+reload(CamTbAddLib)
 
 
 
@@ -16,7 +16,7 @@ if 1 == 2:
 
   print("Example 5. User boboxx Example: 2F-D6.35-L31.076, FC issue:12823")
   import naming_rules.boboxx_naming_rules as boboxx
-  CamLibTbAdd.processUserToolInput(boboxx.boboxx_naming_rules,
+  CamTbAddLib.processUserToolInput(boboxx.boboxx_naming_rules,
                                   shape_name = "endmill",
                                   tb_base_name = "em",
                                   tb_base_nr = 20000,
@@ -32,7 +32,7 @@ if 1 == 2:
   print("testing Float/int/str TbAttributes, ie Chipload, Flutes, Material, SpindleDirection, SpindlePower")
   #   But only If BOTH dia_max & dia_inc are greater than zero,
   #            Else: ONLY create ONE TB of this dia in current library.
-  CamLibTbAdd.processUserToolInput(rules.tb_naming_rules,
+  CamTbAddLib.processUserToolInput(rules.tb_naming_rules,
                                   shape_name = "endmill",
                                   tb_base_name = "em",
                                   tb_base_nr = 20000,
@@ -76,9 +76,9 @@ if 1 == 2:
 
 
   # v-bit works but TODO is get/use std props ....
-  # ties in with fix to move the endmill strd props OUT of CamLibTbAdd.py ~~#215  endmill_tool_props
+  # ties in with fix to move the endmill strd props OUT of CamTbAddLib.py ~~#215  endmill_tool_props
   # TODO ALSO need naming rules to show off!!!
-  CamLibTbAdd.processUserToolInput(rules.tb_naming_rules,
+  CamTbAddLib.processUserToolInput(rules.tb_naming_rules,
                                   shape_name = "v-bit",
                                   tb_base_name = "em",
                                   tb_base_nr = 20000,
@@ -94,7 +94,7 @@ if 1 == 2:
 file1 = "cutting_tool_data/cuttingtools1.csv"
 data_dict = dict()
 # returns a LIST of dicts of each row
-data_list = CamLibTbAdd.load_data(file1)
+data_list = CamTbAddLib.load_data(file1)
 for data_dict in data_list:
   # need id ALL desired FC props AND cater if missing!!!
   print(data_dict['shape'], data_dict['Diameter'], data_dict['ShankDiameter'], data_dict['name'])
