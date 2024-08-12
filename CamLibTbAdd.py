@@ -259,8 +259,8 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
 
     # now iterate od_segs_nested dict
     tb_name_template = ""
-    tb_prop_val = None
     for k, v in od_segs_nested.items():
+        tb_prop_val = ""
         for k1, v1 in v.items():
             if v1["ptype"] == "TbShape":
                 tp = tool_props["parameter"]
@@ -295,9 +295,14 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                         # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                         pass
             elif v1["ptype"] == "added_macro_prop":
-                if k == 'shapename':
+                try:
+                    keyname = k1
+                except KeyError:
+                    # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                    pass
+                if keyname == 'shapename':
                     tb_prop_val = tool_props['shape']
-                if k == 'base_name':
+                if keyname == 'base_name':
                     tb_prop_val = tool_props['name']
             else:
                 print("ToolBit property type is not 'TbShape' \
@@ -315,8 +320,11 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
             # TODO
             # if the order# =1 SKIP adding v1["sep_left"]
             #     unless prepending my tb_nr
-            tb_name_template += v1["sep_left"] + str(tb_prop_val) + v1["abbrev"] + v1["sep_r"]
-    # print("==>", tb_name_template)
+
+            # only add l/r seperators of value exists
+            if len(str(tb_prop_val)) > 0:
+                tb_name_template += v1["sep_left"] + str(tb_prop_val) + v1["abbrev"] + v1["sep_r"]
+            # print("\t\t==>", k1, tb_name_template)
 
     return tb_name_template
 
