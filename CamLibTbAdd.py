@@ -266,19 +266,34 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                 tp = tool_props["parameter"]
                 # FIXME what if that prop not exist???
                 # TEST for str props - eg Material, SpindleDirection
-                # test units, or add another control in in tb_name_rules??
+                # test units, or add another control in in tb_name_rules?? <<< do as # digits on RHS of dec point. 0=int, -1= str???
                 #   ++ float for all EXCEPT int for Flutes ?others?
-                tb_prop_val = q(tp[k1]).Value
+                try:
+                    tb_prop_val = q(tp[k1]).Value
+                except KeyError:
+                    # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                    pass
             elif v1["ptype"] == "TbAttributes":
-                # Chipload is only number attribute, others are text
+                # Chipload  & SpindlePower=Float, Flutes=Integer, Material & SpindleDirection=text
                 ta = tool_props["attribute"]
-                if ta == "Chipload":
-                    # what if that prop not exist???
-                    tb_prop_val = q(ta[k1]).Value
+                if ta == "Chipload" or ta == "SpindlePower":
+                    try:
+                        tb_prop_val = q(ta[k1]).Value
+                    except KeyError:
+                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                        pass
+                elif ta == "Flutes":
+                    try:
+                        tb_prop_val = round(q(ta[k1]).Value)
+                    except KeyError:
+                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                        pass
                 else:
-                    # what if that prop not exist???
-                    tb_prop_val = q(ta[k1]).toStr()
-
+                    try:
+                        tb_prop_val = ta[k1]
+                    except KeyError:
+                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                        pass
             elif v1["ptype"] == "added_macro_prop":
                 # if k == 'shapename' or k = 'base_name':
                 tb_prop_val = k
@@ -290,8 +305,8 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                         ## maybe auto create with Range of Flutes....
                         ## ++bulk import
 
-            # FIXME cater for None??
             # FIXME what is the _3 at then end OF EVERY TB NAME???? eg: _9.0 mmD_4F_3
+            # FIXME cater for None?? ie have default rules dict
             # FIXME and the space between dia# & 'mm'
             # TODO add My numbering tb_nr <<is it already calc from dia etc here???
             #       or only use tb_nr for the Library T#??
