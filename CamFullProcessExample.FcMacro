@@ -6,6 +6,15 @@
 # TEST code on current stable & doc in macro supported ver info
 # FIXME test for odd props like in vbits, ballend etc
 
+
+
+
+# TODO TODO make sure create TBs required by: CamFullProcessExample.FcMacro!!!!!!!!
+#   make that a create ONCE only - so CHECK if exist first IN CURRENT LIB
+# DO /create from CamFullProcessExample ...to extend the end-end features?
+
+
+
 # process FIXME, TODO, TEST ++++ ++ sanity
 
 # TODO Package_Metadata AND in each file??

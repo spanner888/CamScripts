@@ -82,12 +82,12 @@ def getToolShapeProps(shape_name_dir, shape_name):
 
 def getAllToolShapeProps(shape_name_dir, shape_names):
     props = dict()
-    attrs = dict()
+    all_shape_attrs = dict()
     for i, fname in enumerate(shape_names):
         # FreeCAD.Console.PrintMessage("fname: {}\tshape_name_dir:{}\n".format(fname, shape_name_dir))
         shape_name, props = getToolShapeProps(shape_name_dir, fname)
-        attrs.update({shape_name: props})
-    return attrs
+        all_shape_attrs.update({shape_name: props})
+    return all_shape_attrs
 
 
 # Get all users available shape_names & all properties of each shape.
@@ -95,9 +95,9 @@ def getAllAvailUserShapeDetails():
     shapeDir, shape_names = getDefaultShapes()
 
     # Get all the shape properties and other attributes for each shpe.
-    attrs = getAllToolShapeProps(shapeDir, shape_names)
+    all_shape_attrs = getAllToolShapeProps(shapeDir, shape_names)
 
-    return shape_names, attrs
+    return shape_names, all_shape_attrs
 
 
 def full_path(filename):
@@ -137,9 +137,33 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
         #  TODO : get shapes ...then again????
         # for FC code...need use real/existing shape OK
         # is here supposed to merge users shape props with tempale/existing shape??
-
+        # shoulD be ABLE TO MOVE THIS TO top THIS MODULES - NO NEED REREAD EVERY TIME
         if shape_full_path_fname_as_path.is_file():
+            # KISS BEGINNING remove above file check as well???
             shape_name, shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
+            shape_full_path_fname_attrs_NEW = all_shape_attrs[shape_name]
+
+            print(shape_full_path_fname_attrs)
+            print()
+            print(shape_full_path_fname_attrs_NEW)
+            print()
+            # if shape_full_path_fname_attrs == shape_full_path_fname_attrs_NEW:
+            #     print("yea the SAME")
+            # else:
+            #     print("o oh!!!!!")
+            # print()
+            #
+            # for k, v in shape_full_path_fname_attrs:
+            #     if k in shape_full_path_fname_attrs_NEW:
+            #         if v == shape_full_path_fname_attrs_NEW[k]:
+            #             print(k, "BOTH values = ", v)
+            #         else:
+            #             print(k, "values DIFFER ", v, shape_full_path_fname_attrs_NEW[k])
+            #
+            #     else:
+            #         print("Key {} not present in new attrs")
+
+            print("TODO swap order of vars to check presence in New  & Not in old")
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
@@ -219,7 +243,7 @@ def processUserToolInput(tb_name_rules,
         doc = FreeCAD.newDocument()
    
     # update tool_props with dia, tb_base_name
-    tool_props = attrs[shape_name]
+    tool_props = all_shape_attrs[shape_name]
     tool_props["name"] = tb_base_name
 
     tp = tool_props["parameter"] 
@@ -417,4 +441,21 @@ def load_data(dataFile, print_csv_file_names=False):
 
 # Init these when this Library imported, so only need to do slow-ish open/close files once
 # BEWare IF SHAPE FILES CHANGE without another re/import!!!!
-shape_names, attrs = getAllAvailUserShapeDetails()
+shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
+print("imported 'CamTbAddLib' and loaded all users Tool shape properties")
+
+....SO below is debug trying work out how all_shape_attrs has DIFF content way above @ LINE: # KISS.......
+    seems like user setting s for tb to create
+
+print(all_shape_attrs)
+print()
+for k, v in all_shape_attrs.items():
+    print(k, v["name"], "\t\t", end="")
+    tp = v["parameter"]
+    print(tp)
+    for k1, v1 in tp.items():
+        print(k1,v1)
+    ta = v["attribute"]
+    for k1, v1 in ta.items():
+        print(k1,v1)
+

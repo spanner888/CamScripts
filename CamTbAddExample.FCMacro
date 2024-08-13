@@ -6,44 +6,43 @@
 # YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
 
 
-# TODO TODO make sure create TBs required by: CamFullProcessExample.FcMacro!!!!!!!!
-
-#watch for erorr below ...prob another z400 only s/c issue:
-#14:31:49  Adding ToolBit Shape: probe, Dia: 3.125 Name: _23125.0_3.125D_probe_example
-#14:31:49  Sketch: Solving the sketch failed
-
-# FIXME - now v slow move BOTH get all shapes to once only sorta init???
-# ...slow as opens/closes EVERY shape file!!
-
-
 # allow edited library updates, without close/reopen FC.
 from importlib import reload
 import CamTbAddLib
 reload(CamTbAddLib)
 
 # Code derived from or inspired by:
-# FC toolbit-attributes.py & several more CAM-Path modules
-# FreeCAD forum users:
-#   onekk code: onekk_path_tools_2021-12-15
-#   russ/???
+# FC sliptonic: toolbit-attributes.py & several more CAM-Path modules
+# russ JobUtils and related FC changes
+# FreeCAD forum users & developers:
+#   russ/sliptonic/imm/onekk
 
-# DESC script to add many ToolBits into CAM Tool Library
+# DESC Create ToolBits from definitions or import csv. Add to CAM Tool Library
 # Details and how to use in README.MD
 
+# TEST all empty combos of tb_XXXX, missing Dia...=default??
 
-# FIXME ....make use of this a THIRD macro!!!!
+# FIXME ....make use of this a THIRD macro!!!!<<<<<MAYBE if do TWO x releases...then her gets good focus ++ now simpler demos
 #    so add defualt tb_naming_rules in the lib, ALL WITH ORDER#=0
 # Flexible rule based TB names auto derived from selected TB properties
 # FIXME TEST try duplicate EXACTLY: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
 #              so make boboxx_naming_rules
 
-
 # TODO 1
 #so current rules = for ALL poss props of ALL defualt
 #maybe change so ONE rule for EACH shape type..ONLY with rules for default props
-#in one file or 1xdir- 10 files
+#       >>>do in code for each prop in dflt_tb if not in dflt_rule del (or don't attrs.update({shape_name: props}))
+#   ...then print for manual saving .....if reformatting = pain instead just print WHAT TO DELETE
+#    make this bit of code report any mising props in rule as well!!!
 
+#in one file or 1xdir- 10 files
 #then ANOTHER reduce further to really common (name/dia/flutes/ShankDiameter, Length) ++ v specific()tip dia, tip angle...
+# say all_dflt_rules_shape_name
+# say trimmed/core_dflt_rules_shape_name
+# CHANGE ORDER: 
+# shape_name_ALL_dflt_rules
+# shape_name_minimal_dflt_rules
+# then my/example_shape_name.....
 
 
 # TODO somewhere {#278 of lib} notes on put default in lib so not here and SEP file to demo all this
@@ -269,89 +268,58 @@ tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
 # TODO  option to add TC-tb to JobX
 
 # Three examples on adding a Default, One or a list of Tools to current Library.
+# -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
 CamTbAddLib.processUserToolInput(tb_naming_rules)
 print("\t...Example 1 finished.\n")
-
-
-
-
-
-print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
-CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                shape_name = "endmill",
-                                tb_base_name = "em",
-                                tb_base_nr = 20000,
-                                tb_nr_inc = 100,
-                                dia = 6.35,
-                                dia_max = 0,
-                                dia_inc = 0)
-print("\t...Example 2 finished.\n")
-
-
-# TEST all empty combos of tb_XXXX, missing Dia...=default??
-
-print("Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
-#   But only If BOTH dia_max & dia_inc are greater than zero,
-#            Else: ONLY create ONE TB of this dia in current library.
-CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                shape_name = "endmill",
-                                tb_base_name = "em",
-                                tb_base_nr = 20000,
-                                tb_nr_inc = 100,
-                                dia = 8.2,
-                                dia_max = 9.0,
-                                dia_inc = 0.2)
-print("\t...Example 3 finished.\n")
 # -----------------------------------------------------------------------
 
-
-print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
-shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
-for s in shape_names:
+if 1==2:
+    # -----------------------------------------------------------------------
+    print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
     CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                    shape_name = s,
-                                    tb_base_name = s + "_example",
+                                    shape_name = "endmill",
+                                    tb_base_name = "em",
                                     tb_base_nr = 20000,
                                     tb_nr_inc = 100,
-                                    dia = 3.125,
+                                    dia = 6.35,
                                     dia_max = 0,
                                     dia_inc = 0)
-print("\t...Example 4 finished.\n")
-
-print("")
-print("CamTbAddLibExample.FcMacro finished.\n")
+    print("\t...Example 2 finished.\n")
+    # -----------------------------------------------------------------------
 
 
-
-# TODO delete
-# shape_names, attrs = CamTbAddLib.getAllAvailUserShapeDetails()
-# print(shape_names)
-# print()
-# print(attrs)
-###################################################################
-###################################################################
-# MY tool#s for each shape_name type: base# + 100*dia
-# Main libs be library.temptoollow contain may contain lots of drills etc,
-#   then on occasion MERGE different tools into NEW lib for specific purpose/design.
-#   ...& no tool number clashes forcing auto # change & interferring with #dia*100 scheme.
-# Default - either no#, or 1-50
-# Drills        10000   # 4x0 allows for dia up to 99.99 mm
-# Endmills      20000
-# Ballend       30000
-# Bullnose      40000
-# Chamfers      50000
-# PCB_mills     60000
-# Slitting Saws 70000
-# WoodRouters   90000
+    # -----------------------------------------------------------------------
+    print("Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
+    #   But only If BOTH dia_max & dia_inc are greater than zero,
+    #            Else: ONLY create ONE TB of this dia in current library.
+    CamTbAddLib.processUserToolInput(tb_naming_rules,
+                                    shape_name = "endmill",
+                                    tb_base_name = "em",
+                                    tb_base_nr = 20000,
+                                    tb_nr_inc = 100,
+                                    dia = 8.2,
+                                    dia_max = 9.0,
+                                    dia_inc = 0.2)
+    print("\t...Example 3 finished.\n")
+    # -----------------------------------------------------------------------
 
 
-# fyi ie not used here, but of interest: ShamanTcler CandL "Very BETA" code to:
-# "read CSV tool bit descriptions and create FreeCad JSON tool bit files.
-# In the "test" directory you will find:
-#     WhitesideBitData.xlsx, Data provided by the Whiteside Machine Company https://www.whitesiderouterbits.com/
-#     test2.csv the data above formatted as a csv file
-# "https://github.com/ShamanTcler/FreeCadToolBitImport
-# above code does not use any FreeCAD imports/code, it directly reads/writes json files.
-###################################################################
-###################################################################
+    # -----------------------------------------------------------------------
+    print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
+    shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
+    for s in shape_names:
+        CamTbAddLib.processUserToolInput(tb_naming_rules,
+                                        shape_name = s,
+                                        tb_base_name = s + "_example",
+                                        tb_base_nr = 20000,
+                                        tb_nr_inc = 100,
+                                        dia = 3.125,
+                                        dia_max = 3.5,
+                                        dia_inc = 0.125)
+    print("\t...Example 4 finished.\n")
+    # -----------------------------------------------------------------------
+
+    print("")
+    print("CamTbAddLibExample.FcMacro finished.\n")
+
