@@ -18,7 +18,7 @@ import numpy as np
 
 import collections
 import csv
-
+import copy
 
 if False:
     Path.Log.setLevel(Path.Log.Level.DEBUG, Path.Log.thisModule())
@@ -120,8 +120,8 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 
 
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
-    tp = tool_props["parameter"]
-
+    # tp = tool_props["parameter"]
+    global all_shape_attrs
     # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
     tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
     tool_props["name"] = tb_name
@@ -141,17 +141,25 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
         if shape_full_path_fname_as_path.is_file():
             # KISS BEGINNING remove above file check as well???
             shape_name, shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
+
+
+            # User settign have changed all_shape_attrs!!!!!
             shape_full_path_fname_attrs_NEW = all_shape_attrs[shape_name]
 
-            print(shape_full_path_fname_attrs)
             print()
-            print(shape_full_path_fname_attrs_NEW)
+            print(shape_full_path_fname_attrs_NEW, "addToolToCurrentLibrary: shape_full_path_fname_attrs_NEW")
+            # print_Tb(all_shape_attrs, msg="show imp again:")
             print()
-            # if shape_full_path_fname_attrs == shape_full_path_fname_attrs_NEW:
-            #     print("yea the SAME")
-            # else:
-            #     print("o oh!!!!!")
+
+            # print(shape_full_path_fname_attrs)
             # print()
+            # print(shape_full_path_fname_attrs_NEW)
+            print()
+            if shape_full_path_fname_attrs == shape_full_path_fname_attrs_NEW:
+                print("yea the SAME")
+            else:
+                print("o oh!!!!!")
+            print()
             #
             # for k, v in shape_full_path_fname_attrs:
             #     if k in shape_full_path_fname_attrs_NEW:
@@ -207,11 +215,9 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props,
                                 tb_name_rules):
-    params = tool_props["parameter"]
     for d in dia_list:
         tb_nr = int(tb_base_nr + tb_nr_inc * d)
-        params["Diameter"] = str(round(d, 3)) + " mm"
-        tool_props["parameter"].update(params)
+        tool_props["parameter"]["Diameter"] = str(round(d, 3)) + " mm"
 
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
@@ -242,13 +248,33 @@ def processUserToolInput(tb_name_rules,
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
    
-    # update tool_props with dia, tb_base_name
-    tool_props = all_shape_attrs[shape_name]
-    tool_props["name"] = tb_base_name
+    global all_shape_attrs
 
-    tp = tool_props["parameter"] 
-    tp["Diameter"] = dia
-    tool_props.update(tp)
+    # update tool_props with dia, tb_base_name
+    # tool_props = all_shape_attrs[shape_name]deepcopy()
+    tool_props_orig = dict()
+    tool_props = dict()
+    tool_props_orig = all_shape_attrs[shape_name]
+
+#     ok - fails as can't deep copt FC:Quantity
+#     tool_props = copy.deepcopy(tool_props_orig)
+#     so to see if issue here or afterwards somewhere
+#
+#     just create a HARDCODED tool_props and see what happens!!!
+    tool_props = {'shape': 'endmill.fcstd', 'name': 'default_em', 'parameter': {'CuttingEdgeHeight': 30.0 mm, 'Diameter': 8.12, 'Length': 50.0 mm, 'ShankDiameter': 3.0 mm}, 'attribute': {'Chipload': 0.0 mm, 'Flutes': 0, 'Material': 'HSS', 'SpindleDirection': 'Forward'}}
+
+
+    # tool_props = dict(tool_props_orig)
+
+    print(tool_props, "processUserToolInput: tool_props deepcopy, before update")
+    tool_props["name"] = tb_base_name
+    tool_props["parameter"]["Diameter"] = dia
+
+    print()
+    print(tool_props, "processUserToolInput: tool_props copy, AFTER update")
+    print()
+    print(all_shape_attrs[shape_name], "processUserToolInput: all_shape_attrs[shape_name]")
+    print()
 
     library = PathToolBitLibraryGui.ToolBitLibrary()
     workingdir = None
@@ -368,6 +394,20 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
     return tb_name_template
 
 
+def print_Tb(tb_attrs, msg="", shape=""):
+    if shape != "":
+        print(tb_attrs[shape])
+    else:
+        for k, v in tb_attrs.items():
+            print(msg, k, v["name"], "\t\t")
+            tp = v["parameter"]
+            print("\t", tp)
+            ta = v["attribute"]
+            print("\t", ta)
+            # for k1, v1 in tp.items():
+            #     print(k1,v1)
+            # for k1, v1 in ta.items():
+            #     print(k1,v1)
 
 # --- csv -----------------------------
 # From user imm https://forum.freecadweb.org/viewtopic.php?f=15&t=59856&start=50
@@ -444,18 +484,14 @@ def load_data(dataFile, print_csv_file_names=False):
 shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
 print("imported 'CamTbAddLib' and loaded all users Tool shape properties")
 
-....SO below is debug trying work out how all_shape_attrs has DIFF content way above @ LINE: # KISS.......
-    seems like user setting s for tb to create
+# >>>>>CHECK *HERE* that returned all_shape_attrs is ONLY the vals from the shape files
+# >>>>>>>>>>if not - why not!!!!!
+#
+# ....SO below is debug trying work out how all_shape_attrs has DIFF content way above @ LINE: # KISS.......
+#     seems like user setting s for tb to create
+#     THEN FINISH the changes @# KISS which meant speed up....
 
-print(all_shape_attrs)
+# print(all_shape_attrs)
+print_Tb(all_shape_attrs, "at import:")
 print()
-for k, v in all_shape_attrs.items():
-    print(k, v["name"], "\t\t", end="")
-    tp = v["parameter"]
-    print(tp)
-    for k1, v1 in tp.items():
-        print(k1,v1)
-    ta = v["attribute"]
-    for k1, v1 in ta.items():
-        print(k1,v1)
 
