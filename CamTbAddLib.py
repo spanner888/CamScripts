@@ -122,7 +122,7 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
     tp = tool_props["parameter"]
 
-    ### >>>    NOW USE THE NE TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
+    # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
     tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
     tool_props["name"] = tb_name
 
@@ -134,7 +134,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
         shape_full_path_fname = workingdir + "/Shape/" + shape_name + ".fcstd"
         shape_full_path_fname_as_path = osPath(shape_full_path_fname)
         if shape_full_path_fname_as_path.is_file():
-            shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
+            shape_name, shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
@@ -192,10 +192,10 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
 #TODO IMPORT at least csv
 def importToolCsv():
     # import expect need set EVERY tool data via
-    addToolToCurrentLibrary(endmill_tool_props, tb_nr, tb_name_rules)
+    addToolToCurrentLibrary(tool_props, tb_nr, tb_name_rules)
     # THEN set individ props, like #Flutes, shank dia, material........
 
-
+# TODO replace ALL tb_base_name var from default rules
 def processUserToolInput(tb_name_rules,
                          shape_name="endmill",
                          tb_base_name="default_em",
@@ -219,17 +219,21 @@ def processUserToolInput(tb_name_rules,
     # NB 'name' is set to my default naming scheme for a SINGLE tool of dia (see about a dozen lines up)
     # Also this dictionary matches that used by FreeCAD for ToolBit
 
+    # get all users shape file names & props
+    # TODO test is shape not exist
+    shape_names, attrs = getAllAvailUserShapeDetails()
+    tool_props = attrs[shape_name]
                                                             # 'name': str(int(round(tb_nr))) + tb_base_name,
-    endmill_tool_props = {'shape': shape_name + '.fcstd', 'name': tb_base_name,
-                                'parameter': {'CuttingEdgeHeight': '30.5 mm',
-                                                'Diameter': str(dia) + ' mm',
-                                                'Length': '50.0 mm',
-                                                'ShankDiameter': '6.0 mm'},
-                                'attribute': {'Chipload': '0.01 mm',
-                                                'Flutes': 4,
-                                                'Material': 'HSS',
-                                                'SpindleDirection': 'Forward'}
-                                }
+    # endmill_tool_props = {'shape': shape_name + '.fcstd', 'name': tb_base_name,
+    #                             'parameter': {'CuttingEdgeHeight': '30.5 mm',
+    #                                             'Diameter': str(dia) + ' mm',
+    #                                             'Length': '50.0 mm',
+    #                                             'ShankDiameter': '6.0 mm'},
+    #                             'attribute': {'Chipload': '0.01 mm',
+    #                                             'Flutes': 4,
+    #                                             'Material': 'HSS',
+    #                                             'SpindleDirection': 'Forward'}
+    #                             }
 
     library = PathToolBitLibraryGui.ToolBitLibrary()
     workingdir = None
@@ -243,11 +247,11 @@ def processUserToolInput(tb_name_rules,
             # CHOOSE to create many ToolBits & add to current library.
             addToolListToCurrentLibrary(library, shape_name, dia_list,
                                         tb_base_name, tb_base_nr, tb_nr_inc,
-                                        endmill_tool_props,
+                                        tool_props,
                                         tb_name_rules)
         else:
             # create ONE ToolBit with diameter = dia
-            addToolToCurrentLibrary(library, shape_name, endmill_tool_props, tb_nr, tb_name_rules)
+            addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules)
     else:
         print("Tool diameter must be number greater than zero.")
 
