@@ -286,9 +286,22 @@ print("\t...Example 3 finished.\n")
 # -----------------------------------------------------------------------
 
 
+print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
+shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
+for s in shape_names:
+    CamTbAddLib.processUserToolInput(tb_naming_rules,
+                                    shape_name = s,
+                                    tb_base_name = s + "_example",
+                                    tb_base_nr = 20000,
+                                    tb_nr_inc = 100,
+                                    dia = 3.125,
+                                    dia_max = 0,
+                                    dia_inc = 0)
+print("\t...Example 4 finished.\n")
 
-print("Example 4. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.")
-print("Example 4. NB not enable by default.")
+
+print("Example 5. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.")
+print("Example 5. NB not enable by default.")
 # By default this example is disabled.
 # Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
 

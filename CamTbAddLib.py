@@ -133,6 +133,11 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
 
         shape_full_path_fname = workingdir + "/Shape/" + shape_name + ".fcstd"
         shape_full_path_fname_as_path = osPath(shape_full_path_fname)
+
+        #  TODO : get shapes ...then again????
+        # for FC code...need use real/existing shape OK
+        # is here supposed to merge users shape props with tempale/existing shape??
+
         if shape_full_path_fname_as_path.is_file():
             shape_name, shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
             params = shape_full_path_fname_attrs["parameter"]
@@ -152,7 +157,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
                 FreeCAD.ActiveDocument.removeObject(o.Name)
 
             for row in range(library.toolModel.rowCount()):
-                # print (row, tb_nr, library.toolModel.item(row,0).text(), int(library.toolModel.item(row,0).text()))
+                print (row, tb_nr, library.toolModel.item(row,0).text(), int(library.toolModel.item(row,0).text()))
                 if int(library.toolModel.item(row,0).text()) == tb_nr:
                     FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
                                                  .format(tb_nr, tool_props["name"]))
@@ -326,8 +331,11 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
                 if keyname == "t_auto_number":
                     base_nr = v1["tb_base_nr"]
                     dia_multiplier = v1["tb_dia_mult"]
-                    #TODO change or alt approach: change base_nr to be # that is prepended instead of added, then can insert seperator to highlight dia.
-                    tb_prop_val = base_nr + dia_multiplier * t_dia
+
+                    # ATM only allow 2 decimals places HERE for t_dia
+                    # stops issue with decimal Library tool# (this code issue not FC issue)
+                    tb_prop_val = base_nr + dia_multiplier * round(t_dia, 2)
+
             else:
                 print("ToolBit property type is not 'TbShape' \
                     or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
