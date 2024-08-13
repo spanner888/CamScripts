@@ -87,7 +87,7 @@ Because the scripts and library files are supplied in a directory, the FreeCAD m
 If after setting the Macro directory and running one of the macros, you get an error in the report pane, like that shown below:
 
 
->>>UPDATE BELOW DUE TO FILE RENAMES!!!!!!!!!!!!!!!1
+>>>UPDATE BELOW DUE TO FILE RENAMES!!!!!!!!!!!!!!!
 ```
     .....
     shiboken2/files.dir/shibokensupport/feature.py", line 139, in _import
@@ -117,6 +117,8 @@ One example script file is provided for each library, each containing several ex
 
 Both example files provide full automation, ie once user has set desired properties and actions, running each script requires no further user interaction.
 
+TODO: remove what was last example 4 - no longer req - invisble mostly to user
+        NB new last example needs doc - creates 1xTB for EVERY shape.
 
 REDUCE to KISS/short generic - each example is on command call to the associated library, complete wtih example properties, either in the function call, or in variables prior.
 >>>>>MAYBE EVEN THE **entire** SECTION MUCH SHORTER...keep the intro stuff, but shorten if poss, maybe skip some images??

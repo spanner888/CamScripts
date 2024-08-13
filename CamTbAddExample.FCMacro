@@ -8,6 +8,13 @@
 
 # TODO TODO make sure create TBs required by: CamFullProcessExample.FcMacro!!!!!!!!
 
+#watch for erorr below ...prob another z400 only s/c issue:
+#14:31:49  Adding ToolBit Shape: probe, Dia: 3.125 Name: _23125.0_3.125D_probe_example
+#14:31:49  Sketch: Solving the sketch failed
+
+# FIXME - now v slow move BOTH get all shapes to once only sorta init???
+# ...slow as opens/closes EVERY shape file!!
+
 
 # allow edited library updates, without close/reopen FC.
 from importlib import reload
@@ -29,6 +36,15 @@ reload(CamTbAddLib)
 # Flexible rule based TB names auto derived from selected TB properties
 # FIXME TEST try duplicate EXACTLY: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
 #              so make boboxx_naming_rules
+
+
+# TODO 1
+#so current rules = for ALL poss props of ALL defualt
+#maybe change so ONE rule for EACH shape type..ONLY with rules for default props
+#in one file or 1xdir- 10 files
+
+#then ANOTHER reduce further to really common (name/dia/flutes/ShankDiameter, Length) ++ v specific()tip dia, tip angle...
+
 
 # TODO somewhere {#278 of lib} notes on put default in lib so not here and SEP file to demo all this
 # Note: Dictionary below is so big to cater for ALL default FC ToolBit Shape properties
@@ -257,6 +273,10 @@ print("Example 1. Add single example default endmill to current Library.")
 CamTbAddLib.processUserToolInput(tb_naming_rules)
 print("\t...Example 1 finished.\n")
 
+
+
+
+
 print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
 CamTbAddLib.processUserToolInput(tb_naming_rules,
                                 shape_name = "endmill",
@@ -298,29 +318,6 @@ for s in shape_names:
                                     dia_max = 0,
                                     dia_inc = 0)
 print("\t...Example 4 finished.\n")
-
-
-print("Example 5. Retrieve properties & attributes of all shape files in FC Tool- Shape directory.")
-print("Example 5. NB not enable by default.")
-# By default this example is disabled.
-# Change the value of getDefaultShapeAttrs to True and save the macro to run this example.
-
-# These can be used to create different types of ToolBits above.
-# Get FreeCAD Default shape directory & list of shape names in dir.
-getDefaultShapeAttrs = False
-if getDefaultShapeAttrs:
-    # Get all the shape properties and other attributes for each shpe.
-    shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
-    print("shapeDir: ",shapeDir)
-    print()
-    print("shape_names: ", shape_names)
-    print()
-
-    print("All properties of all shape files from above shapeDir:")
-    shape_names, attrs = CamTbAddLib.getAllAvailUserShapeDetails()
-    for k, v in attrs.items():
-        print(v)
-        print()
 
 print("")
 print("CamTbAddLibExample.FcMacro finished.\n")

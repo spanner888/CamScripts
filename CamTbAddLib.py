@@ -214,32 +214,17 @@ def processUserToolInput(tb_name_rules,
     # FIXME review @least location of this "rule" & other TB name rules
     tb_nr = tb_base_nr + dia * tb_nr_inc
 
-    # FIXME move dict to be module/global var once in Lib!!!
-
     # need any document open, no changes are made.
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
-
-    # FIXME user should not be editing this here ...should be in user example code!!
-    # Need to create dict for EACH known prop names FOR EVERY SHAPE TYPE that will be created.
-    # NB 'name' is set to my default naming scheme for a SINGLE tool of dia (see about a dozen lines up)
-    # Also this dictionary matches that used by FreeCAD for ToolBit
-
-    # get all users shape file names & props
-    # TODO test is shape not exist
-    shape_names, attrs = getAllAvailUserShapeDetails()
+   
+    # update tool_props with dia, tb_base_name
     tool_props = attrs[shape_name]
-                                                            # 'name': str(int(round(tb_nr))) + tb_base_name,
-    # endmill_tool_props = {'shape': shape_name + '.fcstd', 'name': tb_base_name,
-    #                             'parameter': {'CuttingEdgeHeight': '30.5 mm',
-    #                                             'Diameter': str(dia) + ' mm',
-    #                                             'Length': '50.0 mm',
-    #                                             'ShankDiameter': '6.0 mm'},
-    #                             'attribute': {'Chipload': '0.01 mm',
-    #                                             'Flutes': 4,
-    #                                             'Material': 'HSS',
-    #                                             'SpindleDirection': 'Forward'}
-    #                             }
+    tool_props["name"] = tb_base_name
+
+    tp = tool_props["parameter"] 
+    tp["Diameter"] = dia
+    tool_props.update(tp)
 
     library = PathToolBitLibraryGui.ToolBitLibrary()
     workingdir = None
@@ -429,3 +414,7 @@ def load_data(dataFile, print_csv_file_names=False):
 # -------------------------------------
 #####################################################################
 
+
+# Init these when this Library imported, so only need to do slow-ish open/close files once
+# BEWare IF SHAPE FILES CHANGE without another re/import!!!!
+shape_names, attrs = getAllAvailUserShapeDetails()
