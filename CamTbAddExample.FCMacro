@@ -262,6 +262,13 @@ tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                 }
         }
 
+
+#FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
+#...need have TB name/# = expected!!!
+#CHANGE her or THERE
+#tcProps1.bitName = "880_em"
+#tcProps2.lib_tool_nr = 20840
+
 # tb_name_templ = CamTbAddLib.get_tb_name_template(tb_naming_rules)
 # print("boboxx tool name convention:\n2F-D6.35-L31.076")
 # print(tb_name_templ)
@@ -276,7 +283,7 @@ CamTbAddLib.processUserToolInput(tb_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
 
-if 1==2:
+if 1==1:
     # -----------------------------------------------------------------------
     print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
     CamTbAddLib.processUserToolInput(tb_naming_rules,

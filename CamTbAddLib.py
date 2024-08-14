@@ -18,7 +18,6 @@ import numpy as np
 
 import collections
 import csv
-import copy
 
 if False:
     Path.Log.setLevel(Path.Log.Level.DEBUG, Path.Log.thisModule())
@@ -59,10 +58,22 @@ def getToolShapeProps(shape_name_dir, shape_name):
 
                     idx+=1
                     if grp == "Shape":
-                        parameter = {p: val}
+                        #if isinstance(val, Base.Quantity):
+                        if isinstance(val, FreeCAD.Units.Quantity):
+                            #attribute = {p: "'" + val.toStr() + "'"}
+                            parameter = {p: val.toStr()}
+                            #print(type(val), parameter)
+                        else:
+                            parameter = {p: val}
                         parameters.update(parameter)
                     elif grp == "Attributes":
-                        attribute = {p: val}
+                        #if isinstance(val, Base.Quantity):
+                        if isinstance(val, FreeCAD.Units.Quantity):
+                            #attribute = {p: "'" + val.toStr() + "'"}
+                            attribute = {p: val.toStr()}
+                            #print(type(val), attribute)
+                        else:
+                            attribute = {p: val}
                         attributes.update(attribute)
                     else:
                         FreeCAD.Console.PrintWarning(
@@ -146,20 +157,20 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
             # User settign have changed all_shape_attrs!!!!!
             shape_full_path_fname_attrs_NEW = all_shape_attrs[shape_name]
 
-            print()
-            print(shape_full_path_fname_attrs_NEW, "addToolToCurrentLibrary: shape_full_path_fname_attrs_NEW")
-            # print_Tb(all_shape_attrs, msg="show imp again:")
-            print()
+            #print()
+            #print(shape_full_path_fname_attrs_NEW, "addToolToCurrentLibrary: shape_full_path_fname_attrs_NEW")
+            #print_Tb(all_shape_attrs, msg="show imp again:")
+            #print()
 
             # print(shape_full_path_fname_attrs)
             # print()
             # print(shape_full_path_fname_attrs_NEW)
-            print()
-            if shape_full_path_fname_attrs == shape_full_path_fname_attrs_NEW:
-                print("yea the SAME")
-            else:
-                print("o oh!!!!!")
-            print()
+            #print()
+            #if shape_full_path_fname_attrs == shape_full_path_fname_attrs_NEW:
+                #print("yea the SAME")
+            #else:
+                #print("o oh!!!!!")
+            #print()
             #
             # for k, v in shape_full_path_fname_attrs:
             #     if k in shape_full_path_fname_attrs_NEW:
@@ -171,11 +182,11 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
             #     else:
             #         print("Key {} not present in new attrs")
 
-            print("TODO swap order of vars to check presence in New  & Not in old")
+            # "TODO swap order of vars to check presence in New  & Not in old"
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
-            print("Adding ToolBit Shape: {}, Dia: {} Name: {}"
+            print("\t\t\tAdding ToolBit Shape: {}, Dia: {} Name: {}"
                   .format(shape_name,
                           new_tool_params['Diameter'],
                           tool_props['name']
@@ -252,29 +263,70 @@ def processUserToolInput(tb_name_rules,
 
     # update tool_props with dia, tb_base_name
     # tool_props = all_shape_attrs[shape_name]deepcopy()
-    tool_props_orig = dict()
-    tool_props = dict()
-    tool_props_orig = all_shape_attrs[shape_name]
+    # tool_props_orig = dict()
+    # tool_props = dict()
+    # tool_props_orig = all_shape_attrs[shape_name]
 
-#     ok - fails as can't deep copt FC:Quantity
-#     tool_props = copy.deepcopy(tool_props_orig)
-#     so to see if issue here or afterwards somewhere
-#
-#     just create a HARDCODED tool_props and see what happens!!!
-    tool_props = {'shape': 'endmill.fcstd', 'name': 'default_em', 'parameter': {'CuttingEdgeHeight': 30.0 mm, 'Diameter': 8.12, 'Length': 50.0 mm, 'ShankDiameter': 3.0 mm}, 'attribute': {'Chipload': 0.0 mm, 'Flutes': 0, 'Material': 'HSS', 'SpindleDirection': 'Forward'}}
+    #     ok - fails as can't deep copt FC:Quantity
+    #     tool_props = copy.deepcopy(tool_props_orig)
+    #     so to see if issue here or afterwards somewhere
+    #
+    #     just create a HARDCODED tool_props and see what happens!!!
+    # or create class-var for all_shape_attrs...
+    # still wondering if somewhere pass WRONG var & accidently change global var
+    # BUT can see change immediately herE so ?????
+    # tool_props = {'shape': 'endmill.fcstd', 'name': 'default_em', 'parameter': {'CuttingEdgeHeight': 30.0 mm, 'Diameter': 8.12, 'Length': 50.0 mm, 'ShankDiameter': 3.0 mm}, 'attribute': {'Chipload': 0.0 mm, 'Flutes': 0, 'Material': 'HSS', 'SpindleDirection': 'Forward'}}
 
+    # tool_props_str = str(all_shape_attrs[shape_name])
+    tool_props_str = "{"
+    #q = FreeCAD.Units.Quantity
+
+    for k, v in all_shape_attrs[shape_name].items():
+        if k == "parameter":
+            tool_props_str += "'parameter': {"
+            for k1, v1 in v.items():
+                #print(k1, v1 )
+                tool_props_str += "'" + k1 + "': '" + str(v1) + "', "
+            tool_props_str += "}, "
+        elif k == "attribute":
+            tool_props_str += "'attribute' : {"
+            for k1, v1 in v.items():
+                #print(k1, v1 )
+                
+                #fails on material = STR already
+                #so do convert in method that checks if quantity or str...
+                #print(type(v1))
+                tool_props_str += "'" + k1 + "': '" + str(v1) + "', "
+        else:
+            tool_props_str += "'" + k + "': '" + v + "', "
+            # tool_props_str += "{'" + k + "': '" + v['shape'] + "','"
+            # tool_props_str += "{'" + k + "': '" + v['name']  + "','"
+    tool_props_str += "}}"
+
+    #print(tool_props_str)
+    import ast
+    # Fails as Values+ Units are NOT quoted in the text!!
+    tool_props = ast.literal_eval(tool_props_str)
 
     # tool_props = dict(tool_props_orig)
+    # so json or print each element to str & make sure quoted, then literal_eval?
 
-    print(tool_props, "processUserToolInput: tool_props deepcopy, before update")
-    tool_props["name"] = tb_base_name
-    tool_props["parameter"]["Diameter"] = dia
+    # import json
+    # ALSO fails due to missing quotes: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+    # tool_props = json.loads(tool_props_str)
+    # print(tool_props['meta']['total_count'])
 
-    print()
-    print(tool_props, "processUserToolInput: tool_props copy, AFTER update")
-    print()
-    print(all_shape_attrs[shape_name], "processUserToolInput: all_shape_attrs[shape_name]")
-    print()
+    #print(tool_props, "processUserToolInput: tool_props  ast.literal_eval, before update")
+    #tool_props["name"] = tb_base_name
+    #tool_props["parameter"]["Diameter"] = dia
+    #print()
+    #print(tool_props)
+
+    #print()
+    #print(tool_props, "processUserToolInput: tool_props copy, AFTER update")
+    #print()
+    #print(all_shape_attrs[shape_name], "processUserToolInput: all_shape_attrs[shape_name]")
+    #print()
 
     library = PathToolBitLibraryGui.ToolBitLibrary()
     workingdir = None
@@ -283,7 +335,7 @@ def processUserToolInput(tb_name_rules,
         if dia_max > 0 and dia_inc > 0:
 
             dia_list = np.arange(dia, dia_max, dia_inc)
-            print("ToolBit diameters to be created: ", dia_list)
+            print("\tToolBit diameters to be created: ", dia_list)
 
             # CHOOSE to create many ToolBits & add to current library.
             addToolListToCurrentLibrary(library, shape_name, dia_list,
@@ -396,10 +448,10 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
 
 def print_Tb(tb_attrs, msg="", shape=""):
     if shape != "":
-        print(tb_attrs[shape])
+        print(msg, tb_attrs[shape])
     else:
         for k, v in tb_attrs.items():
-            print(msg, k, v["name"], "\t\t")
+            print(k, v["name"], "\t\t")
             tp = v["parameter"]
             print("\t", tp)
             ta = v["attribute"]
@@ -484,14 +536,6 @@ def load_data(dataFile, print_csv_file_names=False):
 shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
 print("imported 'CamTbAddLib' and loaded all users Tool shape properties")
 
-# >>>>>CHECK *HERE* that returned all_shape_attrs is ONLY the vals from the shape files
-# >>>>>>>>>>if not - why not!!!!!
-#
-# ....SO below is debug trying work out how all_shape_attrs has DIFF content way above @ LINE: # KISS.......
-#     seems like user setting s for tb to create
-#     THEN FINISH the changes @# KISS which meant speed up....
-
-# print(all_shape_attrs)
-print_Tb(all_shape_attrs, "at import:")
-print()
+#print_Tb(all_shape_attrs, "at importzzz: ")
+#print()
 
