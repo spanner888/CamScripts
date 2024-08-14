@@ -58,20 +58,14 @@ def getToolShapeProps(shape_name_dir, shape_name):
 
                     idx+=1
                     if grp == "Shape":
-                        #if isinstance(val, Base.Quantity):
                         if isinstance(val, FreeCAD.Units.Quantity):
-                            #attribute = {p: "'" + val.toStr() + "'"}
                             parameter = {p: val.toStr()}
-                            #print(type(val), parameter)
                         else:
                             parameter = {p: val}
                         parameters.update(parameter)
                     elif grp == "Attributes":
-                        #if isinstance(val, Base.Quantity):
                         if isinstance(val, FreeCAD.Units.Quantity):
-                            #attribute = {p: "'" + val.toStr() + "'"}
                             attribute = {p: val.toStr()}
-                            #print(type(val), attribute)
                         else:
                             attribute = {p: val}
                         attributes.update(attribute)
@@ -88,6 +82,7 @@ def getToolShapeProps(shape_name_dir, shape_name):
                     }
 
                 FreeCAD.closeDocument(doc.Name)
+                # FIXME remove shape_names in favour of global shape_names ++CHANGE THOSE 2x GLOBALS TO BE UPPERCASE
                 return shape_name, attrs
 
 
@@ -95,7 +90,6 @@ def getAllToolShapeProps(shape_name_dir, shape_names):
     props = dict()
     all_shape_attrs = dict()
     for i, fname in enumerate(shape_names):
-        # FreeCAD.Console.PrintMessage("fname: {}\tshape_name_dir:{}\n".format(fname, shape_name_dir))
         shape_name, props = getToolShapeProps(shape_name_dir, fname)
         all_shape_attrs.update({shape_name: props})
     return all_shape_attrs
@@ -131,8 +125,10 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 
 
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
-    # tp = tool_props["parameter"]
+
+    # FIXME review if global requirefd..think should be
     global all_shape_attrs
+
     # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
     tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
     tool_props["name"] = tb_name
@@ -150,11 +146,8 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
         # is here supposed to merge users shape props with tempale/existing shape??
         # shoulD be ABLE TO MOVE THIS TO top THIS MODULES - NO NEED REREAD EVERY TIME
         if shape_full_path_fname_as_path.is_file():
-            # KISS BEGINNING remove above file check as well???
+            # FIXME: DELETE NEXT, THEN USE (renamed) shape_full_path_fname_attrs_NEW
             shape_name, shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
-
-
-            # User settign have changed all_shape_attrs!!!!!
             shape_full_path_fname_attrs_NEW = all_shape_attrs[shape_name]
 
             #print()
@@ -182,7 +175,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
             #     else:
             #         print("Key {} not present in new attrs")
 
-            # "TODO swap order of vars to check presence in New  & Not in old"
+            # "TODO swap order of vars ABOVE to check presence in New  & Not in old"
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
@@ -200,8 +193,6 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
                 FreeCAD.ActiveDocument.removeObject(o.Name)
 
             for row in range(library.toolModel.rowCount()):
-                # print (row, tb_nr, library.toolModel.item(row,0).text(), int(library.toolModel.item(row,0).text()))
-                # print (row, tb_nr, library.toolModel.item(row,0).text())
                 if float(library.toolModel.item(row,0).text()) == tb_nr:
                     FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
                                                  .format(tb_nr, tool_props["name"]))
@@ -232,7 +223,6 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
 
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
-        # print("\tCreating: {}".format(tool_props["name"]))
         addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules)
 
 
@@ -531,11 +521,10 @@ def load_data(dataFile, print_csv_file_names=False):
 #####################################################################
 
 
+
 # Init these when this Library imported, so only need to do slow-ish open/close files once
-# BEWare IF SHAPE FILES CHANGE without another re/import!!!!
 shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
 print("imported 'CamTbAddLib' and loaded all users Tool shape properties")
-
-#print_Tb(all_shape_attrs, "at importzzz: ")
+#print_Tb(all_shape_attrs, "at import: ")
 #print()
 
