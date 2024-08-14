@@ -24,13 +24,19 @@ reload(CamTbAddLib)
 # TODO pycharm & FC cfg from z400????
 # TODO tabs->spaces???
 
-# FIXME ....make use of this a THIRD macro!!!!<<<<<MAYBE if do TWO x releases...then her gets good focus ++ now simpler demos
+# FIXME ....make use of this a THIRD macro!!!!<<<<<MAYBE if do TWO x releases...then here gets good focus ++ now simpler demos
 #    so add defualt tb_naming_rules in the lib, ALL WITH ORDER#=0
 # Flexible rule based TB names auto derived from selected TB properties
 # FIXME TEST try duplicate EXACTLY: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
 #              so make boboxx_naming_rules
 
-# TODO 1
+
+
+print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
+print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
+print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
+print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
+# TODO 1 RULES **ALREADY ON RULES BRANCH!!!!
 #so current rules = for ALL poss props of ALL defualt
 #maybe change so ONE rule for EACH shape type..ONLY with rules for default props
 #       >>>do in code for each prop in dflt_tb if not in dflt_rule del (or don't attrs.update({shape_name: props}))
@@ -57,6 +63,104 @@ reload(CamTbAddLib)
 # sep_left, sep_r are left/leading & right/trailing seperators of each part of the name.
 # TODO: add ???My numbering & if NOT used @ beginnning, then NO leading seperator.
 # LIMITATION: If you duplicate and order# in a second item, it will NOT show in TB name.
+
+
+# **use enum for itype
+class RuleItem:
+  def __init__(self, name='endmill',
+                     ptype='TbShape',
+                     order=0):
+    self.pref_name = name
+    self.ptype = ptype
+    self.abbrev_left = ''
+    self.abbrev_r = ''
+    self.sep_left = ''
+    self.sep_r = ''
+    self.order = order
+
+# STARTING WITH EVERYTHING...can trim down!!! but CARE HAVE SET SOME props
+# AND matchign current dict ver <<<<so has SOME VALUES!!!!
+class Rules:
+    def __init__(self):
+        self.shapename = RuleItem(name='', ptype='added_macro_prop')
+        self.shapename.sep_left = "_"
+
+        self.base_name = RuleItem(name='', ptype='added_macro_prop', order=99)
+        self.base_name.sep_left = "_"
+
+        # This is ONLY rule item with added/different properties!
+        self.base_name = RuleItem(name='', ptype='added_macro_prop')
+        self.base_name.sep_left = "_"
+        self.base_name.order = 99
+        self.base_name.tb_base_nr = 20000
+        self.base_name.tb_dia_mult = 1000
+
+        self.Chipload = RuleItem(name='', ptype='TbAttributes')
+        self.Chipload.abbrev_r = "CL"
+        self.Chipload.sep_left = "_"
+        self.Chipload.order = 1
+
+        self.Flutes = RuleItem(name='', ptype='TbAttributes')
+        self.Flutes.abbrev_r = "F"
+        self.Flutes.sep_left = "_"
+        self.Flutes.order = 3
+
+        self.Material = RuleItem(name='', ptype='TbAttributes')
+        self.SpindleDirection = RuleItem(name='', ptype='TbAttributes')
+        self.SpindlePower = RuleItem(name='', ptype='TbAttributes')
+
+        self.BladeThickness = RuleItem(name='', ptype='TbShape')
+        self.CapDiameter = RuleItem(name='', ptype='TbShape')
+        self.CapHeight = RuleItem(name='', ptype='TbShape')
+        self.Crest = RuleItem(name='', ptype='TbShape')
+
+        self.cuttingAngle = RuleItem(name='', ptype='TbShape')
+        self.cuttingAngle.abbrev_r = "deg"
+
+        self.CuttingEdgeAngle = RuleItem(name='', ptype='TbShape')
+        self.CuttingEdgeHeight = RuleItem(name='', ptype='TbShape')
+
+        self.Diameter = RuleItem(name='', ptype='TbShape')
+        self.Diameter.abbrev_r = "D"
+        self.Diameter.sep_left = "_"
+        self.Diameter.order = 2
+
+        self.FlatRadius = RuleItem(name='', ptype='TbShape')
+
+        self.Length = RuleItem(name='', ptype='TbShape')
+        self.Length.abbrev_r = "ND"
+
+        self.NeckDiameter = RuleItem(name='', ptype='TbShape')
+        self.NeckDiameter.abbrev_r = "F"
+
+        self.NeckHeight = RuleItem(name='', ptype='TbShape')
+        self.NeckHeight.abbrev_r = "NH"
+
+        self.NeckLength = RuleItem(name='', ptype='TbShape')
+        self.NeckLength.abbrev_r = "NL"
+
+        self.ShankDiameter = RuleItem(name='', ptype='TbShape')
+        self.ShankDiameter.abbrev_r = "DS"
+
+        self.TipAngle = RuleItem(name='', ptype='TbShape')
+        self.TipAngle.abbrev_r = "deg"
+
+        self.TipDiameter = RuleItem(name='', ptype='TbShape')
+
+    # TODO add helpers eg:
+    #       show props in order & example of the rule based name
+    #       alert if dup order#s
+    #       alert if order >0, but no other props set
+    #       dump all props that have val
+    # TODO ...so move the create_tb_name() here!!!
+
+
+
+tb_n_r = Rules()
+print(tb_n_r.Diameter.abbrev_r, tb_n_r.cuttingAngle.abbrev_r)
+
+
+
 tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                 "pref_name": "",
                                 "abbrev_left": "",
@@ -167,7 +271,7 @@ tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
             "CuttingEdgeAngle" :{"ptype": "TbShape",
                                 "pref_name": "",
                                 "abbrev_left": "",
-                                "abbrev_r": "",
+                                "abbrev_r": "deg",
                                 "sep_left": "",
                                 "sep_r": "",
                                 "order": 0
@@ -239,7 +343,7 @@ tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
             "TipAngle"         :{"ptype": "TbShape",
                                 "pref_name": "",
                                 "abbrev_left": "",
-                                "abbrev_r": "",
+                                "abbrev_r": "deg",
                                 "sep_left": "",
                                 "sep_r": "",
                                 "order": 0
@@ -251,84 +355,77 @@ tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                 "sep_left": "",
                                 "sep_r": "",
                                 "order": 0
-                                },
-            "Chipload"         :{"ptype": "TbAttributes",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "CL",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
                                 }
         }
 
+if 1==2:
 
-#FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
-#...need have TB name/# = expected!!!
-#CHANGE her or THERE
-#tcProps1.bitName = "880_em"
-#tcProps2.lib_tool_nr = 20840
+    #FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
+    #...need have TB name/# = expected!!!
+    #CHANGE here or THERE
+    #tcProps1.bitName = "880_em"
+    #tcProps2.lib_tool_nr = 20840
 
-# tb_name_templ = CamTbAddLib.get_tb_name_template(tb_naming_rules)
-# print("boboxx tool name convention:\n2F-D6.35-L31.076")
-# print(tb_name_templ)
+    # tb_name_templ = CamTbAddLib.get_tb_name_template(tb_naming_rules)
+    # print("boboxx tool name convention:\n2F-D6.35-L31.076")
+    # print(tb_name_templ)
 
-# TODO  import tools & bulk create tb & add to current library
-# TODO  option to add TC-tb to JobX
+    # TODO  import tools & bulk create tb & add to current library
+    # TODO  option to add TC-tb to JobX
 
-# Three examples on adding a Default, One or a list of Tools to current Library.
-# -----------------------------------------------------------------------
-print("Example 1. Add single example default endmill to current Library.")
-CamTbAddLib.processUserToolInput(tb_naming_rules)
-print("\t...Example 1 finished.\n")
-# -----------------------------------------------------------------------
-
-
-# -----------------------------------------------------------------------
-print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
-CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                shape_name = "endmill",
-                                tb_base_name = "em",
-                                tb_base_nr = 20000,
-                                tb_nr_inc = 100,
-                                dia = 6.35,
-                                dia_max = 0,
-                                dia_inc = 0)
-print("\t...Example 2 finished.\n")
-# -----------------------------------------------------------------------
+    # Three examples on adding a Default, One or a list of Tools to current Library.
+    # -----------------------------------------------------------------------
+    print("Example 1. Add single example default endmill to current Library.")
+    CamTbAddLib.processUserToolInput(tb_naming_rules)
+    print("\t...Example 1 finished.\n")
+    # -----------------------------------------------------------------------
 
 
-# -----------------------------------------------------------------------
-print("Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
-#   But only If BOTH dia_max & dia_inc are greater than zero,
-#            Else: ONLY create ONE TB of this dia in current library.
-CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                shape_name = "endmill",
-                                tb_base_name = "em",
-                                tb_base_nr = 20000,
-                                tb_nr_inc = 100,
-                                dia = 8.2,
-                                dia_max = 9.0,
-                                dia_inc = 0.2)
-print("\t...Example 3 finished.\n")
-# -----------------------------------------------------------------------
-
-
-# -----------------------------------------------------------------------
-print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
-shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
-for s in shape_names:
+    # -----------------------------------------------------------------------
+    print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
     CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                    shape_name = s,
-                                    tb_base_name = s + "_example",
+                                    shape_name = "endmill",
+                                    tb_base_name = "em",
                                     tb_base_nr = 20000,
                                     tb_nr_inc = 100,
-                                    dia = 3.125,
-                                    dia_max = 3.5,
-                                    dia_inc = 0.125)
-print("\t...Example 4 finished.\n")
-# -----------------------------------------------------------------------
+                                    dia = 6.35,
+                                    dia_max = 0,
+                                    dia_inc = 0)
+    print("\t...Example 2 finished.\n")
+    # -----------------------------------------------------------------------
 
-print("")
-print("CamTbAddLibExample.FcMacro finished.\n")
+
+    # -----------------------------------------------------------------------
+    print("Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
+    #   But only If BOTH dia_max & dia_inc are greater than zero,
+    #            Else: ONLY create ONE TB of this dia in current library.
+    CamTbAddLib.processUserToolInput(tb_naming_rules,
+                                    shape_name = "endmill",
+                                    tb_base_name = "em",
+                                    tb_base_nr = 20000,
+                                    tb_nr_inc = 100,
+                                    dia = 8.2,
+                                    dia_max = 9.0,
+                                    dia_inc = 0.2)
+    print("\t...Example 3 finished.\n")
+    # -----------------------------------------------------------------------
+
+
+    # -----------------------------------------------------------------------
+    print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
+    shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
+    for s in shape_names:
+        CamTbAddLib.processUserToolInput(tb_naming_rules,
+                                        shape_name = s,
+                                        tb_base_name = s + "_example",
+                                        tb_base_nr = 20000,
+                                        tb_nr_inc = 100,
+                                        dia = 3.125,
+                                        dia_max = 3.5,
+                                        dia_inc = 0.125)
+    print("\t...Example 4 finished.\n")
+    # -----------------------------------------------------------------------
+
+    print("")
+    print("CamTbAddLibExample.FcMacro finished.\n")
 

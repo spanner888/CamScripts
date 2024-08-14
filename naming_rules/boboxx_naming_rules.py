@@ -195,13 +195,6 @@ boboxx_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                   "sep_left": "",
                                   "sep_r": "",
                                   "order": 0
-                                 },
-             "Chipload"         :{"ptype": "TbAttributes",
-                                  "pref_name": "",
-                                  "abbrev_left": "",
-                                  "abbrev_r": "CL",
-                                  "sep_left": "",
-                                  "sep_r": "",
-                                  "order": 0
-                                }
+                                 }
+
         }
