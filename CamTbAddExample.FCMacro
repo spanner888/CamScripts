@@ -65,103 +65,148 @@ print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
 # LIMITATION: If you duplicate and order# in a second item, it will NOT show in TB name.
 
 
-# **use enum for itype
+
+from enum import Enum
+
+# Each rule item, must be one of these types.
+class PropType(Enum):
+    rule_prop = 'rule_prop',
+    tb_attrib = 'TbAttributes',
+    tb_shape = 'tb_shape'
+
+
 class RuleItem:
-  def __init__(self, name='endmill',
-                     ptype='TbShape',
-                     order=0):
-    self.pref_name = name
-    self.ptype = ptype
-    self.abbrev_left = ''
-    self.abbrev_r = ''
-    self.sep_left = ''
-    self.sep_r = ''
-    self.order = order
+    def __init__(self, name,
+                       ptype: PropType,
+                       order=0) -> None:
+
+        self.pref_name = name
+        self.ptype = ptype
+        self.abbrev_left = ''
+        self.abbrev_r = ''
+        self.sep_left = ''
+        self.sep_r = ''
+        self.order = order
+
+    def __str__(self) -> str:
+        return f'ptype: {self.ptype.name}'
+
+
+# class IterMixin(object):
+#     def __iter__(self):
+#         for attr, value in self.__dict__.iteritems():
+#             yield attr, value
+
+# class RulesTemplate(IterMixin):
+#     def __init__():
+#         # ???? 3x ptype=PropType.rule_prop added??? user still needs set same props not really saving??
+#         pass
+#
+#         def create_tb_name(self, tb_nr, tool_props):
+#         # REQUIRES vars passed AND (??child?? class from ALL rules:order>0)
+#         # which => need iterate
+#         pass
 
 # STARTING WITH EVERYTHING...can trim down!!! but CARE HAVE SET SOME props
 # AND matchign current dict ver <<<<so has SOME VALUES!!!!
-class Rules:
-    def __init__(self):
-        self.shapename = RuleItem(name='', ptype='added_macro_prop')
+# TODO add helpers eg:
+#       show props in order & example of the rule based name
+#       alert if dup order#s
+#       alert if order >0, but no other props set
+#       dump all props that have val
+# TODO #1-ish Let user define alt Tool-prop names &/or just select default alternatives, from ISO, Imperial....
+#       & let user edit/add more templates/sets....
+
+# ptype=PropType.rule_prop MUST be a valid enum (left side) from class PropType(Enum)
+# otherwise an exception will occur, for eg:
+#     .....
+#     raise AttributeError(name) from None
+# <class 'AttributeError'>: rule_propa
+class Rules():
+    def __init__(self, shape_name):
+        # super().__init__()
+        self.shapename = RuleItem(name=shape_name, ptype=PropType.rule_prop)
         self.shapename.sep_left = "_"
 
-        self.base_name = RuleItem(name='', ptype='added_macro_prop', order=99)
-        self.base_name.sep_left = "_"
-
-        # This is ONLY rule item with added/different properties!
-        self.base_name = RuleItem(name='', ptype='added_macro_prop')
+        self.base_name = RuleItem(name='', ptype=PropType.rule_prop)
         self.base_name.sep_left = "_"
         self.base_name.order = 99
-        self.base_name.tb_base_nr = 20000
-        self.base_name.tb_dia_mult = 1000
 
-        self.Chipload = RuleItem(name='', ptype='TbAttributes')
+        self.t_auto_number = RuleItem(name='', ptype=PropType.rule_prop)
+        self.t_auto_number.sep_left = "_"
+        self.t_auto_number.order = 1
+        # This is ONLY rule item with added/different properties!
+        self.t_auto_number.tb_base_nr = 20000
+        self.t_auto_number.tb_dia_mult = 1000
+
+        self.Chipload = RuleItem(name='', ptype=PropType.tb_attrib)
         self.Chipload.abbrev_r = "CL"
         self.Chipload.sep_left = "_"
         self.Chipload.order = 1
 
-        self.Flutes = RuleItem(name='', ptype='TbAttributes')
+        self.Flutes = RuleItem(name='', ptype=PropType.tb_attrib)
         self.Flutes.abbrev_r = "F"
         self.Flutes.sep_left = "_"
         self.Flutes.order = 3
 
-        self.Material = RuleItem(name='', ptype='TbAttributes')
-        self.SpindleDirection = RuleItem(name='', ptype='TbAttributes')
-        self.SpindlePower = RuleItem(name='', ptype='TbAttributes')
+        self.Material = RuleItem(name='', ptype=PropType.tb_attrib)
+        self.SpindleDirection = RuleItem(name='', ptype=PropType.tb_attrib)
+        self.SpindlePower = RuleItem(name='', ptype=PropType.tb_attrib)
 
-        self.BladeThickness = RuleItem(name='', ptype='TbShape')
-        self.CapDiameter = RuleItem(name='', ptype='TbShape')
-        self.CapHeight = RuleItem(name='', ptype='TbShape')
-        self.Crest = RuleItem(name='', ptype='TbShape')
+        self.BladeThickness = RuleItem(name='', ptype=PropType.tb_shape)
+        self.CapDiameter = RuleItem(name='', ptype=PropType.tb_shape)
+        self.CapHeight = RuleItem(name='', ptype=PropType.tb_shape)
+        self.Crest = RuleItem(name='', ptype=PropType.tb_shape)
 
-        self.cuttingAngle = RuleItem(name='', ptype='TbShape')
+        self.cuttingAngle = RuleItem(name='', ptype=PropType.tb_shape)
         self.cuttingAngle.abbrev_r = "deg"
 
-        self.CuttingEdgeAngle = RuleItem(name='', ptype='TbShape')
-        self.CuttingEdgeHeight = RuleItem(name='', ptype='TbShape')
+        self.CuttingEdgeAngle = RuleItem(name='', ptype=PropType.tb_shape)
+        self.CuttingEdgeAngle.abbrev_r = "deg"
 
-        self.Diameter = RuleItem(name='', ptype='TbShape')
+        self.CuttingEdgeHeight = RuleItem(name='', ptype=PropType.tb_shape)
+
+        self.Diameter = RuleItem(name='', ptype=PropType.tb_shape)
         self.Diameter.abbrev_r = "D"
         self.Diameter.sep_left = "_"
         self.Diameter.order = 2
 
-        self.FlatRadius = RuleItem(name='', ptype='TbShape')
+        self.FlatRadius= RuleItem(name='', ptype=PropType.tb_shape)
 
-        self.Length = RuleItem(name='', ptype='TbShape')
-        self.Length.abbrev_r = "ND"
+        self.Length = RuleItem(name='', ptype=PropType.tb_shape)
+        self.Length.abbrev_r = "L"
 
-        self.NeckDiameter = RuleItem(name='', ptype='TbShape')
-        self.NeckDiameter.abbrev_r = "F"
+        self.NeckDiameter = RuleItem(name='', ptype=PropType.tb_shape)
+        self.NeckDiameter.abbrev_r = "ND"
 
-        self.NeckHeight = RuleItem(name='', ptype='TbShape')
+        self.NeckHeight = RuleItem(name='', ptype=PropType.tb_shape)
         self.NeckHeight.abbrev_r = "NH"
 
-        self.NeckLength = RuleItem(name='', ptype='TbShape')
+        self.NeckLength = RuleItem(name='', ptype=PropType.tb_shape)
         self.NeckLength.abbrev_r = "NL"
 
-        self.ShankDiameter = RuleItem(name='', ptype='TbShape')
+        self.ShankDiameter = RuleItem(name='', ptype=PropType.tb_shape)
         self.ShankDiameter.abbrev_r = "DS"
 
-        self.TipAngle = RuleItem(name='', ptype='TbShape')
+        self.TipAngle = RuleItem(name='', ptype=PropType.tb_shape)
         self.TipAngle.abbrev_r = "deg"
 
-        self.TipDiameter = RuleItem(name='', ptype='TbShape')
-
-    # TODO add helpers eg:
-    #       show props in order & example of the rule based name
-    #       alert if dup order#s
-    #       alert if order >0, but no other props set
-    #       dump all props that have val
-    # TODO ...so move the create_tb_name() here!!!
+        self.TipDiameter = RuleItem(name='', ptype=PropType.tb_shape)
 
 
+    def create_tb_name(self, tb_nr, tool_props):
+        for attr, value in vars(self).items():
+            print(attr, value)
 
-tb_n_r = Rules()
-print(tb_n_r.Diameter.abbrev_r, tb_n_r.cuttingAngle.abbrev_r)
+
+tb_n_r = Rules(shape_name='endmill')
+print(tb_n_r.shapename.pref_name, tb_n_r.Diameter.abbrev_r, tb_n_r.cuttingAngle.abbrev_r)
+tb_n_r.create_tb_name(1, None)
+
+ttt = Rules(shape_name='rubbish')
 
 
-
-tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
+tb_naming_rules = {"shapename"  :{"ptype": "rule_prop",
                                 "pref_name": "",
                                 "abbrev_left": "",
                                 "abbrev_r": "",
@@ -169,7 +214,7 @@ tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                 "sep_r": "",
                                 "order": 0
                                 },
-            "base_name"        :{"ptype": "added_macro_prop",
+            "base_name"        :{"ptype": "rule_prop",
                                 "pref_name": "",
                                 "abbrev_left": "",
                                 "abbrev_r": "",
@@ -178,7 +223,7 @@ tb_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                 "order": 99
                                 },
             # This is ONLY element with added/different properties!
-            "t_auto_number"    :{"ptype": "added_macro_prop",
+            "t_auto_number"    :{"ptype": "rule_prop",
                                 "tb_base_nr": 20000,    # For now KISS:= user sets!! ??lookup based on shapename??
                                 "tb_dia_mult": 1000,
                                 "pref_name": "",
