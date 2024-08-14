@@ -37,9 +37,9 @@ def getDefaultShapes():
         shapeDir += os.path.sep
 
     # ATM only gets default FreeCAD Tools/Shape dir, not your User Tools/Shape dir.
-    shape_names = [os.path.splitext(f)[0] for f in os.listdir(shapeDir)]
+    s_names = [os.path.splitext(f)[0] for f in os.listdir(shapeDir)]
 
-    return shapeDir, shape_names
+    return shapeDir, s_names
 
 
 def getToolShapeProps(shape_name_dir, shape_name):
@@ -86,23 +86,23 @@ def getToolShapeProps(shape_name_dir, shape_name):
                 return shape_name, attrs
 
 
-def getAllToolShapeProps(shape_name_dir, shape_names):
+def getAllToolShapeProps(shape_name_dir, s_names):
     props = dict()
-    all_shape_attrs = dict()
-    for i, fname in enumerate(shape_names):
+    all_shp_at = dict()
+    for i, fname in enumerate(s_names):
         shape_name, props = getToolShapeProps(shape_name_dir, fname)
-        all_shape_attrs.update({shape_name: props})
-    return all_shape_attrs
+        all_shp_at.update({shape_name: props})
+    return all_shp_at
 
 
 # Get all users available shape_names & all properties of each shape.
 def getAllAvailUserShapeDetails():
-    shapeDir, shape_names = getDefaultShapes()
+    shapeDir, s_names = getDefaultShapes()
 
     # Get all the shape properties and other attributes for each shpe.
-    all_shape_attrs = getAllToolShapeProps(shapeDir, shape_names)
+    all_shp_at = getAllToolShapeProps(shapeDir, s_names)
 
-    return shape_names, all_shape_attrs
+    return s_names, all_shp_at
 
 
 def full_path(filename):
@@ -127,7 +127,7 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
 
     # FIXME review if global requirefd..think should be
-    global all_shape_attrs
+    # global all_shape_attrs
 
     # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
     tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
@@ -250,7 +250,7 @@ def processUserToolInput(tb_name_rules,
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
    
-    global all_shape_attrs
+    # global all_shape_attrs
 
     # update tool_props with dia, tb_base_name
     # tool_props = all_shape_attrs[shape_name]deepcopy()
