@@ -82,7 +82,7 @@ def getToolShapeProps(shape_name_dir, shape_name):
                     }
 
                 FreeCAD.closeDocument(doc.Name)
-                # FIXME remove shape_names in favour of global shape_names ++CHANGE THOSE 2x GLOBALS TO BE UPPERCASE
+
                 return shape_name, attrs
 
 
@@ -147,8 +147,9 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
         # shoulD be ABLE TO MOVE THIS TO top THIS MODULES - NO NEED REREAD EVERY TIME
         if shape_full_path_fname_as_path.is_file():
             # FIXME: DELETE NEXT, THEN USE (renamed) shape_full_path_fname_attrs_NEW
-            shape_name, shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
-            shape_full_path_fname_attrs_NEW = all_shape_attrs[shape_name]
+            # shape_name, shape_full_path_fname_attrs = getToolShapeProps(workingdir + "/Shape/", shape_name)
+            # shape_full_path_fname_attrs_NEW = all_shape_attrs[shape_name]
+            shape_full_path_fname_attrs = all_shape_attrs[shape_name]
 
             #print()
             #print(shape_full_path_fname_attrs_NEW, "addToolToCurrentLibrary: shape_full_path_fname_attrs_NEW")
