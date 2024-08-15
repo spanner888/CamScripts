@@ -125,15 +125,17 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 
 
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print=False):
+    # if dbg_print:
+    #     print("dbg_print addToolToCurrentLibrary")
     # FIXME INTERIM usign BOTH old/new-class tb_name_rules
     msg=""
     if isinstance(tb_name_rules, Rules):
         msg="new class rules"
-        tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print=False)
+        tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     else:
         msg="old dict rules "
         # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
-        tb_name = create_tb_name(tb_name_rules, tool_props, dbg_print=False)
+        tb_name = create_tb_name(tb_name_rules, tool_props, dbg_print)
     # FIXME remove print
     #print("CamTbAddLib", tb_name)
     tool_props["name"] = tb_name
@@ -190,19 +192,21 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props,
                                 tb_name_rules, dbg_print=False):
+    if dbg_print:
+        print("dbg_print addToolListToCurrentLibrary")
     for d in dia_list:
         tb_nr = int(tb_base_nr + tb_nr_inc * d)
         tool_props["parameter"]["Diameter"] = str(round(d, 3)) + " mm"
 
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
-        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print=False)
+        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
 
 
 #TODO IMPORT at least csv
 def importToolCsv():
     # import expect need set EVERY tool data via
-    addToolToCurrentLibrary(tool_props, tb_nr, tb_name_rules)
+    addToolToCurrentLibrary(tool_props, tb_nr, tb_name_rules, dbg_print)
     # THEN set individ props, like #Flutes, shank dia, material........
 
 def deepcopy_toolprops(tp):
@@ -239,6 +243,9 @@ def processUserToolInput(tb_name_rules,
                          dia_inc=0,
                          dbg_print=False
                         ):
+    # if dbg_print:
+    #     print("dbg_print processUserToolInput")
+
     # FIXME review @least location of this "rule" & other TB name rules
     tb_nr = tb_base_nr + dia * tb_nr_inc
 
@@ -268,7 +275,7 @@ def processUserToolInput(tb_name_rules,
                                         )
         else:
             # create ONE ToolBit with diameter = dia
-            addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print=False)
+            addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
     else:
         print("Tool diameter must be number greater than zero.")
 
@@ -276,7 +283,10 @@ def processUserToolInput(tb_name_rules,
 
 # Use rules with "order" > 0 and some tool_props
 # to join segment data & seperators to create each tb name.
+# NB: INTEND RETIRE THIS METHOD ...ALREADY HAVE CLASS - just do more testing!!!
 def create_tb_name(tb_name_rules, tool_props, dbg_print=False):
+    # if dbg_print:
+    #     print("dbg_print OLD create_tb_name")
     q = FreeCAD.Units.Quantity
     # Save TB dia to calc TB# later
     t_dia = q(tool_props["parameter"]["Diameter"]).Value
@@ -413,6 +423,8 @@ class Rules:
 
 
     def create_tb_name(self, tool_props, dbg_print=False):
+        # if dbg_print:
+        #     print("create_tb_name CLASS create_tb_name")
         q = FreeCAD.Units.Quantity
         # Save TB dia to calc TB# later
         t_dia = q(tool_props["parameter"]["Diameter"]).Value
