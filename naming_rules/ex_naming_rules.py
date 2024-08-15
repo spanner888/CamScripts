@@ -2,9 +2,43 @@
 
 import CamTbAddLib
 
+# Contains rules used to create ToolBit names, based on TB property values, seperators, Abbreviations
+# and an auto numbering based on:
+# FIXME finish here ++ duplicate/merge with info in example
+# make sure the NOT included if value=0 AND TESTED!!!!
+
+# Rules included here:
+#   1. Ex1Rules
+#   2. Duplicate User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
+#   NB above are "trimmed" rule sets including only
+#       the active rules where .order >0
+#       and the mandatory, but as yet unused shapename.
+#   3. AllRulesTemplate.
+#       These are all possible rules matching default FreeCAD tool shapes.
+#       Copy to use as template for your own custom rules.
+#       Optionaly remove any rules with order = 0.
+#       FIXME: doc the dbg_print to print active rules "helper"
+
+# To see all CURRENT shape properties to use as rules, either
+# FIXME FIXME print_Tb <<<MOVE TO CLASS else update!!!!
+#   uncomment "#print_Tb(all_shape_attrs, "at import: ")" at end of CamTbAddLib.py
+#   or add to your code the line below:
+#   CamTbAddLib.print_Tb(all_shape_attrs, "at import: ")" at end of CamTbAddLib.py
+
+# Sections with "order": 0 are NOT included in making the TB name.
+# "order": n sets the order of each part of the TB name.
+# Order can have gaps in the numbers & can be set to large number to move item to end.
+# If item value is empty: it is skipped & seperators & abbrev_r are not added.
+# sep_left, sep_r are left/leading & right/trailing seperators of each part of the name.
+
+# NOTE: all rules have the same attributes, except t_auto_number, which has two added attributes:
+#        # This is ONLY rule item with added/different properties!
+#        self.t_auto_number.tb_base_nr = 20000
+#        self.t_auto_number.tb_dia_mult = 1000
+
 class Ex1Rules(CamTbAddLib.Rules):
     def __init__(self, shape_name):
-        # Only manadatory RuleItem
+        # NB At present it is NOT used to restrict rules to set value (or poss list of values)
         self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
         self.shapename.sep_left = "_"
 
@@ -74,11 +108,12 @@ class Ex1Rules(CamTbAddLib.Rules):
         self.TipDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
 
-# Attempt to  duplicate: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
+# Duplicate: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
 # Only required entries.
 class BoboxxRules(CamTbAddLib.Rules):
     def __init__(self, shape_name):
         # Only manadatory RuleItem
+        # NB At present it is NOT used to restrict rules to set value (or poss list of values)
         self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
 
         self.Flutes = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
@@ -96,17 +131,22 @@ class BoboxxRules(CamTbAddLib.Rules):
         self.Length.order = 3
 
 
+class AllRulesTemplate(CamTbAddLib.Rules):
+    def __init__(self, shape_name):
+        # Only manadatory RuleItem
+        # NB At present it is NOT used to restrict rules to set value (or poss list of values)
+        self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
 
+        self.base_name = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
+        self.base_name.sep_left = "_"
+        self.base_name.order = 99
 
-
-
-# Note: Dictionary below is so big to cater for ALL default FC ToolBit Shape properties
-#   Remove/add/reorder sections/dict as you desire eg:- {"shapename"  :{".......}}
-# Sections with "order": 0 are NOT included in making the TB name.
-# "order": n sets the order of each part of the TB name.
-# Order can have gaps in the numbers & can be set to large number to move item to end.
-# If item value is empty: it is skipped & seperators & abbrev_r are not added.
-# sep_left, sep_r are left/leading & right/trailing seperators of each part of the name.
+        self.t_auto_number = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
+        self.t_auto_number.sep_left = "_"
+        self.t_auto_number.order = 1
+        # This is ONLY rule item with added/different properties!
+        self.t_auto_number.tb_base_nr = 20000
+        self.t_auto_number.tb_dia_mult = 1000
 
 
 # OLD about to be retired apprach

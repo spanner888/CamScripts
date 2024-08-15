@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-
-
-
-
 # NEXT try match one set new/old rules & match both OUTPUT names!!!
 #if OK. clean up code, then more more tests as per fixmes & todos!!!
 
@@ -36,9 +32,6 @@ reload(CamTbAddLib)
 #   toolprops and ordered list of rules WITH order >0.
 
 # TEST all empty combos of tb_XXXX, missing Dia...=default??
-
-# TODO make "shape_name"  in def processUserToolInput(ex_rules.ex1_naming_rules, shape_name....
-# be str for ONE shape or LIST for many shapes
 
 #    so add default tb_naming_rules FOR EVERY FC DEFAULT SHAPE in the lib, ALL WITH ORDER#=0 <<< sep rules file!!!
 # TODO TODO really showcase TB sev Shape types & sev NAME RULES
