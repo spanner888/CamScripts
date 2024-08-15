@@ -36,25 +36,16 @@ reload(CamTbAddLib)
 #   toolprops and ordered list of rules WITH order >0.
 
 # TEST all empty combos of tb_XXXX, missing Dia...=default??
-# TODO pycharm & FC cfg from z400????
-# TODO tabs->spaces???
 
-# FIXME ....make use of this a THIRD macro!!!!<<<<<MAYBE if do TWO x releases...then here gets good focus ++ now simpler demos
+# TODO make "shape_name"  in def processUserToolInput(ex_rules.ex1_naming_rules, shape_name....
+# be str for ONE shape or LIST for many shapes
+
 #    so add default tb_naming_rules FOR EVERY FC DEFAULT SHAPE in the lib, ALL WITH ORDER#=0 <<< sep rules file!!!
-# FIXME TEST try duplicate EXACTLY: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
-#       ++boboxx_naming_rules
-
 # TODO TODO really showcase TB sev Shape types & sev NAME RULES
             ## maybe auto create with Range of Flutes....
             ## ++bulk import
 
 # TODO: add ???My numbering & if NOT used @ beginnning, then NO leading seperator.
-
-from importlib import reload
-import naming_rules.ex_naming_rules as ex_rules
-reload(ex_rules)
-
-tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmill')
 
 
 #FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
@@ -70,10 +61,15 @@ tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmill')
 # TODO  import tools & bulk create tb & add to current library >>STARTED IN:CamTbAdd_TESTING.FCMacro
 # TODO  option to add TC-tb to JobX
 
-# ??Three examples on adding a Default, One or a list of Tools to current Library.
+from importlib import reload
+import naming_rules.ex_naming_rules as ex_rules
+reload(ex_rules)
 
-#import naming_rules.boboxx_naming_rules as boboxx
-#import naming_rules.test_mixed as rules
+# create a naming rules object with DESIRED rules
+# FIXME FIXME 1 - why "restrict" rules to ONE shape type, thus forcing user to duplciate rule clsses/sets???
+tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmill')
+
+# ??Three examples on adding a Default, One or a list of Tools to current Library.
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
 CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules, dbg_print=False)
@@ -84,7 +80,7 @@ print("\t...Example 1 finished.\n")
 
 
 # -----------------------------------------------------------------------
-print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
+print("Example 2. Add SINGLE Tool 6.35 mm dia to current library, shows all settings")
 CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
                                 shape_name = "endmill",
                                 tb_base_name = "em",
@@ -98,7 +94,7 @@ print("\t...Example 2 finished.\n")
 
 
 # -----------------------------------------------------------------------
-print("Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
+print("Example 3. Create many tools: dia to dia_max, increment dia_inc")
 #   But only If BOTH dia_max & dia_inc are greater than zero,
 #            Else: ONLY create ONE TB of this dia in current library.
 CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
