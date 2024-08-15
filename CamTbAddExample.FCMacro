@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-Add debug mode ...print ordered rules & also toolprops
+# Add debug mode ...print ordered rules & also toolprops
 #NEXT try match one set new/old rules & match both OUTPUT names!!!
 #if OK. clean up code, then more more tests as per fixmes & todos!!!
 
