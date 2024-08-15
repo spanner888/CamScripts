@@ -92,20 +92,29 @@ class RuleItem:
         return f'ptype: {self.ptype.name}'
 
 
-# class IterMixin(object):
-#     def __iter__(self):
-#         for attr, value in self.__dict__.iteritems():
-#             yield attr, value
+class RulesTemplate:
+    def __init__():
+        # ???? 3x ptype=PropType.rule_prop added??? user still needs set same props not really saving??
+        pass
 
-# class RulesTemplate(IterMixin):
-#     def __init__():
-#         # ???? 3x ptype=PropType.rule_prop added??? user still needs set same props not really saving??
-#         pass
-#
-#         def create_tb_name(self, tb_nr, tool_props):
-#         # REQUIRES vars passed AND (??child?? class from ALL rules:order>0)
-#         # which => need iterate
-#         pass
+
+    def create_tb_name(self, tool_props):
+        pass
+        tp = tool_props["parameter"]
+        print(tp)
+        q = FreeCAD.Units.Quantity
+        # Save TB dia to calc TB# later
+        t_dia = q(tp["Diameter"]).Value
+
+        # # TODO cope/warn about duplicate order#s
+        # segs_nested = dict()
+        # for k, v in vars(self).items():
+        #     print(attr, value)
+        #     if v["order"] > 0:
+        #         s2 = {v["order"]: {k:v}}
+        #         segs_nested.update(s2)
+
+
 
 # STARTING WITH EVERYTHING...can trim down!!! but CARE HAVE SET SOME props
 # AND matchign current dict ver <<<<so has SOME VALUES!!!!
@@ -122,7 +131,7 @@ class RuleItem:
 #     .....
 #     raise AttributeError(name) from None
 # <class 'AttributeError'>: rule_propa
-class Rules():
+class Rules(RulesTemplate):
     def __init__(self, shape_name):
         # super().__init__()
         self.shapename = RuleItem(name=shape_name, ptype=PropType.rule_prop)
@@ -194,16 +203,27 @@ class Rules():
         self.TipDiameter = RuleItem(name='', ptype=PropType.tb_shape)
 
 
-    def create_tb_name(self, tb_nr, tool_props):
-        for attr, value in vars(self).items():
-            print(attr, value)
-
 
 tb_n_r = Rules(shape_name='endmill')
 print(tb_n_r.shapename.pref_name, tb_n_r.Diameter.abbrev_r, tb_n_r.cuttingAngle.abbrev_r)
-tb_n_r.create_tb_name(1, None)
 
-ttt = Rules(shape_name='rubbish')
+# tb_n = ''
+# tb_n = 'endmillss'
+tb_n = 'endmill'
+if tb_n in CamTbAddLib.shape_names:
+    tb_n_r.create_tb_name(CamTbAddLib.all_shape_attrs[tb_n])
+else:
+    print("ToolBit Shape {} is not in your Tool shares directory!".format(tb_n))
+
+
+
+
+
+
+
+
+
+
 
 
 tb_naming_rules = {"shapename"  :{"ptype": "rule_prop",
