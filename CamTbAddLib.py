@@ -124,16 +124,16 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     library.temptool.Proxy.saveToFile(library.temptool, fullpath)
 
 
-def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
+def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print=False):
     # FIXME INTERIM usign BOTH old/new-class tb_name_rules
     msg=""
     if isinstance(tb_name_rules, Rules):
         msg="new class rules"
-        tb_name = tb_name_rules.create_tb_name(tool_props)
+        tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print=False)
     else:
         msg="old dict rules "
         # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
-        tb_name = create_tb_name(tb_name_rules, tool_props)
+        tb_name = create_tb_name(tb_name_rules, tool_props, dbg_print=False)
     # FIXME remove print
     #print("CamTbAddLib", tb_name)
     tool_props["name"] = tb_name
@@ -189,14 +189,14 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
 def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props,
-                                tb_name_rules):
+                                tb_name_rules, dbg_print=False):
     for d in dia_list:
         tb_nr = int(tb_base_nr + tb_nr_inc * d)
         tool_props["parameter"]["Diameter"] = str(round(d, 3)) + " mm"
 
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
-        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules)
+        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print=False)
 
 
 #TODO IMPORT at least csv
@@ -236,7 +236,8 @@ def processUserToolInput(tb_name_rules,
                          tb_nr_inc=100,
                          dia=8.12,           # Odd size so less likely to clash with existing TB
                          dia_max=0,
-                         dia_inc=0
+                         dia_inc=0,
+                         dbg_print=False
                         ):
     # FIXME review @least location of this "rule" & other TB name rules
     tb_nr = tb_base_nr + dia * tb_nr_inc
@@ -249,7 +250,7 @@ def processUserToolInput(tb_name_rules,
     tool_props = ast.literal_eval(tool_props_str)
     #print(tool_props)
     tool_props['parameter']['Diameter'] = dia
-    
+
     library = PathToolBitLibraryGui.ToolBitLibrary()
     workingdir = None
 
@@ -262,10 +263,12 @@ def processUserToolInput(tb_name_rules,
             addToolListToCurrentLibrary(library, shape_name, dia_list,
                                         tb_base_name, tb_base_nr, tb_nr_inc,
                                         tool_props,
-                                        tb_name_rules)
+                                        tb_name_rules,
+                                        dbg_print=False
+                                        )
         else:
             # create ONE ToolBit with diameter = dia
-            addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules)
+            addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print=False)
     else:
         print("Tool diameter must be number greater than zero.")
 
@@ -273,7 +276,7 @@ def processUserToolInput(tb_name_rules,
 
 # Use rules with "order" > 0 and some tool_props
 # to join segment data & seperators to create each tb name.
-def create_tb_name(tb_name_rules, tool_props):
+def create_tb_name(tb_name_rules, tool_props, dbg_print=False):
     q = FreeCAD.Units.Quantity
     # Save TB dia to calc TB# later
     t_dia = q(tool_props["parameter"]["Diameter"]).Value
@@ -287,7 +290,9 @@ def create_tb_name(tb_name_rules, tool_props):
 
     # sort, so can collate all the parts on TB name in Users desired order
     od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
-
+    if dbg_print:
+        print("Active, ordered rules:", od_segs_nested)
+        print("tool_props:", tool_props)
     # now iterate od_segs_nested dict
     tb_name_template = ""
     for k, v in od_segs_nested.items():
@@ -388,7 +393,6 @@ class RuleItem:
     def __init__(self, name,
                        ptype: PropType,
                        order=0) -> None:
-
         self.pref_name = name
         self.ptype = ptype
         self.abbrev_left = ''
@@ -408,7 +412,7 @@ class Rules:
         pass
 
 
-    def create_tb_name(self, tool_props):
+    def create_tb_name(self, tool_props, dbg_print=False):
         q = FreeCAD.Units.Quantity
         # Save TB dia to calc TB# later
         t_dia = q(tool_props["parameter"]["Diameter"]).Value
@@ -422,7 +426,9 @@ class Rules:
                 segs_nested.update(s2)
         # sort, so can collate all the parts on TB name in Users desired order
         od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
-        #print(od_segs_nested)
+        if dbg_print:
+            print("Active, ordered rules:", od_segs_nested)
+            print("tool_props:", tool_props)
 
         # now iterate od_segs_nested dict
         tb_name_template = ""
@@ -473,8 +479,8 @@ class Rules:
                     if keyname == 'base_name':
                         tb_prop_val = tool_props['name']
                     if keyname == "t_auto_number":
-                        base_nr = v1["tb_base_nr"]
-                        dia_multiplier = v1["tb_dia_mult"]
+                        base_nr = v1.tb_base_nr
+                        dia_multiplier = v1.tb_dia_mult
                         tb_prop_val = base_nr + dia_multiplier * t_dia
                 elif v1.ptype == PropType.user_prop:
                     print("TODO add code for PropType.user_prop....hmm mainly for IMPORT, eg tool-Family, Brand/Model, uid, ...")

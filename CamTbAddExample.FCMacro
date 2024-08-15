@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
+
+
+
+
 # Add debug mode ...print ordered rules & also toolprops
 #NEXT try match one set new/old rules & match both OUTPUT names!!!
 #if OK. clean up code, then more more tests as per fixmes & todos!!!
@@ -79,8 +83,16 @@ reload(ex_rules)
 #import naming_rules.test_mixed as rules
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
-CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules)
-CamTbAddLib.processUserToolInput(tb_class_naming_rules)
+CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
+                         shape_name="endmill",
+                         tb_base_name="default_em",
+                         tb_base_nr=20000,
+                         tb_nr_inc=100,
+                         dia=8.12,           # Odd size so less likely to clash with existing TB
+                         dia_max=0,
+                         dia_inc=0,
+                         dbg_print=True)
+CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=True)
 CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
