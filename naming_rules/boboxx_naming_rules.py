@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Attempt to  duplicate: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
-boboxx_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
+boboxx_naming_rules = {"shapename"  :{"ptype": "rule_prop",
                                   "pref_name": "",
                                   "abbrev_left": "",
                                   "abbrev_r": "",
@@ -9,7 +9,7 @@ boboxx_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                   "sep_r": "",
                                   "order": 0
                                  },
-             "base_name"        :{"ptype": "added_macro_prop",
+             "base_name"        :{"ptype": "rule_prop",
                                   "pref_name": "",
                                   "abbrev_left": "",
                                   "abbrev_r": "",
@@ -18,7 +18,7 @@ boboxx_naming_rules = {"shapename"  :{"ptype": "added_macro_prop",
                                   "order": 0
                                  },
              # This is ONLY element with added/different properties!
-             "t_auto_number"    :{"ptype": "added_macro_prop",
+             "t_auto_number"    :{"ptype": "rule_prop",
                                   "tb_base_nr": 20000,    # For now KISS:= user sets!! ??lookup based on shapename??
                                   "tb_dia_mult": 1000,
                                   "pref_name": "",

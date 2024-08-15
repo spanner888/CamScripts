@@ -1,18 +1,5 @@
-
-2 things
-    IN LIB replacing tp/ta = toolprops['blah']
-    with like: tool_props["parameter"]['soome prop']
-
-    ditto in example AND bug fixing ...did I get rule props & toolprops confused
-
-
-so now remove calss rules & get lib changes working
-then the rest....
-
-
-
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
+
 
 # LICENSE: LGPL-2.1
 # need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
@@ -20,8 +7,8 @@ then the rest....
 
 
 # allow edited library updates, without close/reopen FC.
-from importlib import reload
 import CamTbAddLib
+from importlib import reload
 reload(CamTbAddLib)
 
 # Code derived from or inspired by:
@@ -45,8 +32,6 @@ reload(CamTbAddLib)
 
 
 
-print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
-print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
 print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
 print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
 # TODO 1 RULES **ALREADY ON RULES BRANCH!!!!
@@ -79,131 +64,6 @@ print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
 
 
 
-from enum import Enum
-import collections
-# Each rule item, must be one of these types.
-class PropType(Enum):
-    rule_prop = 'rule_prop',
-    tb_attrib = 'TbAttributes',
-    tb_shape = 'tb_shape'
-
-
-class RuleItem:
-    def __init__(self, name,
-                       ptype: PropType,
-                       order=0) -> None:
-
-        self.pref_name = name
-        self.ptype = ptype
-        self.abbrev_left = ''
-        self.abbrev_r = ''
-        self.sep_left = ''
-        self.sep_r = ''
-        self.order = order
-
-    def __str__(self) -> str:
-        return f'ptype: {self.ptype.name}'
-        # yield f'{ptype <<get str(class.prop)}: {self.ptype.name}'
-
-class RulesTemplate:
-    def __init__():
-        # ???? 3x ptype=PropType.rule_prop added??? user still needs set same props not really saving??
-        pass
-
-
-    def create_tb_name(self, tool_props):
-        q = FreeCAD.Units.Quantity
-        # Save TB dia to calc TB# later
-        t_dia = q(tool_props["parameter"]["Diameter"]).Value
-
-        # TODO cope/warn about duplicate order#s
-        segs_nested = dict()
-        for k, v in vars(self).items():
-            # print(k, v)
-            if v.order > 0:
-                s2 = {v.order: {k:v}}
-                segs_nested.update(s2)
-        # sort, so can collate all the parts on TB name in Users desired order
-        od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
-        print(od_segs_nested)
-
-        # now iterate od_segs_nested dict
-        tb_name_template = ""
-        for k, v in od_segs_nested.items():
-            tb_prop_val = ""
-            for k1, v1 in v.items():
-                print("\t", v1.ptype)
-                if v1.ptype == PropType.tb_shape:
-                    tp = tool_props["parameter"]
-                    # FIXME what if that prop not exist???
-                    # TEST for str props - eg Material, SpindleDirection
-                    # test units, or add another control in in tb_name_rules?? <<< do as # digits on RHS of dec point. 0=int, -1= str???
-                    #   ++ float for all EXCEPT int for Flutes ?others?
-                    try:
-                        tb_prop_val = q(tp[k1]).Value
-                    except KeyError:
-                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                        pass
-                elif v1.ptype == PropType.tb_attrib:
-                    # Chipload  & SpindlePower=Float, Flutes=Integer, Material & SpindleDirection=text
-                    ta = tool_props["attribute"]
-                    if k1 == "Chipload" or k1 == "SpindlePower":
-                        try:
-                            tb_prop_val = q(ta[k1]).Value
-                        except KeyError:
-                            # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                            pass
-                    elif k1 == "Flutes":
-                        try:
-                            tb_prop_val = round(q(ta[k1]).Value)
-                        except KeyError:
-                            # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                            pass
-                    else:
-                        try:
-                            tb_prop_val = ta[k1]
-                        except KeyError:
-                            # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                            pass
-                elif v1.ptype == PropType.rule_prop:
-                    try:
-                        keyname = k1
-                    except KeyError:
-                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                        pass
-                    if keyname == 'shapename':
-                        tb_prop_val = tool_props['shape']
-                    if keyname == 'base_name':
-                        tb_prop_val = tool_props['name']
-                    if keyname == "t_auto_number":
-                        base_nr = v1["tb_base_nr"]
-                        dia_multiplier = v1["tb_dia_mult"]
-                        tb_prop_val = base_nr + dia_multiplier * t_dia
-                else:
-                    print("ToolBit property type is not 'TbShape' \
-or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
-
-                # TODO TODO really showcase TB sev Shape types & sev NAME RULES
-                            ## maybe auto create with Range of Flutes....
-                            ## ++bulk import
-
-                # FIXME what is the _3 at then end OF EVERY TB NAME???? eg: _9.0 mmD_4F_3
-                # FIXME cater for None?? ie have default rules dict
-                # FIXME and the space between dia# & 'mm'
-                # TODO add My numbering tb_nr <<is it already calc from dia etc here???
-                #       or only use tb_nr for the Library T#??
-                # TODO
-                # if the order# =1 SKIP adding v1["sep_left"]
-                #     unless prepending my tb_nr
-
-                # only add l/r seperators of value exists
-                if len(str(tb_prop_val)) > 0:
-                    tb_name_template += v1.sep_left + v1.abbrev_left + str(tb_prop_val) + v1.abbrev_r + v1.sep_r
-                # print("\t\t==>", k1, tb_name_template)
-
-        return tb_name_template
-
-
 
 # STARTING WITH EVERYTHING...can trim down!!! but CARE HAVE SET SOME props
 # AND matchign current dict ver <<<<so has SOME VALUES!!!!
@@ -215,94 +75,92 @@ or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
 # TODO #1-ish Let user define alt Tool-prop names &/or just select default alternatives, from ISO, Imperial....
 #       & let user edit/add more templates/sets....
 
-# ptype=PropType.rule_prop MUST be a valid enum (left side) from class PropType(Enum)
+# ptype=CamTbAddLib.PropType.rule_prop MUST be a valid enum (left side) from class CamTbAddLib.PropType(Enum)
 # otherwise an exception will occur, for eg:
 #     .....
 #     raise AttributeError(name) from None
 # <class 'AttributeError'>: rule_propa
-class Rules(RulesTemplate):
-    def __init__(self, shape_name):
-        # super().__init__()
-        self.shapename = RuleItem(name=shape_name, ptype=PropType.rule_prop)
-        self.shapename.sep_left = "_"
+#class Ex1Rules(CamTbAddLib.Rules):
+    #def __init__(self, shape_name):
+        #super().__init__()
+        #self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
+        #self.shapename.sep_left = "_"
 
-        self.base_name = RuleItem(name='', ptype=PropType.rule_prop)
-        self.base_name.sep_left = "_"
-        self.base_name.order = 99
+        #self.base_name = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
+        #self.base_name.sep_left = "_"
+        #self.base_name.order = 99
 
-        self.t_auto_number = RuleItem(name='', ptype=PropType.rule_prop)
-        self.t_auto_number.sep_left = "_"
-        self.t_auto_number.order = 1
-        # This is ONLY rule item with added/different properties!
-        self.t_auto_number.tb_base_nr = 20000
-        self.t_auto_number.tb_dia_mult = 1000
+        #self.t_auto_number = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
+        #self.t_auto_number.sep_left = "_"
+        #self.t_auto_number.order = 1
+        #This is ONLY rule item with added/different properties!
+        #self.t_auto_number.tb_base_nr = 20000
+        #self.t_auto_number.tb_dia_mult = 1000
 
-        self.Chipload = RuleItem(name='', ptype=PropType.tb_attrib)
-        self.Chipload.abbrev_r = "CL"
-        self.Chipload.sep_left = "_"
-        self.Chipload.order = 1
+        #self.Chipload = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
+        #self.Chipload.abbrev_r = "CL"
+        #self.Chipload.sep_left = "_"
+        #self.Chipload.order = 1
 
-        self.Flutes = RuleItem(name='', ptype=PropType.tb_attrib)
-        self.Flutes.abbrev_r = "F"
-        self.Flutes.sep_left = "_"
-        self.Flutes.order = 3
+        #self.Flutes = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
+        #self.Flutes.abbrev_r = "F"
+        #self.Flutes.sep_left = "_"
+        #self.Flutes.order = 3
 
-        self.Material = RuleItem(name='', ptype=PropType.tb_attrib)
-        self.SpindleDirection = RuleItem(name='', ptype=PropType.tb_attrib)
-        self.SpindlePower = RuleItem(name='', ptype=PropType.tb_attrib)
+        #self.Material = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
+        #self.SpindleDirection = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
+        #self.SpindlePower = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
 
-        self.BladeThickness = RuleItem(name='', ptype=PropType.tb_shape)
-        self.CapDiameter = RuleItem(name='', ptype=PropType.tb_shape)
-        self.CapHeight = RuleItem(name='', ptype=PropType.tb_shape)
-        self.Crest = RuleItem(name='', ptype=PropType.tb_shape)
+        #self.BladeThickness = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.CapDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.CapHeight = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.Crest = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
-        self.cuttingAngle = RuleItem(name='', ptype=PropType.tb_shape)
-        self.cuttingAngle.abbrev_r = "deg"
+        #self.cuttingAngle = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.cuttingAngle.abbrev_r = "deg"
 
-        self.CuttingEdgeAngle = RuleItem(name='', ptype=PropType.tb_shape)
-        self.CuttingEdgeAngle.abbrev_r = "deg"
+        #self.CuttingEdgeAngle = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.CuttingEdgeAngle.abbrev_r = "deg"
 
-        self.CuttingEdgeHeight = RuleItem(name='', ptype=PropType.tb_shape)
+        #self.CuttingEdgeHeight = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
-        self.Diameter = RuleItem(name='', ptype=PropType.tb_shape)
-        self.Diameter.abbrev_r = "D"
-        self.Diameter.sep_left = "_"
-        self.Diameter.order = 2
+        #self.Diameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.Diameter.abbrev_r = "D"
+        #self.Diameter.sep_left = "_"
+        #self.Diameter.order = 2
 
-        self.FlatRadius= RuleItem(name='', ptype=PropType.tb_shape)
+        #self.FlatRadius= CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
-        self.Length = RuleItem(name='', ptype=PropType.tb_shape)
-        self.Length.abbrev_r = "L"
+        #self.Length = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.Length.abbrev_r = "L"
 
-        self.NeckDiameter = RuleItem(name='', ptype=PropType.tb_shape)
-        self.NeckDiameter.abbrev_r = "ND"
+        #self.NeckDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.NeckDiameter.abbrev_r = "ND"
 
-        self.NeckHeight = RuleItem(name='', ptype=PropType.tb_shape)
-        self.NeckHeight.abbrev_r = "NH"
+        #self.NeckHeight = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.NeckHeight.abbrev_r = "NH"
 
-        self.NeckLength = RuleItem(name='', ptype=PropType.tb_shape)
-        self.NeckLength.abbrev_r = "NL"
+        #self.NeckLength = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.NeckLength.abbrev_r = "NL"
 
-        self.ShankDiameter = RuleItem(name='', ptype=PropType.tb_shape)
-        self.ShankDiameter.abbrev_r = "DS"
+        #self.ShankDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.ShankDiameter.abbrev_r = "DS"
 
-        self.TipAngle = RuleItem(name='', ptype=PropType.tb_shape)
-        self.TipAngle.abbrev_r = "deg"
+        #self.TipAngle = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        #self.TipAngle.abbrev_r = "deg"
 
-        self.TipDiameter = RuleItem(name='', ptype=PropType.tb_shape)
+        #self.TipDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
+from importlib import reload
+import naming_rules.ex_naming_rules as ex_rules
+reload(ex_rules)
 
-
-tb_n_r = Rules(shape_name='endmill')
-print(tb_n_r.shapename.pref_name, tb_n_r.Diameter.abbrev_r, tb_n_r.cuttingAngle.abbrev_r)
-
-# tb_n = ''
-# tb_n = 'endmillss'
-tb_n = 'endmill'
-if tb_n in CamTbAddLib.shape_names:
-    print("CamTbAddEX:", tb_n_r.create_tb_name(CamTbAddLib.all_shape_attrs[tb_n]))
+tb_n_rules = ex_rules.Ex1Rules(shape_name='endmill')
+tb_name = 'endmill'
+if tb_name in CamTbAddLib.shape_names:
+    print("\t\tCamTbAddEX:", tb_n_rules.create_tb_name(CamTbAddLib.all_shape_attrs[tb_name]))
 else:
-    print("ToolBit Shape {} is not in your Tool shares directory!".format(tb_n))
+    print("ToolBit Shape {} is not in your Tool shares directory!".format(tb_name))
 
 
 
@@ -315,202 +173,6 @@ else:
 
 
 
-tb_naming_rules = {"shapename"  :{"ptype": "rule_prop",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "_",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "base_name"        :{"ptype": "rule_prop",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "_",
-                                "sep_r": "",
-                                "order": 99
-                                },
-            # This is ONLY element with added/different properties!
-            "t_auto_number"    :{"ptype": "rule_prop",
-                                "tb_base_nr": 20000,    # For now KISS:= user sets!! ??lookup based on shapename??
-                                "tb_dia_mult": 1000,
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "_",
-                                "sep_r": "",
-                                "order": 1
-                                },
-            "Chipload"         :{"ptype": "TbAttributes",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "CL",
-                                "sep_left": "_",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "Flutes"           :{"ptype": "TbAttributes",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "F",
-                                "sep_left": "_",
-                                "sep_r": "",
-                                "order": 3
-                                },
-            "Material"         :{"ptype": "TbAttributes",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "SpindleDirection" :{"ptype": "TbAttributes",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "SpindlePower"     :{"ptype": "TbAttributes",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "BladeThickness"   :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "CapDiameter"      :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "CapHeight"        :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "Crest"            :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "cuttingAngle"     :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "deg",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "CuttingEdgeAngle" :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "deg",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "CuttingEdgeHeight":{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "Diameter"         :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "D",
-                                "sep_left": "_",
-                                "sep_r": "",
-                                "order": 2
-                                },
-            "FlatRadius"       :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "Length"           :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "L",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "NeckDiameter"     :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "ND",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "NeckHeight"       :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "NH",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "NeckLength"       :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "NL",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "ShankDiameter"    :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "DS",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "TipAngle"         :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "deg",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                },
-            "TipDiameter"      :{"ptype": "TbShape",
-                                "pref_name": "",
-                                "abbrev_left": "",
-                                "abbrev_r": "",
-                                "sep_left": "",
-                                "sep_r": "",
-                                "order": 0
-                                }
-        }
 
 
 #FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
@@ -527,9 +189,15 @@ tb_naming_rules = {"shapename"  :{"ptype": "rule_prop",
 # TODO  option to add TC-tb to JobX
 
 # Three examples on adding a Default, One or a list of Tools to current Library.
+from importlib import reload
+#reload(naming_rules.ex_naming_rules)
+reload(ex_rules)
+#import naming_rules.boboxx_naming_rules as boboxx
+#import naming_rules.test_mixed as rules
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
-CamTbAddLib.processUserToolInput(tb_naming_rules)
+CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules)
+CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
 
