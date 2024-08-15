@@ -5,6 +5,8 @@
 #if OK. clean up code, then more more tests as per fixmes & todos!!!
 
 
+
+
 # LICENSE: LGPL-2.1
 # need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
 # YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
@@ -23,6 +25,9 @@ reload(CamTbAddLib)
 
 # DESC Create ToolBits from definitions or import csv. Add to CAM Tool Library
 # Details and how to use in README.MD
+# Flexible rule based TB names auto derived from selected TB properties
+#   Any Tool property in specified order, with pre/post seperators and Abbreviations/Units
+# LIMITATION: If you duplicate and order# in a second item, it will NOT show in TB name.
 
 # TEST all empty combos of tb_XXXX, missing Dia...=default??
 # TODO pycharm & FC cfg from z400????
@@ -30,145 +35,21 @@ reload(CamTbAddLib)
 
 # FIXME ....make use of this a THIRD macro!!!!<<<<<MAYBE if do TWO x releases...then here gets good focus ++ now simpler demos
 #    so add defualt tb_naming_rules in the lib, ALL WITH ORDER#=0
-# Flexible rule based TB names auto derived from selected TB properties
 # FIXME TEST try duplicate EXACTLY: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
 #              so make boboxx_naming_rules
 
 
+print("**time to merge RULES BRANCH=>dev???")
+print("**time to merge RULES BRANCH=>dev???")
+print("**time to merge RULES BRANCH=>dev???")
 
-print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
-print("TODO 1 RULES **ALREADY ON RULES BRANCH!!!!")
-# TODO 1 RULES **ALREADY ON RULES BRANCH!!!!
-#so current rules = for ALL poss props of ALL defualt
-#maybe change so ONE rule for EACH shape type..ONLY with rules for default props
-#       >>>do in code for each prop in dflt_tb if not in dflt_rule del (or don't attrs.update({shape_name: props}))
-#   ...then print for manual saving .....if reformatting = pain instead just print WHAT TO DELETE
-#    make this bit of code report any mising props in rule as well!!!
-
-#in one file or 1xdir- 10 files
-#then ANOTHER reduce further to really common (name/dia/flutes/ShankDiameter, Length) ++ v specific()tip dia, tip angle...
-# say all_dflt_rules_shape_name
-# say trimmed/core_dflt_rules_shape_name
-# CHANGE ORDER:
-# shape_name_ALL_dflt_rules
-# shape_name_minimal_dflt_rules
-# then my/example_shape_name.....
-
-
-# TODO somewhere {#278 of lib} notes on put default in lib so not here and SEP file to demo all this
-# Note: Dictionary below is so big to cater for ALL default FC ToolBit Shape properties
-#   Remove/add/reorder sections/dict as you desire eg:- {"shapename"  :{".......}}
-# Sections with "order": 0 are NOT included in making the TB name.
-# "order": n sets the order of each part of the TB name.
-# Order can have gaps in the numbers & can be set to large number to move item to end.
-# If item value is empty: it is skipped & seperators & abbrev_r are not added.
-# sep_left, sep_r are left/leading & right/trailing seperators of each part of the name.
 # TODO: add ???My numbering & if NOT used @ beginnning, then NO leading seperator.
-# LIMITATION: If you duplicate and order# in a second item, it will NOT show in TB name.
-
-
-
-
-# STARTING WITH EVERYTHING...can trim down!!! but CARE HAVE SET SOME props
-# AND matchign current dict ver <<<<so has SOME VALUES!!!!
-# TODO add helpers eg:
-#       show props in order & example of the rule based name
-#       alert if dup order#s
-#       alert if order >0, but no other props set
-#       dump all props that have val
-# TODO #1-ish Let user define alt Tool-prop names &/or just select default alternatives, from ISO, Imperial....
-#       & let user edit/add more templates/sets....
-
-# ptype=CamTbAddLib.PropType.rule_prop MUST be a valid enum (left side) from class CamTbAddLib.PropType(Enum)
-# otherwise an exception will occur, for eg:
-#     .....
-#     raise AttributeError(name) from None
-# <class 'AttributeError'>: rule_propa
-#class Ex1Rules(CamTbAddLib.Rules):
-    #def __init__(self, shape_name):
-        #super().__init__()
-        #self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
-        #self.shapename.sep_left = "_"
-
-        #self.base_name = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
-        #self.base_name.sep_left = "_"
-        #self.base_name.order = 99
-
-        #self.t_auto_number = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
-        #self.t_auto_number.sep_left = "_"
-        #self.t_auto_number.order = 1
-        #This is ONLY rule item with added/different properties!
-        #self.t_auto_number.tb_base_nr = 20000
-        #self.t_auto_number.tb_dia_mult = 1000
-
-        #self.Chipload = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
-        #self.Chipload.abbrev_r = "CL"
-        #self.Chipload.sep_left = "_"
-        #self.Chipload.order = 1
-
-        #self.Flutes = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
-        #self.Flutes.abbrev_r = "F"
-        #self.Flutes.sep_left = "_"
-        #self.Flutes.order = 3
-
-        #self.Material = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
-        #self.SpindleDirection = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
-        #self.SpindlePower = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
-
-        #self.BladeThickness = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.CapDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.CapHeight = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.Crest = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-
-        #self.cuttingAngle = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.cuttingAngle.abbrev_r = "deg"
-
-        #self.CuttingEdgeAngle = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.CuttingEdgeAngle.abbrev_r = "deg"
-
-        #self.CuttingEdgeHeight = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-
-        #self.Diameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.Diameter.abbrev_r = "D"
-        #self.Diameter.sep_left = "_"
-        #self.Diameter.order = 2
-
-        #self.FlatRadius= CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-
-        #self.Length = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.Length.abbrev_r = "L"
-
-        #self.NeckDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.NeckDiameter.abbrev_r = "ND"
-
-        #self.NeckHeight = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.NeckHeight.abbrev_r = "NH"
-
-        #self.NeckLength = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.NeckLength.abbrev_r = "NL"
-
-        #self.ShankDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.ShankDiameter.abbrev_r = "DS"
-
-        #self.TipAngle = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
-        #self.TipAngle.abbrev_r = "deg"
-
-        #self.TipDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
 from importlib import reload
 import naming_rules.ex_naming_rules as ex_rules
 reload(ex_rules)
 
 tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmills')
-
-#tb_name = 'endmill'
-#if tb_name in CamTbAddLib.shape_names:
-    #print("\t\tCamTbAddEX:", tb_class_naming_rules.create_tb_name(CamTbAddLib.all_shape_attrs[tb_name]))
-#else:
-    #print("ToolBit Shape {} is not in your Tool shares directory!".format(tb_name))
-
-
-
 
 
 #FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
@@ -181,7 +62,7 @@ tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmills')
 # print("boboxx tool name convention:\n2F-D6.35-L31.076")
 # print(tb_name_templ)
 
-# TODO  import tools & bulk create tb & add to current library
+# TODO  import tools & bulk create tb & add to current library >>STARTED IN:CamTbAdd_TESTING.FCMacro
 # TODO  option to add TC-tb to JobX
 
 # Three examples on adding a Default, One or a list of Tools to current Library.

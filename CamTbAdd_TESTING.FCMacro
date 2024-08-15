@@ -105,3 +105,16 @@ for data_dict in data_list:
     # If prop NOT mandatory then need default val <> 0 can't have 0 mm for Tool!!!
     # TODO TODO TODO TODO create easy way USER create EACH default TB type
     #   eg 1x py file/type????
+
+# TODO next is massage MANDATORY (how identify - a **v short** list?? {shape, name?, Diameter}) -> toolprops dict format
+# +++ user setting/dict/dongxi to REMAP csv col name to MANDATORY name....not req do for non-mandatory... BUT PROB GOOD IDEA TO ALLOW ie NOT restrict!!
+# ++add OTHER USER settigns & tag as that in toolprops
+# incldes way for user to specify what to add (anything else ignored)
+
+
+
+#hmmmm what if user wants import Tool RANGE(s) based on:
+    #dia, OAL, CL        ...prob NOT flutes = diff cutting data??
+                        #ditto diff material
+#ATM approach = define toolprops and create range as per main example code.
+#any use allowing import INLCUDING specify a VAR with range???

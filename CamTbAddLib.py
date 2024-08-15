@@ -112,7 +112,6 @@ def full_path(filename):
     fullpath = "{}{}{}.fctb".format(loc, os.path.sep, fname)
     return fullpath, fname
 
-
 # derived from FC BitLibrary.py
 def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     fullpath, fname = full_path(filename)
@@ -205,6 +204,29 @@ def importToolCsv():
     addToolToCurrentLibrary(tool_props, tb_nr, tb_name_rules)
     # THEN set individ props, like #Flutes, shank dia, material........
 
+def deepcopy_toolprops(tp):
+    # Cannot copy/deepcopy all_shape_attrs[] due to the FC Quantities
+    # Not removing Quantities as really want those to help validate
+    # lots Speed&Feeds calc with diff units & vary dif data sources...
+    tool_props_str = "{"
+    for k, v in tp.items():
+        if k == "parameter":
+            tool_props_str += "'parameter': {"
+            for k1, v1 in v.items():
+                #print(k1, v1 )
+                tool_props_str += "'" + k1 + "': '" + str(v1) + "', "
+            tool_props_str += "}, "
+        elif k == "attribute":
+            tool_props_str += "'attribute' : {"
+            for k1, v1 in v.items():
+                tool_props_str += "'" + k1 + "': '" + str(v1) + "', "
+        else:
+            tool_props_str += "'" + k + "': '" + v + "', "
+    tool_props_str += "}}"
+
+    return tool_props_str
+
+
 # TODO replace ALL tb_base_name var from default rules
 def processUserToolInput(tb_name_rules,
                          shape_name="endmill",
@@ -222,24 +244,7 @@ def processUserToolInput(tb_name_rules,
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
 
-    # Cannot copy/deepcopy all_shape_attrs[] due to the FC Quantities
-    # Not removing Quantities as really want those to help validate
-    # lots Speed&Feeds calc with diff units & vary dif data sources...
-    tool_props_str = "{"
-    for k, v in all_shape_attrs[shape_name].items():
-        if k == "parameter":
-            tool_props_str += "'parameter': {"
-            for k1, v1 in v.items():
-                #print(k1, v1 )
-                tool_props_str += "'" + k1 + "': '" + str(v1) + "', "
-            tool_props_str += "}, "
-        elif k == "attribute":
-            tool_props_str += "'attribute' : {"
-            for k1, v1 in v.items():
-                tool_props_str += "'" + k1 + "': '" + str(v1) + "', "
-        else:
-            tool_props_str += "'" + k + "': '" + v + "', "
-    tool_props_str += "}}"
+    tool_props_str = deepcopy_toolprops(all_shape_attrs[shape_name])
 
     import ast
     tool_props = ast.literal_eval(tool_props_str)
@@ -374,11 +379,21 @@ def print_Tb(tb_attrs, msg="", shape=""):
             #     print(k1,v1)
 
 # --- Rules using Classes -----------------------------
+
+# TODO add helpers eg:
+#       show props in order & example of the rule based name
+#       alert if dup order#s
+#       alert if order >0, but no other props set
+#       dump all props that have val
+# TODO #1-ish Let user define alt Tool-prop names &/or just select default alternatives, from ISO, Imperial....
+#       & let user edit/add more templates/sets....
+
 from enum import Enum
 import collections
 # Each rule item, must be one of these types.
 class PropType(Enum):
     rule_prop = 'rule_prop',
+    user_prop = 'user_prop',
     tb_attrib = 'TbAttributes',
     tb_shape = 'tb_shape'
 
@@ -475,6 +490,11 @@ class Rules:
                         base_nr = v1["tb_base_nr"]
                         dia_multiplier = v1["tb_dia_mult"]
                         tb_prop_val = base_nr + dia_multiplier * t_dia
+                elif v1.ptype == PropType.user_prop:
+                    print("TODO add code for PropType.user_prop....hmm mainly for IMPORT, eg tool-Family, Brand/Model, uid, ...")
+                    print("...so get rule as above, but save the specific data to temp var to use @ end - like dia @top??")
+                    print("     or build partial string here???")
+                    print("IS >>>>>PropType.user_prop<<<< actually req or is simialr idea for toolprop ...imported what req??")
                 else:
                     print("ToolBit property type is not 'TbShape' \
 or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
@@ -571,9 +591,10 @@ def load_data(dataFile, print_csv_file_names=False):
 
 
 
-# Init these when this Library imported, so only need to do slow-ish open/close files once
+# Init these when this Library imported,
+#   so only need to do slow-ish open/close shape files IN FreeCAD once!
 shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
-print("imported 'CamTbAddLib' and loaded all users Tool shape properties")
+print("imported 'CamTbAddLib' and loaded all users Tool shape_names & properties")
 #print_Tb(all_shape_attrs, "at import: ")
 #print()
 

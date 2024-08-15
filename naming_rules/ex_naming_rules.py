@@ -74,6 +74,13 @@ class Ex1Rules(CamTbAddLib.Rules):
         self.TipDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
 
+# Note: Dictionary below is so big to cater for ALL default FC ToolBit Shape properties
+#   Remove/add/reorder sections/dict as you desire eg:- {"shapename"  :{".......}}
+# Sections with "order": 0 are NOT included in making the TB name.
+# "order": n sets the order of each part of the TB name.
+# Order can have gaps in the numbers & can be set to large number to move item to end.
+# If item value is empty: it is skipped & seperators & abbrev_r are not added.
+# sep_left, sep_r are left/leading & right/trailing seperators of each part of the name.
 
 
 # OLD about to be retired apprach
