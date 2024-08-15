@@ -125,10 +125,17 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 
 
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
-    # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
-    tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
+    # FIXME INTERIM usign BOTH old/new-class tb_name_rules
+    msg=""
+    if isinstance(tb_name_rules, Rules):
+        msg="new class rules"
+        tb_name = tb_name_rules.create_tb_name(tool_props)
+    else:
+        msg="old dict rules"
+        # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
+        tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
     # FIXME remove print
-    print("CamTbAddLib", tb_name)
+    #print("CamTbAddLib", tb_name)
     tool_props["name"] = tb_name
 
     if PathToolBitLibraryGui.checkWorkingDir():
@@ -145,8 +152,8 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
-            print("\t\t\tAdding ToolBit Shape: {}, Dia: {} Name: {}"
-                  .format(shape_name,
+            print("\t({}): Adding ToolBit Shape: {}, Dia: {} Name: {}"
+                  .format(msg, shape_name,
                           new_tool_params['Diameter'],
                           tool_props['name']
                           )

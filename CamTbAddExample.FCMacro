@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
+#NEXT try match one set new/old rules & match both OUTPUT names!!!
+#if OK. clean up code, then more more tests as per fixmes & todos!!!
+
+
 # LICENSE: LGPL-2.1
 # need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
 # YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
@@ -155,21 +159,13 @@ from importlib import reload
 import naming_rules.ex_naming_rules as ex_rules
 reload(ex_rules)
 
-tb_n_rules = ex_rules.Ex1Rules(shape_name='endmill')
-tb_name = 'endmill'
-if tb_name in CamTbAddLib.shape_names:
-    print("\t\tCamTbAddEX:", tb_n_rules.create_tb_name(CamTbAddLib.all_shape_attrs[tb_name]))
-else:
-    print("ToolBit Shape {} is not in your Tool shares directory!".format(tb_name))
+tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmills')
 
-
-
-
-
-
-
-
-
+#tb_name = 'endmill'
+#if tb_name in CamTbAddLib.shape_names:
+    #print("\t\tCamTbAddEX:", tb_class_naming_rules.create_tb_name(CamTbAddLib.all_shape_attrs[tb_name]))
+#else:
+    #print("ToolBit Shape {} is not in your Tool shares directory!".format(tb_name))
 
 
 
@@ -198,6 +194,7 @@ reload(ex_rules)
 print("Example 1. Add single example default endmill to current Library.")
 CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules)
 CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
+CamTbAddLib.processUserToolInput(tb_class_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
 
