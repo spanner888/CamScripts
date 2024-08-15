@@ -4,7 +4,7 @@ import CamTbAddLib
 
 class Ex1Rules(CamTbAddLib.Rules):
     def __init__(self, shape_name):
-        # super().__init__()
+        # Only manadatory RuleItem
         self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
         self.shapename.sep_left = "_"
 
@@ -72,6 +72,32 @@ class Ex1Rules(CamTbAddLib.Rules):
         self.TipAngle.abbrev_r = "deg"
 
         self.TipDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+
+
+# Attempt to  duplicate: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
+# Only required entries.
+class BoboxxRules(CamTbAddLib.Rules):
+    def __init__(self, shape_name):
+        # Only manadatory RuleItem
+        self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
+
+        self.Flutes = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
+        self.Flutes.abbrev_r = "F"
+        self.Flutes.order = 1
+
+        self.Diameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        self.Diameter.abbrev_left = "D"
+        self.Diameter.sep_left = "_"
+        self.Diameter.order = 2
+
+        self.Length = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        self.Length.sep_left = "-"
+        self.Length.abbrev_left = "L"
+        self.Length.order = 3
+
+
+
+
 
 
 # Note: Dictionary below is so big to cater for ALL default FC ToolBit Shape properties
