@@ -48,12 +48,6 @@ reload(CamTbAddLib)
             ## maybe auto create with Range of Flutes....
             ## ++bulk import
 
-
-
-print("**time to merge RULES BRANCH=>dev???")
-print("**time to merge RULES BRANCH=>dev???")
-print("**time to merge RULES BRANCH=>dev???")
-
 # TODO: add ???My numbering & if NOT used @ beginnning, then NO leading seperator.
 
 from importlib import reload
@@ -84,59 +78,58 @@ reload(ex_rules)
 #import naming_rules.test_mixed as rules
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
-CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules, dbg_print=True)
-CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=True)
+CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules, dbg_print=False)
+CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
 CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
 
-if 1==2:
 
-    # -----------------------------------------------------------------------
-    print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
-    CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                    shape_name = "endmill",
-                                    tb_base_name = "em",
+# -----------------------------------------------------------------------
+print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")
+CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
+                                shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 6.35,
+                                dia_max = 0,
+                                dia_inc = 0)
+print("\t...Example 2 finished.\n")
+# -----------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------
+print("Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
+#   But only If BOTH dia_max & dia_inc are greater than zero,
+#            Else: ONLY create ONE TB of this dia in current library.
+CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
+                                shape_name = "endmill",
+                                tb_base_name = "em",
+                                tb_base_nr = 20000,
+                                tb_nr_inc = 100,
+                                dia = 8.2,
+                                dia_max = 9.0,
+                                dia_inc = 0.2)
+print("\t...Example 3 finished.\n")
+# -----------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------
+print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
+shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
+for s in shape_names:
+    CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
+                                    shape_name = s,
+                                    tb_base_name = s + "_example",
                                     tb_base_nr = 20000,
                                     tb_nr_inc = 100,
-                                    dia = 6.35,
-                                    dia_max = 0,
-                                    dia_inc = 0)
-    print("\t...Example 2 finished.\n")
-    # -----------------------------------------------------------------------
+                                    dia = 3.125,
+                                    dia_max = 3.5,
+                                    dia_inc = 0.125)
+print("\t...Example 4 finished.\n")
+# -----------------------------------------------------------------------
 
-
-    # -----------------------------------------------------------------------
-    print("Example 3. Create range of tools from dia to dia_max, incrementing dia by dia_inc")
-    #   But only If BOTH dia_max & dia_inc are greater than zero,
-    #            Else: ONLY create ONE TB of this dia in current library.
-    CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                    shape_name = "endmill",
-                                    tb_base_name = "em",
-                                    tb_base_nr = 20000,
-                                    tb_nr_inc = 100,
-                                    dia = 8.2,
-                                    dia_max = 9.0,
-                                    dia_inc = 0.2)
-    print("\t...Example 3 finished.\n")
-    # -----------------------------------------------------------------------
-
-
-    # -----------------------------------------------------------------------
-    print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
-    shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
-    for s in shape_names:
-        CamTbAddLib.processUserToolInput(tb_naming_rules,
-                                        shape_name = s,
-                                        tb_base_name = s + "_example",
-                                        tb_base_nr = 20000,
-                                        tb_nr_inc = 100,
-                                        dia = 3.125,
-                                        dia_max = 3.5,
-                                        dia_inc = 0.125)
-    print("\t...Example 4 finished.\n")
-    # -----------------------------------------------------------------------
-
-    print("")
-    print("CamTbAddLibExample.FcMacro finished.\n")
+print("")
+print("CamTbAddLibExample.FcMacro finished.\n")
 
