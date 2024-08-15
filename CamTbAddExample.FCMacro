@@ -40,9 +40,9 @@ reload(CamTbAddLib)
 # TODO tabs->spaces???
 
 # FIXME ....make use of this a THIRD macro!!!!<<<<<MAYBE if do TWO x releases...then here gets good focus ++ now simpler demos
-#    so add default tb_naming_rules in the lib, ALL WITH ORDER#=0
+#    so add default tb_naming_rules FOR EVERY FC DEFAULT SHAPE in the lib, ALL WITH ORDER#=0 <<< sep rules file!!!
 # FIXME TEST try duplicate EXACTLY: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
-#              so make boboxx_naming_rules
+#       ++boboxx_naming_rules
 
 # TODO TODO really showcase TB sev Shape types & sev NAME RULES
             ## maybe auto create with Range of Flutes....
@@ -70,10 +70,8 @@ tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmill')
 # TODO  import tools & bulk create tb & add to current library >>STARTED IN:CamTbAdd_TESTING.FCMacro
 # TODO  option to add TC-tb to JobX
 
-# Three examples on adding a Default, One or a list of Tools to current Library.
-from importlib import reload
-#reload(naming_rules.ex_naming_rules)
-reload(ex_rules)
+# ??Three examples on adding a Default, One or a list of Tools to current Library.
+
 #import naming_rules.boboxx_naming_rules as boboxx
 #import naming_rules.test_mixed as rules
 # -----------------------------------------------------------------------
@@ -128,6 +126,18 @@ for s in shape_names:
                                     dia_max = 3.5,
                                     dia_inc = 0.125)
 print("\t...Example 4 finished.\n")
+# -----------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------
+print("Example 5. User boboxx Example: 2F-D6.35-L31.076, FC issue:12823")
+import naming_rules.boboxx_naming_rules as boboxx
+boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
+
+CamTbAddLib.processUserToolInput(boboxx.boboxx_naming_rules)
+CamTbAddLib.processUserToolInput(boboxx_rules)
+
+print("\t...Example 5 finished.\n")
 # -----------------------------------------------------------------------
 
 print("")
