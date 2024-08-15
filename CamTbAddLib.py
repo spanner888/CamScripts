@@ -17,6 +17,7 @@ from PySide.QtCore import Qt
 import numpy as np
 
 import collections
+import ast
 import csv
 
 if False:
@@ -130,7 +131,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
         msg="new class rules"
         tb_name = tb_name_rules.create_tb_name(tool_props)
     else:
-        msg="old dict rules"
+        msg="old dict rules "
         # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
         tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
     # FIXME remove print
@@ -245,16 +246,15 @@ def processUserToolInput(tb_name_rules,
         doc = FreeCAD.newDocument()
 
     tool_props_str = deepcopy_toolprops(all_shape_attrs[shape_name])
-
-    import ast
     tool_props = ast.literal_eval(tool_props_str)
-
+    #print(tool_props)
+    tool_props['parameter']['Diameter'] = dia
+    
     library = PathToolBitLibraryGui.ToolBitLibrary()
     workingdir = None
 
     if dia > 0:
         if dia_max > 0 and dia_inc > 0:
-
             dia_list = np.arange(dia, dia_max, dia_inc)
             print("\tToolBit diameters to be created: ", dia_list)
 
@@ -273,8 +273,7 @@ def processUserToolInput(tb_name_rules,
 
 # Use rules with "order" > 0 and some tool_props
 # to join segment data & seperators to create each tb name.
-# TODO tb_nr should be redundant now - REMOVE.
-def create_tb_name(tb_name_rules, tb_nr, tool_props):
+def create_tb_name(tb_name_rules, tool_props):
     q = FreeCAD.Units.Quantity
     # Save TB dia to calc TB# later
     t_dia = q(tool_props["parameter"]["Diameter"]).Value
@@ -341,19 +340,6 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
             else:
                 print("ToolBit property type is not 'TbShape' \
                     or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
-
-            # TODO TODO really showcase TB sev Shape types & sev NAME RULES
-                        ## maybe auto create with Range of Flutes....
-                        ## ++bulk import
-
-            # FIXME what is the _3 at then end OF EVERY TB NAME???? eg: _9.0 mmD_4F_3
-            # FIXME cater for None?? ie have default rules dict
-            # FIXME and the space between dia# & 'mm'
-            # TODO add My numbering tb_nr <<is it already calc from dia etc here???
-            #       or only use tb_nr for the Library T#??
-            # TODO
-            # if the order# =1 SKIP adding v1["sep_left"]
-            #     unless prepending my tb_nr
 
             # only add l/r seperators of value exists
             if len(str(tb_prop_val)) > 0:

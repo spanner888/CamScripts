@@ -22,7 +22,7 @@ class Ex1Rules(CamTbAddLib.Rules):
         self.Chipload = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
         self.Chipload.abbrev_r = "CL"
         self.Chipload.sep_left = "_"
-        self.Chipload.order = 1
+        self.Chipload.order = 0
 
         self.Flutes = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
         self.Flutes.abbrev_r = "F"
