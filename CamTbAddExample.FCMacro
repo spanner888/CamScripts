@@ -1,3 +1,16 @@
+
+2 things
+    IN LIB replacing tp/ta = toolprops['blah']
+    with like: tool_props["parameter"]['soome prop']
+
+    ditto in example AND bug fixing ...did I get rule props & toolprops confused
+
+
+so now remove calss rules & get lib changes working
+then the rest....
+
+
+
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
@@ -90,7 +103,7 @@ class RuleItem:
 
     def __str__(self) -> str:
         return f'ptype: {self.ptype.name}'
-
+        # yield f'{ptype <<get str(class.prop)}: {self.ptype.name}'
 
 class RulesTemplate:
     def __init__():
@@ -99,11 +112,9 @@ class RulesTemplate:
 
 
     def create_tb_name(self, tool_props):
-        tp = tool_props["parameter"]
-        print(tp)
         q = FreeCAD.Units.Quantity
         # Save TB dia to calc TB# later
-        t_dia = q(tp["Diameter"]).Value
+        t_dia = q(tool_props["parameter"]["Diameter"]).Value
 
         # TODO cope/warn about duplicate order#s
         segs_nested = dict()
@@ -121,6 +132,7 @@ class RulesTemplate:
         for k, v in od_segs_nested.items():
             tb_prop_val = ""
             for k1, v1 in v.items():
+                print("\t", v1.ptype)
                 if v1.ptype == PropType.tb_shape:
                     tp = tool_props["parameter"]
                     # FIXME what if that prop not exist???
@@ -167,10 +179,9 @@ class RulesTemplate:
                         base_nr = v1["tb_base_nr"]
                         dia_multiplier = v1["tb_dia_mult"]
                         tb_prop_val = base_nr + dia_multiplier * t_dia
-
                 else:
                     print("ToolBit property type is not 'TbShape' \
-                        or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
+or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
 
                 # TODO TODO really showcase TB sev Shape types & sev NAME RULES
                             ## maybe auto create with Range of Flutes....
@@ -289,7 +300,7 @@ print(tb_n_r.shapename.pref_name, tb_n_r.Diameter.abbrev_r, tb_n_r.cuttingAngle.
 # tb_n = 'endmillss'
 tb_n = 'endmill'
 if tb_n in CamTbAddLib.shape_names:
-    print(tb_n_r.create_tb_name(CamTbAddLib.all_shape_attrs[tb_n]))
+    print("CamTbAddEX:", tb_n_r.create_tb_name(CamTbAddLib.all_shape_attrs[tb_n]))
 else:
     print("ToolBit Shape {} is not in your Tool shares directory!".format(tb_n))
 
@@ -501,28 +512,28 @@ tb_naming_rules = {"shapename"  :{"ptype": "rule_prop",
                                 }
         }
 
+
+#FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
+#...need have TB name/# = expected!!!
+#CHANGE here or THERE
+#tcProps1.bitName = "880_em"
+#tcProps2.lib_tool_nr = 20840
+
+# tb_name_templ = CamTbAddLib.get_tb_name_template(tb_naming_rules)
+# print("boboxx tool name convention:\n2F-D6.35-L31.076")
+# print(tb_name_templ)
+
+# TODO  import tools & bulk create tb & add to current library
+# TODO  option to add TC-tb to JobX
+
+# Three examples on adding a Default, One or a list of Tools to current Library.
+# -----------------------------------------------------------------------
+print("Example 1. Add single example default endmill to current Library.")
+CamTbAddLib.processUserToolInput(tb_naming_rules)
+print("\t...Example 1 finished.\n")
+# -----------------------------------------------------------------------
+
 if 1==2:
-
-    #FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
-    #...need have TB name/# = expected!!!
-    #CHANGE here or THERE
-    #tcProps1.bitName = "880_em"
-    #tcProps2.lib_tool_nr = 20840
-
-    # tb_name_templ = CamTbAddLib.get_tb_name_template(tb_naming_rules)
-    # print("boboxx tool name convention:\n2F-D6.35-L31.076")
-    # print(tb_name_templ)
-
-    # TODO  import tools & bulk create tb & add to current library
-    # TODO  option to add TC-tb to JobX
-
-    # Three examples on adding a Default, One or a list of Tools to current Library.
-    # -----------------------------------------------------------------------
-    print("Example 1. Add single example default endmill to current Library.")
-    CamTbAddLib.processUserToolInput(tb_naming_rules)
-    print("\t...Example 1 finished.\n")
-    # -----------------------------------------------------------------------
-
 
     # -----------------------------------------------------------------------
     print("Example 2. Add SINGLE Tool 6.35 mm dia to current library")

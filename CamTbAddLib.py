@@ -127,6 +127,8 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules):
     # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
     tb_name = create_tb_name(tb_name_rules, tb_nr, tool_props)
+    # FIXME remove print
+    print("CamTbAddLib", tb_name)
     tool_props["name"] = tb_name
 
     if PathToolBitLibraryGui.checkWorkingDir():
@@ -262,9 +264,8 @@ def processUserToolInput(tb_name_rules,
 # TODO tb_nr should be redundant now - REMOVE.
 def create_tb_name(tb_name_rules, tb_nr, tool_props):
     q = FreeCAD.Units.Quantity
-    tp = tool_props["parameter"]
     # Save TB dia to calc TB# later
-    t_dia = q(tp["Diameter"]).Value
+    t_dia = q(tool_props["parameter"]["Diameter"]).Value
     
     # TODO cope/warn about duplicate order#s
     segs_nested = dict()
@@ -282,34 +283,32 @@ def create_tb_name(tb_name_rules, tb_nr, tool_props):
         tb_prop_val = ""
         for k1, v1 in v.items():
             if v1["ptype"] == "TbShape":
-                tp = tool_props["parameter"]
                 # FIXME what if that prop not exist???
                 # TEST for str props - eg Material, SpindleDirection
                 # test units, or add another control in in tb_name_rules?? <<< do as # digits on RHS of dec point. 0=int, -1= str???
                 #   ++ float for all EXCEPT int for Flutes ?others?
                 try:
-                    tb_prop_val = q(tp[k1]).Value
+                    tb_prop_val = q(tool_props["parameter"][k1]).Value
                 except KeyError:
                     # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                     pass
             elif v1["ptype"] == "TbAttributes":
                 # Chipload  & SpindlePower=Float, Flutes=Integer, Material & SpindleDirection=text
-                ta = tool_props["attribute"]
                 if k1 == "Chipload" or k1 == "SpindlePower":
                     try:
-                        tb_prop_val = q(ta[k1]).Value
+                        tb_prop_val = q(tool_props["attribute"][k1]).Value
                     except KeyError:
                         # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                         pass
                 elif k1 == "Flutes":
                     try:
-                        tb_prop_val = round(q(ta[k1]).Value)
+                        tb_prop_val = round(q(tool_props["attribute"][k1]).Value)
                     except KeyError:
                         # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                         pass
                 else:
                     try:
-                        tb_prop_val = ta[k1]
+                        tb_prop_val = tool_props["attribute"][k1]
                     except KeyError:
                         # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                         pass
