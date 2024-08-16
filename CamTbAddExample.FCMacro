@@ -32,6 +32,7 @@ reload(CamTbAddLib)
 #   toolprops and ordered list of rules WITH order >0.
 
 # TEST all empty combos of tb_XXXX, missing Dia...=default??
+# FIXME test for odd props like in vbits, ballend etc
 
 # TODO DOC:++ dup shapes AND all those (past) warnigns about need recompuite shapes...
 # 11:09:35  	Adding ToolBit Shape: probe, Dia: 3.375 mm Name: _23375.0_3.375D_337_probe_example

@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+
+import CamTbAddLib
+from importlib import reload
+reload(CamTbAddLib)
+
+# TODO script AND lib & rules versioning!!!!
+# rename this file ...import....
+
+
+# default props from csv: cf spreadsheet "toolbit-attributes_extracted from default shapes.ods"
+# File MUST not have ANT commas.
+# single/double quotes???
+file1 = "cutting_tool_data/cuttingtools1.csv"
+data_dict = dict()
+# returns a LIST of dicts of each row
+data_list = CamTbAddLib.load_data(file1)
+for data_dict in data_list:
+    # need id ALL desired FC props AND cater if missing!!!
+    print(data_dict['shape'], data_dict['Diameter'], data_dict['ShankDiameter'], data_dict['name'])
+    # then use to create ONE TB....
+    #>>>>>TODO TODO +++++ as part of this seperating tool_props from lib!!!
+    # ie tool/shape type => property set wich attempt to read...
+    # ID some mandatory for each type???
+    # If prop NOT mandatory then need default val <> 0 can't have 0 mm for Tool!!!
+    # TODO TODO TODO TODO create easy way USER create EACH default TB type
+    #   eg 1x py file/type????
+
+# TODO next is massage MANDATORY (how identify - a **v short** list?? {shape, name?, Diameter}) -> toolprops dict format
+# +++ user setting/dict/dongxi to REMAP csv col name to MANDATORY name....not req do for non-mandatory... BUT PROB GOOD IDEA TO ALLOW ie NOT restrict!!
+# ++add OTHER USER settigns & tag as that in toolprops
+# incldes way for user to specify what to add (anything else ignored)
+
+
+
+#hmmmm what if user wants import Tool RANGE(s) based on:
+    #dia, OAL, CL        ...prob NOT flutes = diff cutting data??
+                        #ditto diff material
+#ATM approach = define toolprops and create range as per main example code.
+#any use allowing import INLCUDING specify a VAR with range???
