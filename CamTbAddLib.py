@@ -227,25 +227,17 @@ def deepcopy_toolprops(tp):
 
 def createToolFromProps(tb_name_rules, t_props, dbg_print=False):
     # t_props is dict of imported data(typically), so need match keys to known tool propserties...
-    
-    
     #NB tool_props CHANGE with diff shape!!!
-    #just test if key in dict ignore/warn if not
-    #tool_props: {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 8.12, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}}
-    
-    # KISS
-    #{'chamfer': {'shape': 'chamfer.fcstd', 'name': 'chamfer', 'parameter': {'CuttingEdgeAngle': '60.00 deg', 'CuttingEdgeHeight': '6.35 mm', 'Diameter': '12.00 mm', 'Length': '30.00 mm', 'ShankDiameter': '6.35 mm', 'TipDiameter': '5.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'v-bit': {'shape': 'v-bit.fcstd', 'name': 'v-bit', 'parameter': {'CuttingEdgeAngle': '90.00 deg', 'CuttingEdgeHeight': '1.00 mm', 'Diameter': '10.00 mm', 'Length': '20.00 mm', 'ShankDiameter': '5.00 mm', 'TipDiameter': '1.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'bullnose': {'shape': 'bullnose.fcstd', 'name': 'bullnose', 'parameter': {'CuttingEdgeHeight': '40.00 mm', 'Diameter': '5.00 mm', 'FlatRadius': '1.50 mm', 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'probe': {'shape': 'probe.fcstd', 'name': 'probe', 'parameter': {'Diameter': '6.00 mm', 'Length': '50.00 mm', 'ShaftDiameter': '4.00 mm'}, 'attribute': {'SpindlePower': False}}, 'ballend': {'shape': 'ballend.fcstd', 'name': 'ballend', 'parameter': {'CuttingEdgeHeight': '40.00 mm', 'Diameter': '5.00 mm', 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'slittingsaw': {'shape': 'slittingsaw.fcstd', 'name': 'slittingsaw', 'parameter': {'BladeThickness': '3.00 mm', 'CapDiameter': '8.00 mm', 'CapHeight': '3.00 mm', 'Diameter': '76.20 mm', 'Length': '50.00 mm', 'ShankDiameter': '19.05 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'endmill': {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': '5.00 mm', 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS', 'SpindleDirection': 'Forward'}}, 'dovetail': {'shape': 'dovetail.fcstd', 'name': 'dovetail', 'parameter': {'CuttingEdgeAngle': '60.00 deg', 'CuttingEdgeHeight': '9.00 mm', 'Diameter': '19.05 mm', 'Length': '54.20 mm', 'NeckDiameter': '8.00 mm', 'NeckHeight': '5.00 mm', 'ShankDiameter': '9.53 mm', 'TipDiameter': '5.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 8, 'Material': 'HSS'}}, 'thread-mill': {'shape': 'thread-mill.fcstd', 'name': 'thread-mill', 'parameter': {'Crest': '0.10 mm', 'Diameter': '5.00 mm', 'Length': '50.00 mm', 'NeckDiameter': '3.00 mm', 'NeckLength': '20.00 mm', 'ShankDiameter': '5.00 mm', 'cuttingAngle': '60.00 deg'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'drill': {'shape': 'drill.fcstd', 'name': 'drill', 'parameter': {'Diameter': '3.00 mm', 'Length': '50.00 mm', 'TipAngle': '119.00 deg'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}}
-
-    #common_tool_props[]
-    #alt_prop_names[]    # poss list of lists to cater for MANY name schemes ...OR dict of lists??
-    # more for user, or include in above with user tag??
-    
     mandatory_t_props_found = {'shape': False, 'parameter': {'Diameter': False}}
     tool_props = dict()
-    if t_props['shape'] in all_shape_attrs.keys():
-        tool_props = deepcopy_toolprops(all_shape_attrs[t_props['shape']])
-        print(tool_props, type(tool_props))
+    shape_name = t_props['shape']
+    if shape_name in all_shape_attrs.keys():
+        tool_props = deepcopy_toolprops(all_shape_attrs[shape_name])
         mandatory_t_props_found['shape'] = True
+        # force Diameter = 0, in case error traps fail...
+        tool_props['parameter']['Diameter'] = 0.0
+        print(tool_props, type(tool_props))
+        
         tp = tool_props['parameter']
         for k, v in tp.items():
             if k in t_props.keys():
@@ -257,7 +249,7 @@ def createToolFromProps(tb_name_rules, t_props, dbg_print=False):
             if k in t_props.keys():
                 ta[k] = v
     else:
-        print("\t ignoring shape name: {}. It is not in user shapes folder:".format(t_props['shape']))
+        print("\t ignoring shape name: {}. It is not in user shapes folder:".format(shape_name))
         # just silently ignoring unkown keys, ie import column names
         return
     
@@ -267,19 +259,27 @@ def createToolFromProps(tb_name_rules, t_props, dbg_print=False):
         return
     else:
         # FIXME review @least location of this "rule" & other TB name rules
+        dia = 0
         try:
-            tool_props['parameter']['Diameter'] = float(tool_props['parameter']['Diameter'])
+            val = tool_props['parameter']['Diameter']
+            dia = float(val)
         except ValueError:
-            print("Warning 'Diameter' is NOT a valid number: ", 
-                  tool_props['parameter']['Diameter'])
-            return
+            try:
+                # Keep FC:Quantity if possible for future unit management in Speeds & Feeds calculations
+                dia = q(tool_props["parameter"]["Diameter"]).Value
+            except:
+                print("Warning 'Diameter' is NOT a valid number: ", 
+                    tool_props['parameter']['Diameter'])
+                return
 
+    print(dia)
+    tool_props['parameter']['Diameter'] = dia
 
     # valid shape, needs file extension added
-    tool_props['shape'] = tool_props['shape'] + ".fcstd"
+    #tool_props['shape'] = tool_props['shape'] + ".fcstd"
     
 
-    # make function - called few places & might ned manage Quantity!!!
+    # make function - called few places & might need manage Quantity!!!
     #tb_nr = tb_base_nr + dia * tb_nr_inc
     tb_nr = 1   # FIXME HARDCODED ATM
     
@@ -292,8 +292,7 @@ def createToolFromProps(tb_name_rules, t_props, dbg_print=False):
     library = PathToolBitLibraryGui.ToolBitLibrary()
     
     addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
-
-
+    
 #THINKING:
   #below is one or many .....ABOVE is ONE ...one imported row at a time!!!
   #so change is not processUserToolInput, but addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
@@ -406,7 +405,6 @@ class Rules:
     def create_tb_name(self, tool_props, dbg_print=False):
         # if dbg_print:
         #     print("create_tb_name CLASS create_tb_name")
-        q = FreeCAD.Units.Quantity
         # Save TB dia to calc TB# later
         t_dia = q(tool_props["parameter"]["Diameter"]).Value
 
@@ -583,3 +581,4 @@ shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
 #print_Tb(all_shape_attrs, "at import: ")
 #print()
 
+q = FreeCAD.Units.Quantity
