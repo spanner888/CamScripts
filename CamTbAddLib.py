@@ -118,7 +118,6 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     fullpath, fname = full_path(filename)
     Path.Log.debug("filename: {} shape_full_path_fname: {} fullpath: {}".format(filename, shape_full_path_fname, fullpath))
 
-    print("#121:", attrs, attrs["name"], shape_full_path_fname)
     library.temptool = Path.Tool.Bit.ToolBitFactory().CreateFromAttrs(attrs, name=attrs["name"], path=shape_full_path_fname)
 
     library.temptool.Label = fname
@@ -238,14 +237,11 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
         # force Diameter = 0, in case error traps below fail...
         tool_props['parameter']['Diameter'] = 0.0
         dia = 0
-        print(tool_props, type(tool_props))
-
         tp = tool_props['parameter']
         for tpk, v in tp.items():
             if tpk in imported_t_props.keys():
                 if tpk in mandatory_imported_t_props_found['parameter'].keys():
                     mandatory_imported_t_props_found['parameter'][tpk] = True
-                    print("found 'parameter': ", tpk, imported_t_props[tpk], type(imported_t_props[tpk]))
                 tp[tpk] = imported_t_props[tpk]
 
         ta= tool_props['attribute']
@@ -253,7 +249,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             if tak in imported_t_props.keys():
                 ta[tak] = imported_t_props[tak]
 
-        #still failing +++PROB need for othr props like len & deg... - so make method!!!
+        # FIXME +++PROB need for othr props like len & deg... - so make method!!!
         try:
             val = tool_props['parameter']['Diameter']
             dia = float(val)
@@ -261,18 +257,14 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             try:
                 # Keep FC:Quantity if possible for future unit management in Speeds & Feeds calculations
                 dia = q(tool_props["parameter"]["Diameter"]).Value
-                print(dia , type(dia))
             except:
                 print("Warning 'Diameter' is NOT a valid number: ",
                     tool_props['parameter']['Diameter'])
                 return
     else:
         print("\t ignoring shape name: {}. It is not in user shapes folder:".format(shape_name))
-        # just silently ignoring unkown keys, ie import column names
         return
 
-
-    print(mandatory_imported_t_props_found)
     if mandatory_imported_t_props_found['parameter']['Diameter'] == False:
         print("Mandatory property 'Diameter' not found, ignoring this tool bit" )
         return
@@ -282,12 +274,8 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
 
 
     if 'Flutes' in tool_props['attribute'].keys():
-        print("forcing Flutes to int")
         tool_props['attribute']['Flutes'] = int(tool_props['attribute']['Flutes'])
-    else:
-        print("NOT changing Flutes to int", tool_props['attribute']['Flutes'], tool_props['attribute'].keys())
 
-    print(dia , type(dia))
     tool_props['parameter']['Diameter'] = dia
 
     # make function - called few places & might need manage Quantity!!!
