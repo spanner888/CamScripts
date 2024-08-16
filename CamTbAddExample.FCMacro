@@ -129,6 +129,19 @@ CamTbAddLib.processUserToolInput(boboxx_rules)
 print("\t...Example 5 finished.\n")
 # -----------------------------------------------------------------------
 
+
+# -----------------------------------------------------------------------
+print("Example 6. Demonstrate that empty rules produce an empty '' name.")
+print("    Although in Tool Library name literally becomes '.fctb'.")
+all_empty_rules = ex_rules.AllRulesTemplate(shape_name='not used ATM')
+CamTbAddLib.processUserToolInput(all_empty_rules)
+
+print("\t...Example 6 finished.\n")
+# -----------------------------------------------------------------------
+
+
+
 print("")
 print("CamTbAddLibExample.FcMacro finished.\n")
+
 
