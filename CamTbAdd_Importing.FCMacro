@@ -11,8 +11,8 @@ boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
 
 # TODO script AND lib & rules versioning!!!!
 
-
-#FC: 
+# --------------------------------------------------------
+#FC: ver below HAS attr fix...as shown
     #OS: Debian GNU/Linux 11 (bullseye) (XFCE/xfce)
     #Word size of FreeCAD: 64-bit
     #Version: 0.22.0dev.38429 (Git)
@@ -33,9 +33,33 @@ boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
         #attributes = attrs["attribute"]
         #for att in attributes:
             #PathUtil.setProperty(obj, att, attributes[att])
+# --------------------------------------------------------
+
+# How to cope with other bits:
+#     roughing
+#     slot drill
+#     T slot = slitting saw???
+#     PCB drills - v diff rpm/material ...just cutting props
+#     PCB corn cutters ...like roughing endmill...need to know, but just dif cutting props
+
+#     One view is still endmills, but WHEN selecting for Op AND get/calc SF need know diff....
+#         Name - cannot use as get overridden by rules!!
+#         Family/Part not really
+#         ...or suggest SpecialUse col/data <<<NEEDS CODE then to carry info/show - eg via rule into name
+#             OR just new shape name....and just copy equiv shape in tool lib???
+
+# TODO print FOUND shape_names & tell user if Tool importing/creating shape does not match exactly, including case, will be ignored.
+#   if no Diameter prop ...with a number val...tool ignored
 
 
-# make Fultes in default creat prop
+slotdrill, pcbdrill, pcbcorncutters - IGNORED
+have removed spaces, set names in csv AND file sys all lower case
+cannot see other prop in prop bag so????
+...JUST LOOK at my code!!!
+
+# TEST tool material from import!!!!
+
+# make Flutes in default creat prop
 # any other??   Length, ShankD, ??? all the family/brand/????
 # so use methjod to: use tool_prop dict and just auto ID/add vals...
 # make the import method = processUserToolInput + use tool_prop
@@ -58,7 +82,7 @@ data_list = CamTbAddLib.load_data(file1)
 
 for row_dict in data_list:
     # need id ALL desired FC props AND cater if missing!!!
-    print(row_dict['shape'], row_dict['Diameter'], row_dict['ShankDiameter'], row_dict['name'])
+    # print(row_dict['shape'], row_dict['Diameter'], row_dict['ShankDiameter'], row_dict['name'])
     # then use to create ONE TB....
     CamTbAddLib.createToolFromProps(boboxx_rules, row_dict, dbg_print=False)
 

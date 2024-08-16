@@ -581,7 +581,7 @@ def load_data(dataFile, print_csv_file_names=False):
 #   so only need to do slow-ish open/close shape files IN FreeCAD once!
 shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
 #print("imported 'CamTbAddLib' and loaded all users Tool shape_names & properties")
-#print_Tb(all_shape_attrs, "at import: ")
+print("at import found User shapes: ", shape_names)
 #print()
 
 q = FreeCAD.Units.Quantity
