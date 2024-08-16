@@ -71,7 +71,7 @@ print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
 print("Example 2. Add SINGLE Tool 6.35 mm dia to current library, shows all settings")
 CamTbAddLib.processUserToolInput(tb_class_naming_rules,
-                                shape_name = "any",
+                                shape_name = "endmill",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
                                 tb_nr_inc = 100,
