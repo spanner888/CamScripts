@@ -284,7 +284,7 @@ def processUserToolInput(tb_name_rules,
 # Use rules with "order" > 0 and some tool_props
 # to join segment data & seperators to create each tb name.
 # NB: INTEND RETIRE THIS METHOD ...ALREADY HAVE CLASS - just do more testing!!!
-def create_tb_name(tb_name_rules, tool_props, dbg_print=False):
+def create_tb_nameXX(tb_name_rules, tool_props, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print OLD create_tb_name")
     q = FreeCAD.Units.Quantity
@@ -364,7 +364,7 @@ def create_tb_name(tb_name_rules, tool_props, dbg_print=False):
     return tb_name_template
 
 
-def print_Tb(tb_attrs, msg="", shape=""):
+def print_TbXX(tb_attrs, msg="", shape=""):
     if shape != "":
         print(msg, tb_attrs[shape])
     else:
