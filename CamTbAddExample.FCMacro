@@ -47,9 +47,6 @@ reload(CamTbAddLib)
 #tcProps1.bitName = "880_em"
 #tcProps2.lib_tool_nr = 20840
 
-# tb_name_templ = CamTbAddLib.get_tb_name_template(tb_naming_rules)
-# print("boboxx tool name convention:\n2F-D6.35-L31.076")
-# print(tb_name_templ)
 
 # TODO  import tools & bulk create tb & add to current library >>STARTED IN:CamTbAdd_TESTING.FCMacro
 # TODO  option to add TC-tb to JobX
@@ -60,22 +57,21 @@ reload(ex_rules)
 
 # create a naming rules object with DESIRED rules
 # FIXME FIXME 1 - why "restrict" rules to ONE shape type, thus forcing user to duplciate rule clsses/sets???
-tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='endmill')
+tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='any')
 
 # ??Three examples on adding a Default, One or a list of Tools to current Library.
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
-CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules, dbg_print=False)
 CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
-CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
+# CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
 
 
 # -----------------------------------------------------------------------
 print("Example 2. Add SINGLE Tool 6.35 mm dia to current library, shows all settings")
-CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
-                                shape_name = "endmill",
+CamTbAddLib.processUserToolInput(tb_class_naming_rules,
+                                shape_name = "any",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
                                 tb_nr_inc = 100,
@@ -90,7 +86,7 @@ print("\t...Example 2 finished.\n")
 print("Example 3. Create many tools: dia to dia_max, increment dia_inc")
 #   But only If BOTH dia_max & dia_inc are greater than zero,
 #            Else: ONLY create ONE TB of this dia in current library.
-CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
+CamTbAddLib.processUserToolInput(tb_class_naming_rules,
                                 shape_name = "endmill",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
@@ -106,7 +102,7 @@ print("\t...Example 3 finished.\n")
 print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
 shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
 for s in shape_names:
-    CamTbAddLib.processUserToolInput(ex_rules.ex1_naming_rules,
+    CamTbAddLib.processUserToolInput(tb_class_naming_rules,
                                     shape_name = s,
                                     tb_base_name = s + "_example",
                                     tb_base_nr = 20000,
@@ -120,10 +116,7 @@ print("\t...Example 4 finished.\n")
 
 # -----------------------------------------------------------------------
 print("Example 5. User boboxx Example: 2F-D6.35-L31.076, FC issue:12823")
-import naming_rules.boboxx_naming_rules as boboxx
 boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
-
-CamTbAddLib.processUserToolInput(boboxx.boboxx_naming_rules)
 CamTbAddLib.processUserToolInput(boboxx_rules)
 
 print("\t...Example 5 finished.\n")
