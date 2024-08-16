@@ -128,16 +128,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
     # FIXME INTERIM usign BOTH old/new-class tb_name_rules
-    msg=""
-    if isinstance(tb_name_rules, Rules):
-        msg="new class rules"
-        tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
-    else:
-        msg="old dict rules "
-        # USE THE NEW TB_NAME_TMPLATE TO CHANGE endmill_tool_props["name"]..using TB values
-        tb_name = create_tb_name(tb_name_rules, tool_props, dbg_print)
-    # FIXME remove print
-    #print("CamTbAddLib", tb_name)
+    tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     tool_props["name"] = tb_name
 
     if PathToolBitLibraryGui.checkWorkingDir():
@@ -154,8 +145,8 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rule
             params = shape_full_path_fname_attrs["parameter"]
 
             new_tool_params = tool_props["parameter"]
-            print("\t({}): Adding ToolBit Shape: {}, Dia: {} Name: {}"
-                  .format(msg, shape_name,
+            print("\tAdding ToolBit Shape: {}, Dia: {} Name: {}"
+                  .format(shape_name,
                           new_tool_params['Diameter'],
                           tool_props['name']
                           )
@@ -280,104 +271,6 @@ def processUserToolInput(tb_name_rules,
         print("Tool diameter must be number greater than zero.")
 
     # print("...finished.\n")
-
-# Use rules with "order" > 0 and some tool_props
-# to join segment data & seperators to create each tb name.
-# NB: INTEND RETIRE THIS METHOD ...ALREADY HAVE CLASS - just do more testing!!!
-def create_tb_nameXX(tb_name_rules, tool_props, dbg_print=False):
-    # if dbg_print:
-    #     print("dbg_print OLD create_tb_name")
-    q = FreeCAD.Units.Quantity
-    # Save TB dia to calc TB# later
-    t_dia = q(tool_props["parameter"]["Diameter"]).Value
-    
-    # TODO cope/warn about duplicate order#s
-    segs_nested = dict()
-    for k, v in tb_name_rules.items():
-        if v["order"] > 0:
-            s2 = {v["order"]: {k:v}}
-            segs_nested.update(s2)
-
-    # sort, so can collate all the parts on TB name in Users desired order
-    od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
-    if dbg_print:
-        print("Active, ordered rules:", od_segs_nested)
-        print("tool_props:", tool_props)
-    # now iterate od_segs_nested dict
-    tb_name_template = ""
-    for k, v in od_segs_nested.items():
-        tb_prop_val = ""
-        for k1, v1 in v.items():
-            if v1["ptype"] == "TbShape":
-                # FIXME what if that prop not exist???
-                # TEST for str props - eg Material, SpindleDirection
-                # test units, or add another control in in tb_name_rules?? <<< do as # digits on RHS of dec point. 0=int, -1= str???
-                #   ++ float for all EXCEPT int for Flutes ?others?
-                try:
-                    tb_prop_val = q(tool_props["parameter"][k1]).Value
-                except KeyError:
-                    # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                    pass
-            elif v1["ptype"] == "TbAttributes":
-                # Chipload  & SpindlePower=Float, Flutes=Integer, Material & SpindleDirection=text
-                if k1 == "Chipload" or k1 == "SpindlePower":
-                    try:
-                        tb_prop_val = q(tool_props["attribute"][k1]).Value
-                    except KeyError:
-                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                        pass
-                elif k1 == "Flutes":
-                    try:
-                        tb_prop_val = round(q(tool_props["attribute"][k1]).Value)
-                    except KeyError:
-                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                        pass
-                else:
-                    try:
-                        tb_prop_val = tool_props["attribute"][k1]
-                    except KeyError:
-                        # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                        pass
-            elif v1["ptype"] == "rule_prop":
-                try:
-                    keyname = k1
-                except KeyError:
-                    # Specified name rule Property does NOT exist in this ToolBit, IGNORE
-                    pass
-                if keyname == 'shapename':
-                    tb_prop_val = tool_props['shape']
-                if keyname == 'base_name':
-                    tb_prop_val = tool_props['name']
-                if keyname == "t_auto_number":
-                    base_nr = v1["tb_base_nr"]
-                    dia_multiplier = v1["tb_dia_mult"]
-                    tb_prop_val = base_nr + dia_multiplier * t_dia
-            else:
-                print("ToolBit property type is not 'TbShape' \
-                    or 'TbAttributes' or 'added_macro_prop', but is: ", v1["ptype"])
-
-            # only add l/r seperators of value exists
-            if len(str(tb_prop_val)) > 0:
-                tb_name_template += v1["sep_left"] + v1["abbrev_left"] + str(tb_prop_val) + v1["abbrev_r"] + v1["sep_r"]
-            # print("\t\t==>", k1, tb_name_template)
-
-    return tb_name_template
-
-
-def print_TbXX(tb_attrs, msg="", shape=""):
-    if shape != "":
-        print(msg, tb_attrs[shape])
-    else:
-        for k, v in tb_attrs.items():
-            print(k, v["name"], "\t\t")
-            tp = v["parameter"]
-            print("\t", tp)
-            ta = v["attribute"]
-            print("\t", ta)
-            # for k1, v1 in tp.items():
-            #     print(k1,v1)
-            # for k1, v1 in ta.items():
-            #     print(k1,v1)
 
 # --- Rules using Classes -----------------------------
 
