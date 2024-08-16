@@ -52,10 +52,10 @@ boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
 #   if no Diameter prop ...with a number val...tool ignored
 
 
-slotdrill, pcbdrill, pcbcorncutters - IGNORED
-have removed spaces, set names in csv AND file sys all lower case
-cannot see other prop in prop bag so????
-...JUST LOOK at my code!!!
+# slotdrill, pcbdrill, pcbcorncutters - IGNORED
+# have removed spaces, set names in csv AND file sys all lower case
+# cannot see other prop in prop bag so????
+# ...JUST LOOK at my code!!!
 
 # TEST tool material from import!!!!
 
