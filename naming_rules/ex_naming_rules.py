@@ -130,6 +130,7 @@ class BoboxxRules(CamTbAddLib.Rules):
         self.Length.abbrev_left = "L"
         self.Length.order = 3
 
+
 # Copy to use and ensure that required rules have a unique order > 0
 class AllRulesTemplate(CamTbAddLib.Rules):
     def __init__(self, shape_name):

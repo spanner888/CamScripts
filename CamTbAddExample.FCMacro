@@ -52,6 +52,7 @@ reload(CamTbAddLib)
 #tcProps1.bitName = "880_em"
 #tcProps2.lib_tool_nr = 20840
 
+# TODO doc: dbg_print=True
 
 # TODO  import tools & bulk create tb & add to current library >>STARTED IN:CamTbAdd_TESTING.FCMacro
 # TODO  option to add TC-tb to JobX
@@ -67,7 +68,7 @@ tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='any')
 # ??Three examples on adding a Default, One or a list of Tools to current Library.
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
-CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
+CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=True)
 # CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------

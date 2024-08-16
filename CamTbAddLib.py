@@ -219,10 +219,86 @@ def deepcopy_toolprops(tp):
         else:
             tool_props_str += "'" + k + "': '" + v + "', "
     tool_props_str += "}}"
+    
+    tool_props = ast.literal_eval(tool_props_str)
 
-    return tool_props_str
+    return tool_props
 
 
+def createToolFromProps(tb_name_rules, t_props, dbg_print=False):
+    # t_props is dict of imported data(typically), so need match keys to known tool propserties...
+    
+    
+    #NB tool_props CHANGE with diff shape!!!
+    #just test if key in dict ignore/warn if not
+    #tool_props: {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 8.12, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}}
+    
+    # KISS
+    #{'chamfer': {'shape': 'chamfer.fcstd', 'name': 'chamfer', 'parameter': {'CuttingEdgeAngle': '60.00 deg', 'CuttingEdgeHeight': '6.35 mm', 'Diameter': '12.00 mm', 'Length': '30.00 mm', 'ShankDiameter': '6.35 mm', 'TipDiameter': '5.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'v-bit': {'shape': 'v-bit.fcstd', 'name': 'v-bit', 'parameter': {'CuttingEdgeAngle': '90.00 deg', 'CuttingEdgeHeight': '1.00 mm', 'Diameter': '10.00 mm', 'Length': '20.00 mm', 'ShankDiameter': '5.00 mm', 'TipDiameter': '1.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'bullnose': {'shape': 'bullnose.fcstd', 'name': 'bullnose', 'parameter': {'CuttingEdgeHeight': '40.00 mm', 'Diameter': '5.00 mm', 'FlatRadius': '1.50 mm', 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'probe': {'shape': 'probe.fcstd', 'name': 'probe', 'parameter': {'Diameter': '6.00 mm', 'Length': '50.00 mm', 'ShaftDiameter': '4.00 mm'}, 'attribute': {'SpindlePower': False}}, 'ballend': {'shape': 'ballend.fcstd', 'name': 'ballend', 'parameter': {'CuttingEdgeHeight': '40.00 mm', 'Diameter': '5.00 mm', 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'slittingsaw': {'shape': 'slittingsaw.fcstd', 'name': 'slittingsaw', 'parameter': {'BladeThickness': '3.00 mm', 'CapDiameter': '8.00 mm', 'CapHeight': '3.00 mm', 'Diameter': '76.20 mm', 'Length': '50.00 mm', 'ShankDiameter': '19.05 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'endmill': {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': '5.00 mm', 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS', 'SpindleDirection': 'Forward'}}, 'dovetail': {'shape': 'dovetail.fcstd', 'name': 'dovetail', 'parameter': {'CuttingEdgeAngle': '60.00 deg', 'CuttingEdgeHeight': '9.00 mm', 'Diameter': '19.05 mm', 'Length': '54.20 mm', 'NeckDiameter': '8.00 mm', 'NeckHeight': '5.00 mm', 'ShankDiameter': '9.53 mm', 'TipDiameter': '5.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 8, 'Material': 'HSS'}}, 'thread-mill': {'shape': 'thread-mill.fcstd', 'name': 'thread-mill', 'parameter': {'Crest': '0.10 mm', 'Diameter': '5.00 mm', 'Length': '50.00 mm', 'NeckDiameter': '3.00 mm', 'NeckLength': '20.00 mm', 'ShankDiameter': '5.00 mm', 'cuttingAngle': '60.00 deg'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}, 'drill': {'shape': 'drill.fcstd', 'name': 'drill', 'parameter': {'Diameter': '3.00 mm', 'Length': '50.00 mm', 'TipAngle': '119.00 deg'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': 0, 'Material': 'HSS'}}}
+
+    #common_tool_props[]
+    #alt_prop_names[]    # poss list of lists to cater for MANY name schemes ...OR dict of lists??
+    # more for user, or include in above with user tag??
+    
+    mandatory_t_props_found = {'shape': False, 'parameter': {'Diameter': False}}
+    tool_props = dict()
+    if t_props['shape'] in all_shape_attrs.keys():
+        tool_props = deepcopy_toolprops(all_shape_attrs[t_props['shape']])
+        print(tool_props, type(tool_props))
+        mandatory_t_props_found['shape'] = True
+        tp = tool_props['parameter']
+        for k, v in tp.items():
+            if k in t_props.keys():
+                if k in mandatory_t_props_found['parameter'].keys():
+                    mandatory_t_props_found['parameter'][k] = True
+                tp[k] = v
+        ta= tool_props['attribute']
+        for k, v in ta.items():
+            if k in t_props.keys():
+                ta[k] = v
+    else:
+        print("\t ignoring shape name: {}. It is not in user shapes folder:".format(t_props['shape']))
+        # just silently ignoring unkown keys, ie import column names
+        return
+    
+    print(mandatory_t_props_found)
+    if mandatory_t_props_found['parameter']['Diameter'] == False:
+        print("Mandatory property 'Diameter' not found, ignoring these tool_props" )
+        return
+    else:
+        # FIXME review @least location of this "rule" & other TB name rules
+        try:
+            tool_props['parameter']['Diameter'] = float(tool_props['parameter']['Diameter'])
+        except ValueError:
+            print("Warning 'Diameter' is NOT a valid number: ", 
+                  tool_props['parameter']['Diameter'])
+            return
+
+
+    # valid shape, needs file extension added
+    tool_props['shape'] = tool_props['shape'] + ".fcstd"
+    
+
+    # make function - called few places & might ned manage Quantity!!!
+    #tb_nr = tb_base_nr + dia * tb_nr_inc
+    tb_nr = 1   # FIXME HARDCODED ATM
+    
+    
+    # need any document open, no changes are made.
+    if FreeCAD.ActiveDocument == None:
+        doc = FreeCAD.newDocument()
+
+    # FYI: below is sort of code that code be moved/run ONCE for performance!
+    library = PathToolBitLibraryGui.ToolBitLibrary()
+    
+    addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
+
+
+#THINKING:
+  #below is one or many .....ABOVE is ONE ...one imported row at a time!!!
+  #so change is not processUserToolInput, but addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
+    #>>> it alreay uses tool_props!!!!
+    
 # TODO replace ALL tb_base_name var from default rules
 def processUserToolInput(tb_name_rules,
                          shape_name="endmill",
@@ -237,20 +313,32 @@ def processUserToolInput(tb_name_rules,
     # if dbg_print:
     #     print("dbg_print processUserToolInput")
 
+    if shape_name not in shape_names:
+        print("Shape {} is not in shape directory. Current shapes are {}."
+              .format(shape_name, shape_names))
+        return
+    
     # FIXME review @least location of this "rule" & other TB name rules
-    tb_nr = tb_base_nr + dia * tb_nr_inc
+    try:
+        dia=float(dia)
+    except ValueError:
+        print("Warning dia is NOT a valid number!")
+        return
 
+    tb_nr = tb_base_nr + dia * tb_nr_inc
+    
     # need any document open, no changes are made.
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
 
-    tool_props_str = deepcopy_toolprops(all_shape_attrs[shape_name])
-    tool_props = ast.literal_eval(tool_props_str)
+    # FYI: below is sort of code that code be moved/run ONCE for performance!
+    tool_props = deepcopy_toolprops(all_shape_attrs[shape_name])
     #print(tool_props)
     tool_props['parameter']['Diameter'] = dia
 
+    # FYI: below is sort of code that code be moved/run ONCE for performance!
     library = PathToolBitLibraryGui.ToolBitLibrary()
-    workingdir = None
+    #workingdir = None
 
     if dia > 0:
         if dia_max > 0 and dia_inc > 0:
@@ -491,7 +579,7 @@ def load_data(dataFile, print_csv_file_names=False):
 # Init these when this Library imported,
 #   so only need to do slow-ish open/close shape files IN FreeCAD once!
 shape_names, all_shape_attrs = getAllAvailUserShapeDetails()
-print("imported 'CamTbAddLib' and loaded all users Tool shape_names & properties")
+#print("imported 'CamTbAddLib' and loaded all users Tool shape_names & properties")
 #print_Tb(all_shape_attrs, "at import: ")
 #print()
 

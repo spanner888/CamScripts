@@ -4,21 +4,74 @@ import CamTbAddLib
 from importlib import reload
 reload(CamTbAddLib)
 
-# TODO script AND lib & rules versioning!!!!
-# rename this file ...import....
+from importlib import reload
+import naming_rules.ex_naming_rules as ex_rules
+reload(ex_rules)
+boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
 
+# TODO script AND lib & rules versioning!!!!
+
+
+#FC: 
+    #OS: Debian GNU/Linux 11 (bullseye) (XFCE/xfce)
+    #Word size of FreeCAD: 64-bit
+    #Version: 0.22.0dev.38429 (Git)
+    #Build type: Release
+    #Branch: main
+    #Hash: 362cf1c80edb89957d81c0dbe6e50ce35daaa6db
+    #Python 3.11.9, Qt 5.15.13, Coin 4.0.2, Vtk 9.2.6, OCC 7.7.2
+    #Locale: English/Australia (en_AU)
+
+#class ToolBitFactory(object):
+    #def CreateFromAttrs(self, attrs, name="ToolBit", path=None):
+        #Path.Log.track(attrs, path)
+        #obj = Factory.Create(name, attrs["shape"], path)
+        #obj.Label = attrs["name"]
+        #params = attrs["parameter"]
+        #for prop in params:
+            #PathUtil.setProperty(obj, prop, params[prop])
+        #attributes = attrs["attribute"]
+        #for att in attributes:
+            #PathUtil.setProperty(obj, att, attributes[att])
+
+
+# make Fultes in default creat prop
+# any other??   Length, ShankD, ??? all the family/brand/????
+# so use methjod to: use tool_prop dict and just auto ID/add vals...
+# make the import method = processUserToolInput + use tool_prop
+# ...then strip processUserToolInput ... to just populate passed in vars then call above
+# ??dict or list??
+
+#NB tool_props CHANGE with diff shape!!!
+#just test if key in dict ignore/warn if not
+#tool_props: {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 8.12, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}}
+#13:39:34  	Adding ToolBit Shape: endmill, Dia: 8.12 Name: _28120.0_8.12D_0F_endmill
 
 # default props from csv: cf spreadsheet "toolbit-attributes_extracted from default shapes.ods"
 # File MUST not have ANT commas.
 # single/double quotes???
 file1 = "cutting_tool_data/cuttingtools1.csv"
 data_dict = dict()
-# returns a LIST of dicts of each row
+# Imports csv as LIST of dicts of each row, ie header row cells are dict Keys
 data_list = CamTbAddLib.load_data(file1)
-for data_dict in data_list:
+
+
+for row_dict in data_list:
     # need id ALL desired FC props AND cater if missing!!!
-    print(data_dict['shape'], data_dict['Diameter'], data_dict['ShankDiameter'], data_dict['name'])
+    print(row_dict['shape'], row_dict['Diameter'], row_dict['ShankDiameter'], row_dict['name'])
     # then use to create ONE TB....
+    CamTbAddLib.createToolFromProps(boboxx_rules, row_dict, dbg_print=False)
+
+    # below works, BUT can only set shape, name, dia!!!
+    #CamTbAddLib.processUserToolInput(boboxx_rules,
+                                    #shape_name = data_dict['shape'],
+                                    #tb_base_name = data_dict['shape'],
+                                    #tb_base_nr = 20000,
+                                    #tb_nr_inc = 100,
+                                    #dia = data_dict['Diameter'],
+                                    #dia_max = 0,
+                                    #dia_inc = 0,
+                                    #dbg_print=True)
     #>>>>>TODO TODO +++++ as part of this seperating tool_props from lib!!!
     # ie tool/shape type => property set wich attempt to read...
     # ID some mandatory for each type???
