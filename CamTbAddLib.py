@@ -118,6 +118,7 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     fullpath, fname = full_path(filename)
     Path.Log.debug("filename: {} shape_full_path_fname: {} fullpath: {}".format(filename, shape_full_path_fname, fullpath))
 
+    print("#121:", attrs, attrs["name"], shape_full_path_fname)
     library.temptool = Path.Tool.Bit.ToolBitFactory().CreateFromAttrs(attrs, name=attrs["name"], path=shape_full_path_fname)
 
     library.temptool.Label = fname
@@ -225,41 +226,45 @@ def deepcopy_toolprops(tp):
     return tool_props
 
 
-def createToolFromProps(tb_name_rules, t_props, dbg_print=False):
-    # t_props is dict of imported data(typically), so need match keys to known tool propserties...
+def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
+    # imported_t_props is dict of imported data(typically), so need match keys to known tool properties...
     #NB tool_props CHANGE with diff shape!!!
-    mandatory_t_props_found = {'shape': False, 'parameter': {'Diameter': False}}
+    mandatory_imported_t_props_found = {'shape': False, 'parameter': {'Diameter': False}}
     tool_props = dict()
-    shape_name = t_props['shape']
+    shape_name = imported_t_props['shape']
     if shape_name in all_shape_attrs.keys():
         tool_props = deepcopy_toolprops(all_shape_attrs[shape_name])
-        mandatory_t_props_found['shape'] = True
-        # force Diameter = 0, in case error traps fail...
+        mandatory_imported_t_props_found['shape'] = True
+        # force Diameter = 0, in case error traps below fail...
         tool_props['parameter']['Diameter'] = 0.0
-        print(tool_props, type(tool_props))
-        
-        tp = tool_props['parameter']
-        for k, v in tp.items():
-            if k in t_props.keys():
-                if k in mandatory_t_props_found['parameter'].keys():
-                    mandatory_t_props_found['parameter'][k] = True
-                tp[k] = v
-        ta= tool_props['attribute']
-        for k, v in ta.items():
-            if k in t_props.keys():
-                ta[k] = v
-    else:
-        print("\t ignoring shape name: {}. It is not in user shapes folder:".format(shape_name))
-        # just silently ignoring unkown keys, ie import column names
-        return
-    
-    print(mandatory_t_props_found)
-    if mandatory_t_props_found['parameter']['Diameter'] == False:
-        print("Mandatory property 'Diameter' not found, ignoring these tool_props" )
-        return
-    else:
-        # FIXME review @least location of this "rule" & other TB name rules
         dia = 0
+        print(tool_props, type(tool_props))
+
+        # made a mess had sections out of order!!!!!
+        # sorta hope got correct
+        # BUT NOW SEE HAVE SAVED Flutes into BOTH param & attr sections!!!
+        # see #121 below
+        # endmill 6.0 6.0  endmill 6-6stubby4F
+        # 19:19:03  {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 0.0, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}} <class 'dict'>
+        # 19:19:03  found 'parameter':  Diameter 6.0 <class 'float'>
+        # 19:19:03  {'shape': True, 'parameter': {'Diameter': True}}
+        # 19:19:03  0.0 <class 'float'>
+        # 19:19:03  	Adding ToolBit Shape: endmill, Dia: 0.0 Name: 0F_D0.0-L50.0
+        # 19:19:03  #121: {'shape': 'endmill.fcstd', 'name': '0F_D0.0-L50.0', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 0.0, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm', 'Flutes': 4.0}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}} 0F_D0.0-L50.0 /home/spanner888/.local/share/FreeCAD/Macro/toolsFC/tools_shared/Shape/endmill.fcstd
+
+        tp = tool_props['parameter']
+        for tpk, v in tp.items():
+            if tpk in imported_t_props.keys():
+                if tpk in mandatory_imported_t_props_found['parameter'].keys():
+                    mandatory_imported_t_props_found['parameter'][tpk] = True
+                    print("found 'parameter': ", tpk, imported_t_props[tpk], type(imported_t_props[tpk]))
+
+        ta= tool_props['attribute']
+        for tak, v in ta.items():
+            if tak in imported_t_props.keys():
+                tp[tak] = imported_t_props[tak]
+
+        #still failing +++PROB need for othr props like len & deg... - so make method!!!
         try:
             val = tool_props['parameter']['Diameter']
             dia = float(val)
@@ -267,32 +272,55 @@ def createToolFromProps(tb_name_rules, t_props, dbg_print=False):
             try:
                 # Keep FC:Quantity if possible for future unit management in Speeds & Feeds calculations
                 dia = q(tool_props["parameter"]["Diameter"]).Value
+                print(dia , type(dia))
             except:
-                print("Warning 'Diameter' is NOT a valid number: ", 
+                print("Warning 'Diameter' is NOT a valid number: ",
                     tool_props['parameter']['Diameter'])
                 return
 
-    print(dia)
-    tool_props['parameter']['Diameter'] = dia
+        #....soooo try before @121, print the vars about to pass and check....
+        # Flutes is float hsa to be int!!!
+        # ???generic int/float type  how tag/convert somehow??
 
-    # valid shape, needs file extension added
-    #tool_props['shape'] = tool_props['shape'] + ".fcstd"
-    
+    else:
+        print("\t ignoring shape name: {}. It is not in user shapes folder:".format(shape_name))
+        # just silently ignoring unkown keys, ie import column names
+        return
+
+
+    print(mandatory_imported_t_props_found)
+    if mandatory_imported_t_props_found['parameter']['Diameter'] == False:
+        print("Mandatory property 'Diameter' not found, ignoring this tool bit" )
+        return
+    else:
+        pass
+        # FIXME review @least location of this "rule" & other TB name rules
+
+
+    if tool_props['attribute']['Flutes'] in tool_props['attribute'].keys():
+        tool_props['attribute']['Flutes'] = int(tool_props['attribute']['Flutes'])
+
+    print(dia , type(dia))
+    tool_props['parameter']['Diameter'] = dia
 
     # make function - called few places & might need manage Quantity!!!
     #tb_nr = tb_base_nr + dia * tb_nr_inc
     tb_nr = 1   # FIXME HARDCODED ATM
-    
-    
+
+
     # need any document open, no changes are made.
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
 
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     library = PathToolBitLibraryGui.ToolBitLibrary()
-    
+
     addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
-    
+
+
+
+
+
 #THINKING:
   #below is one or many .....ABOVE is ONE ...one imported row at a time!!!
   #so change is not processUserToolInput, but addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
