@@ -240,29 +240,18 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
         dia = 0
         print(tool_props, type(tool_props))
 
-        # made a mess had sections out of order!!!!!
-        # sorta hope got correct
-        # BUT NOW SEE HAVE SAVED Flutes into BOTH param & attr sections!!!
-        # see #121 below
-        # endmill 6.0 6.0  endmill 6-6stubby4F
-        # 19:19:03  {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 0.0, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}} <class 'dict'>
-        # 19:19:03  found 'parameter':  Diameter 6.0 <class 'float'>
-        # 19:19:03  {'shape': True, 'parameter': {'Diameter': True}}
-        # 19:19:03  0.0 <class 'float'>
-        # 19:19:03  	Adding ToolBit Shape: endmill, Dia: 0.0 Name: 0F_D0.0-L50.0
-        # 19:19:03  #121: {'shape': 'endmill.fcstd', 'name': '0F_D0.0-L50.0', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 0.0, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm', 'Flutes': 4.0}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}} 0F_D0.0-L50.0 /home/spanner888/.local/share/FreeCAD/Macro/toolsFC/tools_shared/Shape/endmill.fcstd
-
         tp = tool_props['parameter']
         for tpk, v in tp.items():
             if tpk in imported_t_props.keys():
                 if tpk in mandatory_imported_t_props_found['parameter'].keys():
                     mandatory_imported_t_props_found['parameter'][tpk] = True
                     print("found 'parameter': ", tpk, imported_t_props[tpk], type(imported_t_props[tpk]))
+                tp[tpk] = imported_t_props[tpk]
 
         ta= tool_props['attribute']
         for tak, v in ta.items():
             if tak in imported_t_props.keys():
-                tp[tak] = imported_t_props[tak]
+                ta[tak] = imported_t_props[tak]
 
         #still failing +++PROB need for othr props like len & deg... - so make method!!!
         try:
@@ -277,11 +266,6 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
                 print("Warning 'Diameter' is NOT a valid number: ",
                     tool_props['parameter']['Diameter'])
                 return
-
-        #....soooo try before @121, print the vars about to pass and check....
-        # Flutes is float hsa to be int!!!
-        # ???generic int/float type  how tag/convert somehow??
-
     else:
         print("\t ignoring shape name: {}. It is not in user shapes folder:".format(shape_name))
         # just silently ignoring unkown keys, ie import column names
@@ -297,8 +281,11 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
         # FIXME review @least location of this "rule" & other TB name rules
 
 
-    if tool_props['attribute']['Flutes'] in tool_props['attribute'].keys():
+    if 'Flutes' in tool_props['attribute'].keys():
+        print("forcing Flutes to int")
         tool_props['attribute']['Flutes'] = int(tool_props['attribute']['Flutes'])
+    else:
+        print("NOT changing Flutes to int", tool_props['attribute']['Flutes'], tool_props['attribute'].keys())
 
     print(dia , type(dia))
     tool_props['parameter']['Diameter'] = dia
