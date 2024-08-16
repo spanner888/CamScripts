@@ -33,6 +33,10 @@ reload(CamTbAddLib)
 
 # TEST all empty combos of tb_XXXX, missing Dia...=default??
 
+# TODO DOC:++ dup shapes AND all those (past) warnigns about need recompuite shapes...
+# 11:09:35  	Adding ToolBit Shape: probe, Dia: 3.375 mm Name: _23375.0_3.375D_337_probe_example
+# 11:09:35  Sketch: Solving the sketch failed
+
 #    so add default tb_naming_rules FOR EVERY FC DEFAULT SHAPE in the lib, ALL WITH ORDER#=0 <<< sep rules file!!!
 # TODO TODO really showcase TB sev Shape types & sev NAME RULES
             ## maybe auto create with Range of Flutes....
