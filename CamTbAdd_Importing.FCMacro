@@ -59,21 +59,26 @@ boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
 
 # TEST tool material from import!!!!
 
-# make Flutes in default creat prop
-# any other??   Length, ShankD, ??? all the family/brand/????
-# so use methjod to: use tool_prop dict and just auto ID/add vals...
-# make the import method = processUserToolInput + use tool_prop
-# ...then strip processUserToolInput ... to just populate passed in vars then call above
-# ??dict or list??
 
-#NB tool_props CHANGE with diff shape!!!
-#just test if key in dict ignore/warn if not
-#tool_props: {'shape': 'endmill.fcstd', 'name': 'endmill', 'parameter': {'CuttingEdgeHeight': '30.00 mm', 'Diameter': 8.12, 'Length': '50.00 mm', 'ShankDiameter': '3.00 mm'}, 'attribute': {'Chipload': '0.00 mm', 'Flutes': '0', 'Material': 'HSS', 'SpindleDirection': 'Forward'}}
-#13:39:34  	Adding ToolBit Shape: endmill, Dia: 8.12 Name: _28120.0_8.12D_0F_endmill
+# File CSV format. comma seperated, no commas WITHIN a cell.
+# Default number format is Float.
+# Import data scrubbing converts empty string to float=0.0,
+#   except if data "Flute", converted to int=0.
+# Other than above, any text in number cell = error like:
+# ....<class 'ValueError'>: could not convert string to float: '6-10'
+# Where the last '6-10' shows the text where a float was expected.
+# So you may end up with Diameter=0.0 or Flutes=0.
+# Diameter=0.0 will usually show errors like one or both of:
+#   "Updating geometry: Error build geometry(11): Both points are equal"
+#   "Sketch001: Solving the sketch failed"
+# So 0 is better than incorrect value with no error/warning.
+# Every time script is run:
+#   ToolBit files will be created or overwrite existing files
+#   ToolBits will be added to the current Tool library.
+# so that rec of use empty test lib.
+# or even an entire test Tool dir with default tools/shapes.
+# + Unwanted TB files can be deleted
 
-# default props from csv: cf spreadsheet "toolbit-attributes_extracted from default shapes.ods"
-# File MUST not have ANT commas.
-# single/double quotes???
 file1 = "cutting_tool_data/cuttingtools1.csv"
 data_dict = dict()
 # Imports csv as LIST of dicts of each row, ie header row cells are dict Keys

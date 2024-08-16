@@ -28,9 +28,6 @@ else:
 
 
 ###################################################################
-
-
-
 def getDefaultShapes():
     shapeDir = ''
     # NB MAY open dialog to offer select dir & copy default tool data.
@@ -244,6 +241,12 @@ def deepcopy_toolprops(tp):
 
     return tool_props
 
+def convert_imported_val(ip_val):
+    # TODO extend with DATA type ie str, int, float and convert incoming data, else warning
+    if isinstance(ip_val, str) and len(ip_val) < 1:
+        ip_val = 0
+    return ip_val
+
 
 def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     # imported_t_props is dict of imported data(typically), so need match keys to known tool properties...
@@ -262,23 +265,32 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             if tpk in imported_t_props.keys():
                 if tpk in mandatory_imported_t_props_found['parameter'].keys():
                     mandatory_imported_t_props_found['parameter'][tpk] = True
-                tp[tpk] = imported_t_props[tpk]
+                try:
+                    tp[tpk] = float(convert_imported_val(imported_t_props[tpk]))
+                # except ValueError:
+                except:
+                    print("In column {}, cannot convert {} to Float"\
+                        .format(tpk, convert_imported_val(imported_t_props[tpk])))
 
         ta= tool_props['attribute']
         for tak, v in ta.items():
             if tak in imported_t_props.keys():
-                ta[tak] = imported_t_props[tak]
+                try:
+                    ta[tak] = float(convert_imported_val(imported_t_props[tak]))
+                # except ValueError:
+                except:
+                    print("\t\tWARNING: In column {}, cannot convert {} to Float"\
+                        .format(tak, convert_imported_val(imported_t_props[tak])))
 
         # FIXME +++PROB need for othr props like len & deg... - so make method!!!
         try:
-            val = tool_props['parameter']['Diameter']
-            dia = float(val)
+            dia = float(convert_imported_val(tool_props['parameter']['Diameter']))
         except ValueError:
             try:
                 # Keep FC:Quantity if possible for future unit management in Speeds & Feeds calculations
                 dia = q(tool_props["parameter"]["Diameter"]).Value
             except:
-                print("Warning 'Diameter' is NOT a valid number: ",
+                print("\t\tWARNING: Warning 'Diameter' is NOT a valid number: ",
                     tool_props['parameter']['Diameter'])
                 return
     else:
@@ -292,9 +304,9 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
         pass
         # FIXME review @least location of this "rule" & other TB name rules
 
-
     if 'Flutes' in tool_props['attribute'].keys():
-        tool_props['attribute']['Flutes'] = int(tool_props['attribute']['Flutes'])
+        tool_props['attribute']['Flutes'] =\
+            int(convert_imported_val(tool_props['attribute']['Flutes']))
 
     tool_props['parameter']['Diameter'] = dia
 
