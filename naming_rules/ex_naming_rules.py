@@ -131,6 +131,30 @@ class BoboxxRules(CamTbAddLib.Rules):
         self.Length.order = 3
 
 
+# Add shapename to RHS
+class BoboxxRulesShape(CamTbAddLib.Rules):
+    def __init__(self, shape_name):
+        # Only manadatory RuleItem
+        # NB At present it is NOT used to restrict rules to set value (or poss list of values)
+        self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
+        self.shapename.sep_left = "_"
+        self.shapename.order = 99
+
+        self.Flutes = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
+        self.Flutes.abbrev_r = "F"
+        self.Flutes.order = 1
+
+        self.Diameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        self.Diameter.abbrev_left = "D"
+        self.Diameter.sep_left = "_"
+        self.Diameter.order = 2
+
+        self.Length = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
+        self.Length.sep_left = "-"
+        self.Length.abbrev_left = "L"
+        self.Length.order = 3
+
+
 # Copy to use and ensure that required rules have a unique order > 0
 class AllRulesTemplate(CamTbAddLib.Rules):
     def __init__(self, shape_name):
@@ -327,6 +351,7 @@ ex1_naming_rules = {"shapename"  :{"ptype": "rule_prop",
                                 "order": 99
                                 },
             # This is ONLY element with added/different properties!
+            # If used, tool_# = tb_base_nr + tb_dia_mult * Diameter
             "t_auto_number"    :{"ptype": "rule_prop",
                                 "tb_base_nr": 20000,    # For now KISS:= user sets!! ??lookup based on shapename??
                                 "tb_dia_mult": 1000,
