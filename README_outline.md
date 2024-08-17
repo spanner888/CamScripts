@@ -11,7 +11,11 @@ Add ToolBits to FreeCAD Tool library using using either:
         1F_D3.0-L50.0_endmill
         3F_D4.0-L50.0_roughing
         28600.0_8.6D_0F_860_em
-        ....
+    A ridulous example used for testing imported v-bits etc with uncommon properties:
+        30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
+        30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
+        40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
+
     
 CAM Full Process blurb - Script 3.....
     ...
