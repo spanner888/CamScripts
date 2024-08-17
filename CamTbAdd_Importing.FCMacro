@@ -75,9 +75,11 @@ boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 # Every time script is run:
 #   ToolBit files will be created or overwrite existing files
 #   ToolBits will be added to the current Tool library.
-# so that rec of use empty test lib.
+# so ...include my aldtready wrtten doc: re use empty test lib.
 # or even an entire test Tool dir with default tools/shapes.
 # + Unwanted TB files can be deleted
+# Shape names in the csv file AND in the FC Tools - Shape dir
+#   are case sensitive on Linux and must match exactly.
 
 file1 = "cutting_tool_data/cuttingtools1.csv"
 # TODO migrate below so ONE calls to importToolCsv(file1)

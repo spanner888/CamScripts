@@ -307,12 +307,6 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
 
     tool_props['parameter']['Diameter'] = dia
 
-    # make function - called few places & might need manage Quantity!!!
-
-    #tb_nr = tb_base_nr + dia * tb_nr_inc
-    # tb_nr = 1   # FIXME HARDCODED ATM
-
-
     # need any document open, no changes are made.
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
@@ -324,13 +318,6 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
 
 
 
-
-
-#THINKING:
-  #below is one or many .....ABOVE is ONE ...one imported row at a time!!!
-  #so change is not processUserToolInput, but addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
-    #>>> it alreay uses tool_props!!!!
-    
 # TODO replace ALL tb_base_name var from default rules
 def processUserToolInput(tb_name_rules,
                          shape_name="endmill",
@@ -433,11 +420,11 @@ class Rules:
     def __init__(self, shape_name):
         self.activeSortedRules = self.getActiveSortedRules()
 
-    def getActiveSortedRules(self, dbg_print=True):
+    def getActiveSortedRules(self, dbg_print=False):
         # TODO cope/warn about duplicate order#s
         segs_nested = dict()
         for k, v in vars(self).items():
-            print("k, v", k, v)
+            # print("k, v", k, v)
             if v.order > 0:
                 s2 = {v.order: {k:v}}
                 segs_nested.update(s2)
@@ -540,14 +527,21 @@ or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
 
 
     def create_tb_nr(self, tool_props, dbg_print):
-        print("create_tb_nr", self.t_auto_number.tb_base_nr,
-                            self.t_auto_number.tb_dia_mult)
+        if not type(self.t_auto_number.tb_base_nr ) in (int, float):
+            self.t_auto_number.tb_base_nr = 0
+        if not type(self.t_auto_number.tb_dia_mult ) in (int, float):
+            self.t_auto_number.tb_dia_mult = 1
+
+        # Get dia as FC Quantity...then Value
+        # ATM for the create, not import code
+        dq = q(tool_props["parameter"]["Diameter"]).Value
+
         tb_nr = round(self.t_auto_number.tb_base_nr +\
                     self.t_auto_number.tb_dia_mult *\
-                        tool_props["parameter"]["Diameter"])
-        print("tool_props dia:", tool_props["parameter"]["Diameter"], tb_nr)
+                        dq)
         return tb_nr
 # -------------------------------------
+
 
 # --- csv -----------------------------
 # From user imm https://forum.freecadweb.org/viewtopic.php?f=15&t=59856&start=50
