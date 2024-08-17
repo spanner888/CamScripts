@@ -527,9 +527,28 @@ or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
 
 
     def create_tb_nr(self, tool_props, dbg_print):
-        if not type(self.t_auto_number.tb_base_nr ) in (int, float):
+        # ???if NO self.t_auto_number.tb_base_n/tb_dia_mult
+        # or no self.t_auto_number
+        # DO NOT create via this rule!!!!
+        # some dflt#...or get next avail in lib
+        #     >>>could get save every time add TB??
+
+        # Force to be a number, else create attrib/s=0/1
+        if hasattr(self, 't_auto_number'):
+            if hasattr(self.t_auto_number, 'tb_base_nr'):
+                if not type(self.t_auto_number.tb_base_nr) in (int, float):
+                    self.t_auto_number.tb_base_nr = 0
+            else:
+                self.t_auto_number.tb_base_nr = 0
+
+            if hasattr(self.t_auto_number, 'tb_dia_mult'):
+                if not type(self.t_auto_number.tb_dia_mult) in (int, float):
+                    self.t_auto_number.tb_dia_mult = 1
+            else:
+                self.t_auto_number.tb_dia_mult = 1
+        else:
+            self.t_auto_number = RuleItem(name='', ptype=PropType.rule_prop)
             self.t_auto_number.tb_base_nr = 0
-        if not type(self.t_auto_number.tb_dia_mult ) in (int, float):
             self.t_auto_number.tb_dia_mult = 1
 
         # Get dia as FC Quantity...then Value
