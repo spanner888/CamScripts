@@ -1,3 +1,48 @@
+TOP LEVEL
+3 macro scripts
+Add ToolBits to FreeCAD Tool library using using either:
+        Script 1. Single or Bulk Creation               +++SCRIPT NAME
+        Script 2. Import from csv                       +++SCRIPT NAME
+    An Extensive rule system to provided to auto create Tolbit names.
+    This can use ANY ToolBit property and allows setting order of each component,
+    leading/trailing seperators and abbreviations.
+    For example:
+        2F-D6.35-L31
+        1F_D3.0-L50.0_endmill
+        3F_D4.0-L50.0_roughing
+        28600.0_8.6D_0F_860_em
+        ....
+    
+CAM Full Process blurb - Script 3.....
+    ...
+    The csv import is very flexible, thanks to @imm, but if you wish data to match default ToolBit properties,
+    An auto numbering system is also an option.
+        28120.0_8.12D_0F_endmill
+    then the column names must match exactly.
+    At present, empty cells are forced to number zero, and some data erros are handled, but not all.
+    If Tool shapenames do not match any of those in your User tool Shape directory, 
+    a message will inform you of it being ignored.
+    Also at present things like duplicate Library Tool Numbers, or duplicate Tool  names, or empty names (se example 7)
+    are also ignored as they cause no error, and all these scripts were mainly written for my own use.
+    
+Supported by 2 libraries of mine and Russ JobUtils
+Details are provided in linked readmes and within the example scripts.
+WARNING about using a Test lib!!!!
+
+Scripts are very highly capable and tested, but there are limitations, 
+including your need to configure settings, naming rules and especially for #3 NAME, change the examples.
+Limitations and minor bugs are documented ?????
+Discussion can occur in forum thread [LINK] and pull requests, bugs, issues, via this GITHUBREPO
+
+Execution speed is reasonable, it can create & add several ToolBits per second, on old hardware.
+Once I accidently created and 1600 Toolbits to a Library. 
+This took 20minutes????, but I think a lot of the slowness was debug prints at the time.
+
+Example naming rules are in ...
+Example csv file for import is in...
+SHORT HERE!!!!!!
+
+
 TWO sep release 1x end-end as EXAMPLE ...but note can use toolbits from....
 
 vv-- OR becasue of the one dir focus, then one summary overview readme that links to 2x detaild ones...
