@@ -437,14 +437,14 @@ class Rules:
         # TODO cope/warn about duplicate order#s
         segs_nested = dict()
         for k, v in vars(self).items():
-            print(k, v)
+            print("k, v", k, v)
             if v.order > 0:
                 s2 = {v.order: {k:v}}
                 segs_nested.update(s2)
         # sort, so can collate all the parts on TB name in Users desired order
         od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
         if dbg_print:
-            print("Active, ordered rules:", od_segs_nested)
+            print("dbg_print: Active, ordered rules:", od_segs_nested)
 
         return od_segs_nested
 
@@ -540,9 +540,13 @@ or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
 
 
     def create_tb_nr(self, tool_props, dbg_print):
-        # pp = self.activeSortedRules['t_auto_number']
-        self.getActiveSortedRules()
-        print(self.activeSortedRules)
+        print("create_tb_nr", self.t_auto_number.tb_base_nr,
+                            self.t_auto_number.tb_dia_mult)
+        tb_nr = round(self.t_auto_number.tb_base_nr +\
+                    self.t_auto_number.tb_dia_mult *\
+                        tool_props["parameter"]["Diameter"])
+        print("tool_props dia:", tool_props["parameter"]["Diameter"], tb_nr)
+        return tb_nr
 # -------------------------------------
 
 # --- csv -----------------------------

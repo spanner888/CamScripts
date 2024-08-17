@@ -144,6 +144,16 @@ class BoboxxRulesShape(CamTbAddLib.Rules):
         self.shapename.sep_left = "_"
         self.shapename.order = 99
 
+        self.t_auto_number = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
+        self.t_auto_number.abbrev_left = ''
+        self.t_auto_number.abbrev_r = ''
+        self.t_auto_number.sep_left = ''
+        self.t_auto_number.sep_r = ''
+        self.t_auto_number.order = 0
+        # This is ONLY rule item with added/different properties!
+        self.t_auto_number.tb_base_nr = 20000
+        self.t_auto_number.tb_dia_mult = 1000
+
         self.Flutes = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_attrib)
         self.Flutes.abbrev_r = "F"
         self.Flutes.order = 1
