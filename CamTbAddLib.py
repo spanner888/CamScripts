@@ -141,12 +141,14 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     library.temptool.Proxy.saveToFile(library.temptool, fullpath)
 
 
-def addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print=False):
+def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
     # FIXME INTERIM usign BOTH old/new-class tb_name_rules
     tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     tool_props["name"] = tb_name
+
+    tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
 
     if PathToolBitLibraryGui.checkWorkingDir():
         workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
@@ -208,14 +210,15 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
 
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
-        addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
+        addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
 
 
 #TODO IMPORT at least csv
 def importToolCsv():
     # import expect need set EVERY tool data via
-    addToolToCurrentLibrary(tool_props, tb_nr, tb_name_rules, dbg_print)
+    # NOPE see eampole file: addToolToCurrentLibrary(tool_props, tb_name_rules, dbg_print)
     # THEN set individ props, like #Flutes, shank dia, material........
+    pass
 
 def deepcopy_toolprops(tp):
     # Cannot copy/deepcopy all_shape_attrs[] due to the FC Quantities
@@ -305,8 +308,9 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     tool_props['parameter']['Diameter'] = dia
 
     # make function - called few places & might need manage Quantity!!!
+
     #tb_nr = tb_base_nr + dia * tb_nr_inc
-    tb_nr = 1   # FIXME HARDCODED ATM
+    # tb_nr = 1   # FIXME HARDCODED ATM
 
 
     # need any document open, no changes are made.
@@ -316,7 +320,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     library = PathToolBitLibraryGui.ToolBitLibrary()
 
-    addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
+    addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
 
 
 
@@ -324,7 +328,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
 
 #THINKING:
   #below is one or many .....ABOVE is ONE ...one imported row at a time!!!
-  #so change is not processUserToolInput, but addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
+  #so change is not processUserToolInput, but addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
     #>>> it alreay uses tool_props!!!!
     
 # TODO replace ALL tb_base_name var from default rules
@@ -382,7 +386,7 @@ def processUserToolInput(tb_name_rules,
                                         )
         else:
             # create ONE ToolBit with diameter = dia
-            addToolToCurrentLibrary(library, shape_name, tool_props, tb_nr, tb_name_rules, dbg_print)
+            addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
     else:
         print("Tool diameter must be number greater than zero.")
 
@@ -426,9 +430,23 @@ class RuleItem:
 
 
 class Rules:
-    def __init__():
-        # ???? 3x ptype=PropType.rule_prop added??? user still needs set same props not really saving??
-        pass
+    def __init__(self, shape_name):
+        self.activeSortedRules = self.getActiveSortedRules()
+
+    def getActiveSortedRules(self, dbg_print=True):
+        # TODO cope/warn about duplicate order#s
+        segs_nested = dict()
+        for k, v in vars(self).items():
+            print(k, v)
+            if v.order > 0:
+                s2 = {v.order: {k:v}}
+                segs_nested.update(s2)
+        # sort, so can collate all the parts on TB name in Users desired order
+        od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
+        if dbg_print:
+            print("Active, ordered rules:", od_segs_nested)
+
+        return od_segs_nested
 
 
     def create_tb_name(self, tool_props, dbg_print=False):
@@ -437,22 +455,10 @@ class Rules:
         # Save TB dia to calc TB# later
         t_dia = q(tool_props["parameter"]["Diameter"]).Value
 
-        # TODO cope/warn about duplicate order#s
-        segs_nested = dict()
-        for k, v in vars(self).items():
-            # print(k, v)
-            if v.order > 0:
-                s2 = {v.order: {k:v}}
-                segs_nested.update(s2)
-        # sort, so can collate all the parts on TB name in Users desired order
-        od_segs_nested = collections.OrderedDict(sorted(segs_nested.items()))
-        if dbg_print:
-            print("Active, ordered rules:", od_segs_nested)
-            print("tool_props:", tool_props)
 
-        # now iterate od_segs_nested dict
+        # now iterate activeSortedRules dict
         tb_name_template = ""
-        for k, v in od_segs_nested.items():
+        for k, v in self.activeSortedRules.items():
             tb_prop_val = ""
             for k1, v1 in v.items():
                 #print("\t", v1.ptype)
@@ -531,6 +537,12 @@ or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
                 # print("\t\t==>", k1, tb_name_template)
 
         return tb_name_template
+
+
+    def create_tb_nr(self, tool_props, dbg_print):
+        # pp = self.activeSortedRules['t_auto_number']
+        self.getActiveSortedRules()
+        print(self.activeSortedRules)
 # -------------------------------------
 
 # --- csv -----------------------------

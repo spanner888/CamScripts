@@ -80,6 +80,7 @@ boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 # + Unwanted TB files can be deleted
 
 file1 = "cutting_tool_data/cuttingtools1.csv"
+# TODO migrate below so ONE calls to importToolCsv(file1)
 data_dict = dict()
 # Imports csv as LIST of dicts of each row, ie header row cells are dict Keys
 data_list = CamTbAddLib.load_data(file1)

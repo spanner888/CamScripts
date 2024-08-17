@@ -107,6 +107,8 @@ class Ex1Rules(CamTbAddLib.Rules):
 
         self.TipDiameter = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.tb_shape)
 
+        # Below has to be last item!
+        super().__init__(shape_name)
 
 # Duplicate: User boboxx Example: 2F-D6.35-L31.076, FC issue:12823
 # Only required entries.
@@ -130,11 +132,13 @@ class BoboxxRules(CamTbAddLib.Rules):
         self.Length.abbrev_left = "L"
         self.Length.order = 3
 
+        # Below has to be last item!
+        super().__init__(shape_name)
 
 # Add shapename to RHS
 class BoboxxRulesShape(CamTbAddLib.Rules):
     def __init__(self, shape_name):
-        # Only manadatory RuleItem
+       # Only manadatory RuleItem
         # NB At present it is NOT used to restrict rules to set value (or poss list of values)
         self.shapename = CamTbAddLib.RuleItem(name=shape_name, ptype=CamTbAddLib.PropType.rule_prop)
         self.shapename.sep_left = "_"
@@ -153,6 +157,9 @@ class BoboxxRulesShape(CamTbAddLib.Rules):
         self.Length.sep_left = "-"
         self.Length.abbrev_left = "L"
         self.Length.order = 3
+
+        # Below has to be last item!
+        super().__init__(shape_name)
 
 
 # Copy to use and ensure that required rules have a unique order > 0
@@ -330,6 +337,9 @@ class AllRulesTemplate(CamTbAddLib.Rules):
         self.TipDiameter.sep_left = ''
         self.TipDiameter.sep_r = ''
         self.TipDiameter.order = 0
+
+        # Below has to be last item!
+        super().__init__(shape_name)
 
 
 # OLD about to be retired apprach
