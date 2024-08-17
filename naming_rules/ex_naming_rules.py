@@ -47,7 +47,7 @@ class Ex1Rules(CamTbAddLib.Rules):
         self.base_name.order = 99
 
         self.t_auto_number = CamTbAddLib.RuleItem(name='', ptype=CamTbAddLib.PropType.rule_prop)
-        self.t_auto_number.sep_left = "_"
+        self.t_auto_number.sep_left = ""
         self.t_auto_number.order = 1
         # This is ONLY rule item with added/different properties!
         self.t_auto_number.tb_base_nr = 20000

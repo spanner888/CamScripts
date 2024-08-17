@@ -10,6 +10,7 @@ reload(ex_rules)
 boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 
 # TODO script AND lib & rules versioning!!!!
+# FIXME FIXME SANITISE MY TOOL DATA - BRANDS, PURCHASE INFO FILE LOCATIONS, COMMENTS.....
 
 # --------------------------------------------------------
 #FC: ver below HAS attr fix...as shown

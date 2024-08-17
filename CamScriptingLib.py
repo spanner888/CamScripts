@@ -158,11 +158,11 @@ def addTc(job, tcProps, byNr=False):
 
     try:
         if byNr:
-            print("Add TC using tool#: {} and set h/v feeds & spindle speed."
+            print("Add TC using tool#: '{}' and set h/v feeds & spindle speed."
                 .format(tcProps.lib_tool_nr))
             tc = JobUtils.add_toolcontroller_by_number(job, tcProps.lib_tool_nr)
         else:
-            print("Add TC using toolname: {} and set h/v feeds & spindle speed."
+            print("Add TC using toolname: '{}' and set h/v feeds & spindle speed."
                 .format(tcProps.bitName))
             tc = JobUtils.add_toolcontroller_by_filename(job, tcProps.bitName)
 

@@ -85,14 +85,21 @@ j_props.vRapid = '150/60 mm/s'
 # ---------------------------------------------------------
 
 # FIXME make below empty default, then test if empty and prompt user to set!!
+# FIXME cross plat ...or get some dir from prefs or???? AND SEARCH ANY MORE spanner888
 sanity_report = '/home/spanner888/Documents/cam_sanity/sanity_auto.html'
 
 # JOB-TC & TB properties/defaults.
 # Add one set of props for each TC/TB
+# Create 2 sets Toolcontroller properties to add
+# These require existing ToolBits in the Users Library.
+#   tcProps1 is found by using: bitName = "28120.0_8.12D_0F_endmill"
+#   tcProps2 is found by using: lib_tool_nr = 26350
+# The above Toolbits can be created by running:
+#   Example 1, 2 in CamTbAddExample.FCMacro
 # ---------------------------------------------------------
 tcProps1 = CamScriptingLib.tc_props()
 
-tcProps1.bitName = "880_em"
+tcProps1.bitName = "28120.0_8.12D_0F_endmill"
 # tcProps2.lib_tool_nr =        # Adding this TC by name, not number
 tcProps1.hfeed = '200 mm/min'
 tcProps1.vfeed = '100 mm/min'
@@ -104,7 +111,7 @@ tcProps1.spindleSpeed = 5000.0
 tcProps2 = CamScriptingLib.tc_props()
 
 tcProps2.bitName = ""
-tcProps2.lib_tool_nr = 20840
+tcProps2.lib_tool_nr = 26350
 tcProps2.hfeed = '213 mm/min'
 tcProps2.vfeed = '123 mm/min'
 
