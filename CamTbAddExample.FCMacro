@@ -65,7 +65,8 @@ reload(ex_rules)
 # FIXME FIXME 1 - why "restrict" rules to ONE shape type, thus forcing user to duplciate rule clsses/sets???
 tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='any')
 
-# ??Three examples on adding a Default, One or a list of Tools to current Library.
+# ??Seven examples on adding a Default, One or a list of Tools to current Library,
+# with differing naming rule examples.
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
 CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=True)
