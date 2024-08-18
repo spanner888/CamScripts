@@ -320,7 +320,7 @@ def calcLots():
 
     #hm = sqrt(ae/D) * fz * sin(kapr) # mean undeformed chip thickness; good approximation for ae << D; 20%-30% too large for ae=D
     Sb = D * pi * (phie / (2*pi)) # chip arc length
-    hm = fz * (ae/Sb) * math.sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
+    hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
 
     Kw = 1.2 # correction factor for tool wear: 1 for new sharp tools, 1.2 for used tools, 1.5 for dull tools that need to be replaced
 
@@ -338,16 +338,16 @@ def calcLots():
 
     eff = 0.85 # machine efficiency:
     P = Pc / eff # electrical spindle power
-    print("electrical spindle power ", P.getValueAs("kW"))
+    print("electrical spindle power ", P.getValueAs("kW"), "kW")
 
     Mc = Fc * D / 2 # cutting torque
-    print("Mc cutting torque", Mc.getValueAs("Nm"))
+    print("Mc cutting torque", Mc.getValueAs("Nm"),"Nm")
 
     n = vc / (pi * D) # spindle speed
-    print("RPM ", n.getValueAs("1/min"))
+    print("RPM ", n.getValueAs("1/min"), 'RPM')
 
     vf = n * z * fz # feed rate
-    print("vf ", vf.getValueAs("mm/min"))
+    print("vf ", vf.getValueAs("mm/min"), "mm/min")
 
     print("Console Hint: P, Mc, n, vf = CamScriptingLib.calcLots()")
     return P, Mc, n, vf
