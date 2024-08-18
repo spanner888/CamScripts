@@ -96,7 +96,7 @@ for row_dict in data_list:
     # need id ALL desired FC props AND cater if missing!!!
     # print(row_dict['shape'], row_dict['Diameter'], row_dict['ShankDiameter'], row_dict['name'])
     # then use to create ONE TB....
-    CamTbAddLib.createToolFromProps(exagerated_rules_example, row_dict, dbg_print=False)
+    CamTbAddLib.createToolFromProps(boboxx_rulesShape, row_dict, dbg_print=False)
 
     # below works, BUT can only set shape, name, dia!!!
     #CamTbAddLib.processUserToolInput(boboxx_rules,
