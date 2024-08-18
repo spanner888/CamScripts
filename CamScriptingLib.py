@@ -283,6 +283,75 @@ def calcRpm(tc, SurfaceSpeedCarbide, SurfaceSpeedHSS):
     return rpm
 
 
+def calcLots():
+    from math import acos, sqrt, sin
+    from math import degrees, radians, pi
+    import Materials;
+
+    materialManager = Materials.MaterialManager()
+    alu = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
+    alu.Name
+    alu.Description
+
+    kc11 = FreeCAD.Units.Quantity(alu.PhysicalProperties['UnitCuttingForce']) # why is the property a string, not a Quantity as defined by the model???
+    h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
+    mc = float(alu.PhysicalProperties['ChipThicknessExponent']) # why is the property a string, not a float as defined by the model???
+
+    ToolRakeAngle = FreeCAD.Units.Quantity('20°')
+    Kg = 1 - 0.01 * ToolRakeAngle.getValueAs("deg") # correction factor for rake angle
+
+    ToolDiameter = FreeCAD.Units.Quantity('6 mm')
+    D = ToolDiameter
+
+    ae = FreeCAD.Units.Quantity('2.5 mm') # width of cut (radial)
+    ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
+
+    ToolNumberOfFlutes = 3
+    z = ToolNumberOfFlutes
+
+    ToolHelixAngle = FreeCAD.Units.Quantity('35°')
+
+    #kapr = radians(90 - ToolHelixAngle.getValueAs("deg")) # this looks wired! to be investigated
+    kapr = radians(90) # straight milling cutter, i.e. chamfer=90° aka no chamfer
+
+    fz = FreeCAD.Units.Quantity('0.03 mm') # feed per tooth
+
+    phie = acos(1 - (2 * ae / D)) # engangement angle
+
+    #hm = sqrt(ae/D) * fz * sin(kapr) # mean undeformed chip thickness; good approximation for ae << D; 20%-30% too large for ae=D
+    Sb = D * pi * (phie / (2*pi)) # chip arc length
+    hm = fz * (ae/Sb) * math.sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
+
+    Kw = 1.2 # correction factor for tool wear: 1 for new sharp tools, 1.2 for used tools, 1.5 for dull tools that need to be replaced
+
+    kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting force
+
+    Fcz = ap * hm * kc # cutting force per flute
+
+    ze = phie * z / (2*pi) # engaged flutes
+
+    Fc = Fcz * ze # cutting force
+
+    vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
+
+    Pc = Fc * vc # mechanical cutting power
+
+    eff = 0.85 # machine efficiency:
+    P = Pc / eff # electrical spindle power
+    print("electrical spindle power ", P.getValueAs("kW"))
+
+    Mc = Fc * D / 2 # cutting torque
+    print("Mc cutting torque", Mc.getValueAs("Nm"))
+
+    n = vc / (pi * D) # spindle speed
+    print("RPM ", n.getValueAs("1/min"))
+
+    vf = n * z * fz # feed rate
+    print("vf ", vf.getValueAs("mm/min"))
+
+    print("Console Hint: P, Mc, n, vf = CamScriptingLib.calcLots()")
+    return P, Mc, n, vf
+
 def saveSanityreport(job, sanity_report):
     print("Processing file outputs: Sanity Job common errors report & PostProcess Gcode")
 
