@@ -27,6 +27,16 @@ else:
     Path.Log.setLevel(Path.Log.Level.INFO, Path.Log.thisModule())
 
 
+
+FIXME FIXME 0: DO not get SYSTEM shapes from user dir!!!
+                DO still *also* get user shapes....
+    IDEA - MOST likely best NOT to use....but just note idea fyi
+    could copy sys shapes to a DIFF dir under user tools
+
++++ macro to open/recalc/save *all* SYSTEM macros
+
+
+
 ###################################################################
 def getDefaultShapes():
     shapeDir = ''
