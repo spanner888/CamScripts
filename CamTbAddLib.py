@@ -51,7 +51,7 @@ def getShapesFromDir(shapeDir):
         return s_names
 
 
-def getShapes(user=False):
+def getShapeNamesFromDir(user=False):
     # get shapes User or system dir.
     if user:
         workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
@@ -64,7 +64,7 @@ def getShapes(user=False):
         shapeDir = shapeDir.replace("/", os.path.sep)
         dir_msg = "System shapeDir: "
 
-    s_names = getShapesFromDir(shapeDir)
+    s_names = getShapeNamesFromDirFromDir(shapeDir)
     # print(dir_msg, shapeDir, s_names)
 
     return shapeDir, s_names
@@ -127,10 +127,10 @@ def getShapePropsFromDir(shape_name_dir, s_names):
 def getAllShapeDetails():
     # *Opens* every FC shape DOCUMENT to retreive properties!
 
-    shapeDirUser, s_namesUser = getShapes(user=False)
+    shapeDirUser, s_namesUser = getShapeNamesFromDir(user=False)
     all_shp_attrUser = getShapePropsFromDir(shapeDirUser, s_namesUser)
 
-    shapeDirSys, s_namesSys = getShapes(user=True)
+    shapeDirSys, s_namesSys = getShapeNamesFromDir(user=True)
     all_shp_attrSys = getShapePropsFromDir(shapeDirSys, s_namesSys)
 
     return s_namesUser, all_shp_attrUser, s_namesSys, all_shp_attrSys
