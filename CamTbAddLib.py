@@ -127,10 +127,10 @@ def getShapePropsFromDir(shape_name_dir, s_names):
 def getAllShapeDetails():
     # *Opens* every FC shape DOCUMENT to retreive properties!
 
-    shapeDirUser, s_namesUser = getAllShapeNamesFromDir(user=False)
+    shapeDirUser, s_namesUser = getAllShapeNamesFromDir(user=True)
     all_shp_attrUser = getShapePropsFromDir(shapeDirUser, s_namesUser)
 
-    shapeDirSys, s_namesSys = getAllShapeNamesFromDir(user=True)
+    shapeDirSys, s_namesSys = getAllShapeNamesFromDir(user=False)
     all_shp_attrSys = getShapePropsFromDir(shapeDirSys, s_namesSys)
 
     return s_namesUser, all_shp_attrUser, s_namesSys, all_shp_attrSys
@@ -650,10 +650,10 @@ def load_data(dataFile, print_csv_file_names=False):
 
 # Init these when this Library imported,
 #   so only need to do slow-ish open/close shape files IN FreeCAD once!
-s_namesUser, all_shp_attrUser, s_namesSys, all_shp_attrSys = getAllShapeDetails()
+s_names_User, all_shp_attr_User, s_names_Sys, all_shp_attr_Sys = getAllShapeDetails()
 #print("imported 'CamTbAddLib' and loaded all users Tool shape_names & properties")
-print("at import found User shapes: ", s_namesUser)
-print("at import found System shapes: ", s_namesSys)
+print("at import found User shapes: ", s_names_User)
+print("at import found System shapes: ", s_names_Sys)
 #print()
 
 q = FreeCAD.Units.Quantity
