@@ -27,13 +27,17 @@ else:
     Path.Log.setLevel(Path.Log.Level.INFO, Path.Log.thisModule())
 
 
-
-FIXME FIXME 0: DO not get SYSTEM shapes from user dir!!!
-                DO still *also* get user shapes....
-    IDEA - MOST likely best NOT to use....but just note idea fyi
-    could copy sys shapes to a DIFF dir under user tools
-
-+++ macro to open/recalc/save *all* SYSTEM macros
+# FIXME FIXME 0: DO not get SYSTEM shapes from user dir!!!
+#                 DO still *also* get user shapes....
+#     IDEA - MOST likely best NOT to use....but just note idea fyi
+#     could copy sys shapes to a DIFF dir under user tools
+# +++ macro to open/recalc/save *all* SYSTEM macros
+#
+# FreeCAD.getHomePath()
+# '/home/spanner888/Documents/_source/_APPS/FC_wkly-38459/squashfs-root/usr/'
+# /Mod/CAM/Tools/Shape/endmill.fcstd
+#
+# If NO user Tool dir or any type esp shape...ignore
 
 
 
@@ -140,6 +144,7 @@ def full_path(filename):
     fullpath = "{}{}{}.fctb".format(loc, os.path.sep, fname)
     return fullpath, fname
 
+
 # derived from FC BitLibrary.py
 def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     fullpath, fname = full_path(filename)
@@ -230,6 +235,7 @@ def importToolCsv():
     # THEN set individ props, like #Flutes, shank dia, material........
     pass
 
+
 def deepcopy_toolprops(tp):
     # Cannot copy/deepcopy all_shape_attrs[] due to the FC Quantities
     # Not removing Quantities as really want those to help validate
@@ -253,6 +259,7 @@ def deepcopy_toolprops(tp):
     tool_props = ast.literal_eval(tool_props_str)
 
     return tool_props
+
 
 def convert_imported_val(col, ip_val):
     # TODO extend with DATA type ie str, int, float and convert incoming data, else warning
@@ -325,7 +332,6 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     library = PathToolBitLibraryGui.ToolBitLibrary()
 
     addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
-
 
 
 # TODO replace ALL tb_base_name var from default rules

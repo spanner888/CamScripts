@@ -1,6 +1,3 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
 # -*- coding: utf-8 -*-
 # ***************************************************************************
 # *   Copyright (c) 2024 spanner888 <spanner888@usabledevices.com>          *
@@ -284,6 +281,7 @@ def calcRpm(tc, SurfaceSpeedCarbide, SurfaceSpeedHSS):
 
 
 def calcLots():
+    #  https://github.com/FreeCAD/FreeCAD/pull/15910
     from math import acos, sqrt, sin
     from math import degrees, radians, pi
     import Materials;
@@ -322,15 +320,45 @@ def calcLots():
     Sb = D * pi * (phie / (2*pi)) # chip arc length
     hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
 
+             # Book Kver
     Kw = 1.2 # correction factor for tool wear: 1 for new sharp tools, 1.2 for used tools, 1.5 for dull tools that need to be replaced
+            # 4 corrections in all:
+                # book/here
+                # Kver/Kw Tool wear 1 to 1.5
+                # Kgamma symbol/Kg Correction factor rake angle
+                #     Kg = 1 - (g - g0)/100
+                #     g0 basic rake angle: + 6° for steel, + 2° for cast iron
+                #     g actual rake angle
+                # Kvc/NONE Cutting speed correction factor
+                #     lookup table
+                #                         Vc range    Kvc
+                #                         m/min
+                #     HSS                 30 to 60    1.2
+                #     HM (hardened Mat?)  60 to 300   1
+                #     Ceramic             180 to 500  0.85
+                # Ksp/NONE Chip compression correction factor
+                #                 ^^??Chip thinning?? ...cf other refs for formula & MY work on MC...
+                #                                                 moved into adjustemnts at end of work??
+                #     Manufacturing process               Ksp
+                #     External turning                    1.0
+                #     Broaching, planing, slotting        1.1
+                #     Drilling, milling, internal turning 1.2
+                #     Parting off turning, plunge turning 1.3
 
+    # Extremely complex lookups, even *nested lookups**,
+    #    depends on Tool D/Mat, Rake, Vc, Cutting/Manufact process....
+    # CAN BE broken into simpler steps as down throughout here
+    # 2 corrections ignored ATM
+    # +++ User will want adjust - eg tool wear...
+    # ++ INSERT style calculations and adv machining????
     kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting force
 
+    # ??extended calc?? for this with tool rotation angle ....for the vibration/force min/max/diag!!!
     Fcz = ap * hm * kc # cutting force per flute
 
-    ze = phie * z / (2*pi) # engaged flutes
+    ze = phie * z / (2*pi) # engaged flutes # <<<<< STUDY ...prob NOT in ref to vibration/force min/max/diag
 
-    Fc = Fcz * ze # cutting force
+    Fc = Fcz * ze # cutting force           #<< max?? & not vary with angle.
 
     vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
 
@@ -338,19 +366,20 @@ def calcLots():
 
     eff = 0.85 # machine efficiency:
     P = Pc / eff # electrical spindle power
-    print("electrical spindle power ", P.getValueAs("kW"), "kW")
+    print("electrical spindle power ", P.getValueAs("kW").toStr(3), "kW")
 
     Mc = Fc * D / 2 # cutting torque
-    print("Mc cutting torque", Mc.getValueAs("Nm"),"Nm")
+    print("Mc cutting torque", Mc.getValueAs("Nm").toStr(5),"Nm")
 
     n = vc / (pi * D) # spindle speed
-    print("RPM ", n.getValueAs("1/min"), 'RPM')
+    print("RPM ", n.getValueAs("1/min").toStr(0), 'RPM')
 
     vf = n * z * fz # feed rate
-    print("vf ", vf.getValueAs("mm/min"), "mm/min")
+    print("vf ", vf.getValueAs("mm/min").toStr(0), "mm/min")
 
-    print("Console Hint: P, Mc, n, vf = CamScriptingLib.calcLots()")
+    print("Console Hint: P, Mc, n, vf = CamScriptingLib.calcLots()\n after you 'import CamScriptingLib'")
     return P, Mc, n, vf
+
 
 def saveSanityreport(job, sanity_report):
     print("Processing file outputs: Sanity Job common errors report & PostProcess Gcode")
@@ -477,3 +506,6 @@ def postProcSaveGcode(postProcessorOutputFile):
 # PowerWear = Power*W
 # PowerCutter = Power/E
 # Torque = (Power*60*1000)/(PI*RPM)
+#
+# ++ example calcs in https://github.com/FreeCAD/FreeCAD/pull/15910
+#   NB may need to add `sin` import.
