@@ -70,38 +70,6 @@ def getShapes(user=False):
     return shapeDir, s_names
 
 
-# FIXME: retire/remove getDefaultShapes()
-def getDefaultShapes():
-    shapeDir = ''
-    # NB MAY open dialog to offer select dir & copy default tool data.
-    if PathToolBitLibraryGui.checkWorkingDir():
-        workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
-        s_dir_name = os.path.sep + "Shape" + os.path.sep
-        shapeDir = workingdir + s_dir_name
-        print("shapeDir: ", shapeDir)
-    else:
-        FreeCAD.Console.PrintWarning("getDefaultShapes(): could not find User shape dir.")
-        FreeCAD.Console.PrintWarning("\tTrying default system shape dir.\n\n")
-        # FIXME will FAIL if user never created ToolBit from a shape!!
-        # FIXME also fails if NO SHAPES ...ie FC has not copied to user dir
-        # Cant rely on Macro dir, users change & this macro uses sub-dir.
-        shapeDir = Path.Preferences.lastPathToolShape()
-        shapeDir = shapeDir.replace("/", os.path.sep)
-        # Make sure the path ends with a separator
-        if shapeDir[-1] != os.path.sep:
-            shapeDir += os.path.sep
-
-    # ATM only gets default FreeCAD Tools/Shape dir, not your User Tools/Shape dir.
-    # next fails from any non .fcstd file, eg .FCBak
-    # s_names = [os.path.splitext(f)[0] for f in os.listdir(shapeDir")]
-    s_names = []
-    for f in os.listdir(shapeDir):
-        if f.endswith('.fcstd'):
-            s_names.append(os.path.splitext(f)[0])
-
-    return shapeDir, s_names
-
-
 def getToolShapeProps(shape_name_dir, shape_name):
         doc = FreeCAD.openDocument(shape_name_dir + shape_name + ".fcstd", False)
         parameters = dict()
