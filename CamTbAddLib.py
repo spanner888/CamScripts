@@ -114,7 +114,7 @@ def getToolShapeProps(shape_name_dir, shape_name):
                 return shape_name, attrs
 
 
-def getAllToolShapeProps(shape_name_dir, s_names):
+def getShapePropsFromDir(shape_name_dir, s_names):
     props = dict()
     all_shp_at = dict()
     for i, fname in enumerate(s_names):
@@ -128,10 +128,10 @@ def getAllShapeDetails():
     # *Opens* every FC shape DOCUMENT to retreive properties!
 
     shapeDirUser, s_namesUser = getShapes(user=False)
-    all_shp_attrUser = getAllToolShapeProps(shapeDirUser, s_namesUser)
+    all_shp_attrUser = getShapePropsFromDir(shapeDirUser, s_namesUser)
 
     shapeDirSys, s_namesSys = getShapes(user=True)
-    all_shp_attrSys = getAllToolShapeProps(shapeDirSys, s_namesSys)
+    all_shp_attrSys = getShapePropsFromDir(shapeDirSys, s_namesSys)
 
     return s_namesUser, all_shp_attrUser, s_namesSys, all_shp_attrSys
 
