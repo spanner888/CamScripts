@@ -42,6 +42,56 @@ else:
 
 
 ###################################################################
+def getShapesFromDir(shapeDir):
+        # # NB MAY open dialog to offer select dir & copy default tool data.
+        # if PathToolBitLibraryGui.checkWorkingDir():
+        #     workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
+        #     s_dir_name = os.path.sep + "Shape" + os.path.sep
+        #     shapeDir = workingdir + s_dir_name
+        #     print("shapeDir: ", shapeDir)
+        # else:
+        #     FreeCAD.Console.PrintWarning("getDefaultShapes(): could not find User shape dir.")
+        #     FreeCAD.Console.PrintWarning("\tTrying default system shape dir.\n\n")
+        #     # FIXME will FAIL if user never created ToolBit from a shape!!
+        #     # FIXME also fails if NO SHAPES ...ie FC has not copied to user dir
+        #     # Cant rely on Macro dir, users change & this macro uses sub-dir.
+        #     shapeDir = Path.Preferences.lastPathToolShape()
+        #     shapeDir = shapeDir.replace("/", os.path.sep)
+        #     # Make sure the path ends with a separator
+        #     if shapeDir[-1] != os.path.sep:
+        #         shapeDir += os.path.sep
+
+        s_names = []
+        for f in os.listdir(shapeDir):
+            if f.endswith('.fcstd'):
+                s_names.append(os.path.splitext(f)[0])
+
+        return s_names
+
+
+def getShapes(user=False):
+    # get shapes User or system dir.
+    if user:
+        workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
+        s_dir_name = os.path.sep + "Shape" + os.path.sep
+        shapeDir = workingdir + s_dir_name
+        dir_msg = "User shapeDir: "
+    else:
+        homep_to_shapes = "Mod/CAM/Tools/Shape/"
+        shapeDir = FreeCAD.getHomePath() + homep_to_shapes
+        shapeDir = shapeDir.replace("/", os.path.sep)
+        dir_msg = "System shapeDir: "
+
+    s_names = getShapesFromDir(shapeDir)
+    print(dir_msg, shapeDir, s_names)
+
+    return shapeDir, s_names
+
+
+
+
+
+
 def getDefaultShapes():
     shapeDir = ''
     # NB MAY open dialog to offer select dir & copy default tool data.
@@ -126,6 +176,7 @@ def getAllToolShapeProps(shape_name_dir, s_names):
     return all_shp_at
 
 
+# FIXME remove User from name once dflt sys AND user shapes included
 # Get all users available shape_names & all properties of each shape.
 def getAllAvailUserShapeDetails():
     shapeDir, s_names = getDefaultShapes()
