@@ -107,7 +107,18 @@ print("\t...Example 3 finished.\n")
 
 # -----------------------------------------------------------------------
 print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
-shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
+
+
+
+#getDefaultShapes() NO LONGER EXISTS
+# shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
+
+# Shape names can be in System and User directories
+# List of can be retreived using:
+avail_shape_details = CamTbAddLib.getAllShapeDetails()
+shape_names = avail_shape_details["user"]['shape_names'] +\
+                avail_shape_details["system"]['shape_names']
+
 for s in shape_names:
     CamTbAddLib.processUserToolInput(tb_class_naming_rules,
                                     shape_name = s,

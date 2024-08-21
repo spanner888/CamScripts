@@ -39,6 +39,10 @@ else:
 #
 # If NO user Tool dir or any type esp shape...ignore
 
+# SO NOW: next steps from rename of: shape_names, all_shape_attrs
+#     ...to below.
+#     For every use of EITHER *old* var:
+#         rename *and* dup code or ADD module to process second set/both sets if module
 
 
 ###################################################################
@@ -133,7 +137,15 @@ def getAllShapeDetails():
     shapeDirSys, s_namesSys = getAllShapeNamesFromDir(user=False)
     all_shp_attrSys = getShapePropsFromDir(shapeDirSys, s_namesSys)
 
-    return s_namesUser, all_shp_attrUser, s_namesSys, all_shp_attrSys
+    avail_shape_details = dict({"user": {"dir": shapeDirUser,
+                                         "shape_names": s_namesUser,
+                                         "attr": all_shp_attrUser}})
+    avail_shape_details.update({"system": {"dir": shapeDirSys,
+                                           "shape_names": s_namesSys,
+                                           "attr": all_shp_attrSys}})
+
+    # return s_namesUser, all_shp_attrUser, s_namesSys, all_shp_attrSys
+    return avail_shape_details
 
 
 def full_path(filename):
@@ -155,64 +167,66 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     library.temptool.Proxy.saveToFile(library.temptool, fullpath)
 
 
-def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False):
+def addToolToCurrentLibrary(library, s_dir_type, s_dir, shape_name, tool_props, tb_name_rules, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
     # FIXME INTERIM usign BOTH old/new-class tb_name_rules
     tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     tool_props["name"] = tb_name
 
+    bit_dir = Path.Preferences.lastPathToolBit()
+    print(bit_dir, s_dir)
+    bit_dir = os.path.dirname(bit_dir)
+    if len(bit_dir) > 0:
+        tb_full_path_nr_name =  bit_dir + "/Bit/" + tool_props["name"] + ".fctb"
+    else:
+        print("Preference LastPathToolBit is empty, cannot proceed.")
+        return
+
     tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
 
-    if PathToolBitLibraryGui.checkWorkingDir():
-        workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
+    shape_full_path_fname = s_dir + shape_name + ".fcstd"
+    shape_full_path_fname_as_path = osPath(shape_full_path_fname)
 
-        tb_full_path_nr_name = workingdir + "/Bit/" + tool_props["name"] + ".fctb"
+    if shape_full_path_fname_as_path.is_file():
+        shape_full_path_fname_attrs = avail_shape_details[s_dir_type]['attr'][shape_name]
+            
+        params = shape_full_path_fname_attrs["parameter"]
 
-        shape_full_path_fname = workingdir + "/Shape/" + shape_name + ".fcstd"
-        shape_full_path_fname_as_path = osPath(shape_full_path_fname)
+        new_tool_params = tool_props["parameter"]
+        print("\tAdding ToolBit Shape: {}, Dia: {} Name: {}"
+                .format(shape_name,
+                        new_tool_params['Diameter'],
+                        tool_props['name']
+                        )
+            )
+        toolBitNew(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
 
-        if shape_full_path_fname_as_path.is_file():
-            shape_full_path_fname_attrs = all_shape_attrs[shape_name]
+        library.temptool = None
+        artifacts = FreeCAD.ActiveDocument.findObjects(Label=tool_props['name'])
+        for o in artifacts:
+            FreeCAD.ActiveDocument.removeObject(o.Name)
 
-            params = shape_full_path_fname_attrs["parameter"]
+        for row in range(library.toolModel.rowCount()):
+            if float(library.toolModel.item(row,0).text()) == tb_nr:
+                FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
+                                                .format(tb_nr, tool_props["name"]))
 
-            new_tool_params = tool_props["parameter"]
-            print("\tAdding ToolBit Shape: {}, Dia: {} Name: {}"
-                  .format(shape_name,
-                          new_tool_params['Diameter'],
-                          tool_props['name']
-                          )
-                )
-            toolBitNew(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
+        # add tool to the model , ie current CAM Library & save Library
+        try:
+            fullpath, fname = full_path(tb_full_path_nr_name)
+            tool = Path.Tool.Bit.Declaration(fullpath)
+        except Exception as e:
+            Path.Log.error(e)
+            return
 
-            library.temptool = None
-            artifacts = FreeCAD.ActiveDocument.findObjects(Label=tool_props['name'])
-            for o in artifacts:
-                FreeCAD.ActiveDocument.removeObject(o.Name)
-
-            for row in range(library.toolModel.rowCount()):
-                if float(library.toolModel.item(row,0).text()) == tb_nr:
-                    FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
-                                                 .format(tb_nr, tool_props["name"]))
-
-            # add tool to the model , ie current CAM Library & save Library
-            try:
-                fullpath, fname = full_path(tb_full_path_nr_name)
-                tool = Path.Tool.Bit.Declaration(fullpath)
-            except Exception as e:
-                Path.Log.error(e)
-                return
-
-            library.toolModel.appendRow(library.factory._tool_add(tb_nr, tool, fullpath))
-            library.librarySave()
-        else:
-            print("Shapefile does not exist: {}".format(shape_full_path_fname))
+        library.toolModel.appendRow(library.factory._tool_add(tb_nr, tool, fullpath))
+        library.librarySave()
     else:
-        FreeCAD.Console.PrintWarning(">>>PathToolBitLibraryGui.checkWorkingDir() could not find user writable CAM working directory, macro exiting!\n\n")
+        print("Shapefile does not exist: {}".format(shape_full_path_fname))
 
 
-def addToolListToCurrentLibrary(library, shape_name, dia_list,
+def addToolListToCurrentLibrary(library, s_dir_type, s_dir, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props,
                                 tb_name_rules, dbg_print=False):
@@ -224,13 +238,13 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
 
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
-        addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
+        addToolToCurrentLibrary(library, s_dir_type, s_dir, shape_name, tool_props, tb_name_rules, dbg_print)
 
 
 #TODO IMPORT at least csv
 def importToolCsv():
     # import expect need set EVERY tool data via
-    # NOPE see eampole file: addToolToCurrentLibrary(tool_props, tb_name_rules, dbg_print)
+    # NOPE see eampole file: addToolToCurrentLibrary(library, s_dir, shape_name, tool_props, tb_name_rules, dbg_print)
     # THEN set individ props, like #Flutes, shank dia, material........
     pass
 
@@ -330,7 +344,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     library = PathToolBitLibraryGui.ToolBitLibrary()
 
-    addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
+    addToolToCurrentLibrary(library, s_location, shape_name, tool_props, tb_name_rules, dbg_print)
 
 
 # TODO replace ALL tb_base_name var from default rules
@@ -347,12 +361,22 @@ def processUserToolInput(tb_name_rules,
     # if dbg_print:
     #     print("dbg_print processUserToolInput")
 
-    if shape_name not in shape_names:
-        print("Shape {} is not in shape directory. Current shapes are {}."
-              .format(shape_name, shape_names))
-        return
-    
-    # FIXME review @least location of this "rule" & other TB name rules
+    s_location = None
+    if shape_name in avail_shape_details["user"]['shape_names']:
+        s_location = "user"
+    elif shape_name in avail_shape_details["system"]['shape_names']:
+        s_location = "system"
+    else:
+            print("Shape '{}' is not in User or System shape directory.".format(shape_name))
+            print("\tUser shapes found are: {}."
+                  .format(avail_shape_details["user"]['shape_names']))
+            print("\tSystem shapes found are: {}."
+                  .format(avail_shape_details["system"]['shape_names']))
+            print()
+
+            return
+
+
     try:
         dia=float(dia)
     except ValueError:
@@ -360,14 +384,15 @@ def processUserToolInput(tb_name_rules,
         return
 
     tb_nr = tb_base_nr + dia * tb_nr_inc
-    
+
     # need any document open, no changes are made.
     if FreeCAD.ActiveDocument == None:
         doc = FreeCAD.newDocument()
 
     # FYI: below is sort of code that code be moved/run ONCE for performance!
-    tool_props = deepcopy_toolprops(all_shape_attrs[shape_name])
-    #print(tool_props)
+    tool_props = deepcopy_toolprops(avail_shape_details[s_location]['attr'][shape_name])
+    print(s_location, avail_shape_details[s_location]['attr'][shape_name])
+    print("deepcopied: ",tool_props)
     tool_props['parameter']['Diameter'] = dia
 
     # FYI: below is sort of code that code be moved/run ONCE for performance!
@@ -380,19 +405,21 @@ def processUserToolInput(tb_name_rules,
             print("\tToolBit diameters to be created: ", dia_list)
 
             # CHOOSE to create many ToolBits & add to current library.
-            addToolListToCurrentLibrary(library, shape_name, dia_list,
+            addToolListToCurrentLibrary(library, s_location, avail_shape_details[s_location]["dir"], 
+                                        shape_name, dia_list,
                                         tb_base_name, tb_base_nr, tb_nr_inc,
-                                        tool_props,
-                                        tb_name_rules,
+                                        tool_props, tb_name_rules,
                                         dbg_print=False
                                         )
         else:
             # create ONE ToolBit with diameter = dia
-            addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
+            addToolToCurrentLibrary(library, s_location, avail_shape_details[s_location]["dir"], shape_name, tool_props, tb_name_rules, dbg_print)
     else:
         print("Tool diameter must be number greater than zero.")
 
-    # print("...finished.\n")
+    print("processUserToolInput...finished.\n")
+
+    # FIXME review @least location of this "rule" & other TB name rules
 
 # --- Rules using Classes -----------------------------
 
@@ -651,15 +678,13 @@ def load_data(dataFile, print_csv_file_names=False):
 # Init these when this Library imported,
 #   so only need to do slow-ish open/close shape files IN FreeCAD once!
 
-SO NOW: next steps from rename of: shape_names, all_shape_attrs
-    ...to below.
-    For every use of EITHER *old* var:
-        rename *and* dup code or ADD module to process second set/both sets if module
 
-s_names_User, all_shp_attr_User, s_names_Sys, all_shp_attr_Sys = getAllShapeDetails()
-#print("imported 'CamTbAddLib' and loaded all users Tool shape_names & properties")
-print("at import found User shapes: ", s_names_User)
-print("at import found System shapes: ", s_names_Sys)
-#print()
+# s_names_User, all_shp_attr_User, s_names_Sys, all_shp_attr_Sys = getAllShapeDetails()
+avail_shape_details = getAllShapeDetails()
+# print(avail_shape_details)
+# print("imported 'CamTbAddLib' and loaded all user & systems Tool shape_names & properties")
+# print("at import found User shapes: ", avail_shape_details["user"])
+# print("at import found System shapes: ", avail_shape_details["system"])
+# print()
 
 q = FreeCAD.Units.Quantity
