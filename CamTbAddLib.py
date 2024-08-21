@@ -148,6 +148,28 @@ def getAllShapeDetails():
     return avail_shape_details
 
 
+def get_list_all_shape_names():
+    # Shape names can be in System and User directories
+    # In this example, BOTH lists are retreived & joined
+    # so that ToolBits for EVERY AAVILABLE shape will be created.
+    avail_shape_details = getAllShapeDetails()
+    shape_names = avail_shape_details["user"]['shape_names'] +\
+                    avail_shape_details["system"]['shape_names']
+    return shape_names
+
+
+def find_shape_location(shape_name):
+    s_location = None
+    if shape_name in avail_shape_details["user"]['shape_names']:
+        s_location = "user"
+    elif shape_name in avail_shape_details["system"]['shape_names']:
+        s_location = "system"
+
+    s_dir = avail_shape_details[s_location]["dir"]
+
+    return s_location, s_dir
+
+
 def full_path(filename):
     # Parse out the name of the file and write the structure
     loc, file = os.path.split(filename)
@@ -167,12 +189,15 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     library.temptool.Proxy.saveToFile(library.temptool, fullpath)
 
 
-def addToolToCurrentLibrary(library, s_dir_type, s_dir, shape_name, tool_props, tb_name_rules, dbg_print=False):
+def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
     # FIXME INTERIM usign BOTH old/new-class tb_name_rules
+    # print("tool_props:", tool_props)
     tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     tool_props["name"] = tb_name
+
+    s_dir_type, s_dir = find_shape_location(shape_name)
 
     bit_dir = Path.Preferences.lastPathToolBit()
     bit_dir = os.path.dirname(bit_dir)
@@ -225,7 +250,7 @@ def addToolToCurrentLibrary(library, s_dir_type, s_dir, shape_name, tool_props, 
         print("Shapefile does not exist: {}".format(shape_full_path_fname))
 
 
-def addToolListToCurrentLibrary(library, s_dir_type, s_dir, shape_name, dia_list,
+def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props,
                                 tb_name_rules, dbg_print=False):
@@ -237,13 +262,13 @@ def addToolListToCurrentLibrary(library, s_dir_type, s_dir, shape_name, dia_list
 
         # Set my dia based numbering prefix. If not required, only set = tb_base_name
         tool_props["name"] = str(int(round(tb_nr_inc * d, 2))) + "_" + tb_base_name
-        addToolToCurrentLibrary(library, s_dir_type, s_dir, shape_name, tool_props, tb_name_rules, dbg_print)
+        addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
 
 
 #TODO IMPORT at least csv
 def importToolCsv():
     # import expect need set EVERY tool data via
-    # NOPE see eampole file: addToolToCurrentLibrary(library, s_dir, shape_name, tool_props, tb_name_rules, dbg_print)
+    # NOPE see eampole file: addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False))
     # THEN set individ props, like #Flutes, shank dia, material........
     pass
 
@@ -293,8 +318,20 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     mandatory_imported_t_props_found = {'shape': False, 'parameter': {'Diameter': False}}
     tool_props = dict()
     shape_name = imported_t_props['shape']
-    if shape_name in all_shape_attrs.keys():
-        tool_props = deepcopy_toolprops(all_shape_attrs[shape_name])
+    shape_names = get_list_all_shape_names()
+
+    if shape_name in shape_names:
+        s_location, s_dir = find_shape_location(shape_name)
+        if s_location is None:
+            print("Shape '{}' is not in User or System shape directory.".format(shape_name))
+            print("\tUser shapes found are: {}."
+                    .format(avail_shape_details["user"]['shape_names']))
+            print("\tSystem shapes found are: {}."
+                    .format(avail_shape_details["system"]['shape_names']))
+            print()
+
+            return
+        tool_props = deepcopy_toolprops(avail_shape_details[s_location]['attr'][shape_name])
         mandatory_imported_t_props_found['shape'] = True
         # force Diameter = 0, in case error traps below fail...
         tool_props['parameter']['Diameter'] = 0.0
@@ -343,7 +380,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     library = PathToolBitLibraryGui.ToolBitLibrary()
 
-    addToolToCurrentLibrary(library, s_location, shape_name, tool_props, tb_name_rules, dbg_print)
+    addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
 
 
 # TODO replace ALL tb_base_name var from default rules
@@ -360,20 +397,16 @@ def processUserToolInput(tb_name_rules,
     # if dbg_print:
     #     print("dbg_print processUserToolInput")
 
-    s_location = None
-    if shape_name in avail_shape_details["user"]['shape_names']:
-        s_location = "user"
-    elif shape_name in avail_shape_details["system"]['shape_names']:
-        s_location = "system"
-    else:
-            print("Shape '{}' is not in User or System shape directory.".format(shape_name))
-            print("\tUser shapes found are: {}."
-                  .format(avail_shape_details["user"]['shape_names']))
-            print("\tSystem shapes found are: {}."
-                  .format(avail_shape_details["system"]['shape_names']))
-            print()
+    s_location, s_dir = find_shape_location(shape_name)
+    if s_location is None:
+        print("Shape '{}' is not in User or System shape directory.".format(shape_name))
+        print("\tUser shapes found are: {}."
+                .format(avail_shape_details["user"]['shape_names']))
+        print("\tSystem shapes found are: {}."
+                .format(avail_shape_details["system"]['shape_names']))
+        print()
 
-            return
+        return
 
 
     try:
@@ -402,15 +435,14 @@ def processUserToolInput(tb_name_rules,
             print("\tToolBit diameters to be created: ", dia_list)
 
             # CHOOSE to create many ToolBits & add to current library.
-            addToolListToCurrentLibrary(library, s_location, avail_shape_details[s_location]["dir"], 
-                                        shape_name, dia_list,
+            addToolListToCurrentLibrary(library, shape_name, dia_list,
                                         tb_base_name, tb_base_nr, tb_nr_inc,
                                         tool_props, tb_name_rules,
                                         dbg_print=False
                                         )
         else:
             # create ONE ToolBit with diameter = dia
-            addToolToCurrentLibrary(library, s_location, avail_shape_details[s_location]["dir"], shape_name, tool_props, tb_name_rules, dbg_print)
+            addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
     else:
         print("Tool diameter must be number greater than zero.")
 

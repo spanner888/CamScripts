@@ -118,10 +118,10 @@ print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current libra
 # Shape names can be in System and User directories
 # In this example, BOTH lists are retreived & joined
 # so that ToolBits for EVERY AAVILABLE shape will be created.
-avail_shape_details = CamTbAddLib.getAllShapeDetails()
-shape_names = avail_shape_details["user"]['shape_names'] +\
-                avail_shape_details["system"]['shape_names']
-
+# avail_shape_details = CamTbAddLib.getAllShapeDetails()
+# shape_names = avail_shape_details["user"]['shape_names'] +\
+#                 avail_shape_details["system"]['shape_names']
+shape_names = CamTbAddLib.get_list_all_shape_names()
 for s in shape_names:
     CamTbAddLib.processUserToolInput(exagerated_rules_example,
                                     shape_name = s,
