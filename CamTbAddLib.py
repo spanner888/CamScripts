@@ -650,6 +650,12 @@ def load_data(dataFile, print_csv_file_names=False):
 
 # Init these when this Library imported,
 #   so only need to do slow-ish open/close shape files IN FreeCAD once!
+
+SO NOW: next steps from rename of: shape_names, all_shape_attrs
+    ...to below.
+    For every use of EITHER *old* var:
+        rename *and* dup code or ADD module to process second set/both sets if module
+
 s_names_User, all_shp_attr_User, s_names_Sys, all_shp_attr_Sys = getAllShapeDetails()
 #print("imported 'CamTbAddLib' and loaded all users Tool shape_names & properties")
 print("at import found User shapes: ", s_names_User)
