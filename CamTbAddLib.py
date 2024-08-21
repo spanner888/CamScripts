@@ -175,7 +175,6 @@ def addToolToCurrentLibrary(library, s_dir_type, s_dir, shape_name, tool_props, 
     tool_props["name"] = tb_name
 
     bit_dir = Path.Preferences.lastPathToolBit()
-    print(bit_dir, s_dir)
     bit_dir = os.path.dirname(bit_dir)
     if len(bit_dir) > 0:
         tb_full_path_nr_name =  bit_dir + "/Bit/" + tool_props["name"] + ".fctb"
@@ -391,8 +390,6 @@ def processUserToolInput(tb_name_rules,
 
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     tool_props = deepcopy_toolprops(avail_shape_details[s_location]['attr'][shape_name])
-    print(s_location, avail_shape_details[s_location]['attr'][shape_name])
-    print("deepcopied: ",tool_props)
     tool_props['parameter']['Diameter'] = dia
 
     # FYI: below is sort of code that code be moved/run ONCE for performance!
@@ -417,7 +414,7 @@ def processUserToolInput(tb_name_rules,
     else:
         print("Tool diameter must be number greater than zero.")
 
-    print("processUserToolInput...finished.\n")
+    # print("processUserToolInput...finished.\n")
 
     # FIXME review @least location of this "rule" & other TB name rules
 
@@ -503,25 +500,28 @@ class Rules:
                         # Specified name rule Property does NOT exist in this ToolBit, IGNORE
                         pass
                 elif v1.ptype == PropType.tb_attrib:
-                    # Chipload  & SpindlePower=Float, Flutes=Integer, Material & SpindleDirection=text
+                    # Chipload  & SpindlePower=*BOOLEAN*, Flutes=Integer, Material & SpindleDirection=text
                     ta = tool_props["attribute"]
                     if k1 == "Chipload" or k1 == "SpindlePower":
                         try:
                             tb_prop_val = q(ta[k1]).Value
-                        except KeyError:
+                        except (ValueError, KeyError) as e:
                             # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                            # or is text or boolean & cannot be evaluated as a FC Quantity
                             pass
                     elif k1 == "Flutes":
                         try:
                             tb_prop_val = round(q(ta[k1]).Value)
-                        except KeyError:
+                        except (ValueError, KeyError) as e:
                             # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                            # or is text or boolean & cannot be evaluated as a FC Quantity
                             pass
                     else:
                         try:
                             tb_prop_val = ta[k1]
-                        except KeyError:
+                        except (ValueError, KeyError) as e:
                             # Specified name rule Property does NOT exist in this ToolBit, IGNORE
+                            # or is text or boolean & cannot be evaluated as a FC Quantity
                             pass
                 elif v1.ptype == PropType.rule_prop:
                     try:

@@ -64,9 +64,17 @@ reload(ex_rules)
 # create a naming rules object with DESIRED rules
 # FIXME FIXME 1 - why "restrict" rules to ONE shape type, thus forcing user to duplciate rule clsses/sets???
 tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='any')
+boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
+exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 
 # ??Seven examples on adding a Default, One or a list of Tools to current Library,
 # with differing naming rule examples.
+print("Examples 1 and 2 use a sample set of ToolBit naming rules.")
+print("Example 3 matches naming rules suggested by github user boboxx")
+print("Example 4 uses exagerated_rules_example, to show how dif properties only appear when present.")
+print("Example 5 add Shape name to RHS of boboxx rules.")
+print("Example 6 Shows what happens with an empty naming rule set.")
+print()
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
 CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=True)
@@ -93,7 +101,7 @@ print("\t...Example 2 finished.\n")
 print("Example 3. Create many tools: dia to dia_max, increment dia_inc")
 #   But only If BOTH dia_max & dia_inc are greater than zero,
 #            Else: ONLY create ONE TB of this dia in current library.
-CamTbAddLib.processUserToolInput(tb_class_naming_rules,
+CamTbAddLib.processUserToolInput(boboxx_rulesShape,
                                 shape_name = "endmill",
                                 tb_base_name = "em",
                                 tb_base_nr = 20000,
@@ -107,20 +115,15 @@ print("\t...Example 3 finished.\n")
 
 # -----------------------------------------------------------------------
 print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
-
-
-
-#getDefaultShapes() NO LONGER EXISTS
-# shapeDir, shape_names = CamTbAddLib.getDefaultShapes()
-
 # Shape names can be in System and User directories
-# List of can be retreived using:
+# In this example, BOTH lists are retreived & joined
+# so that ToolBits for EVERY AAVILABLE shape will be created.
 avail_shape_details = CamTbAddLib.getAllShapeDetails()
 shape_names = avail_shape_details["user"]['shape_names'] +\
                 avail_shape_details["system"]['shape_names']
 
 for s in shape_names:
-    CamTbAddLib.processUserToolInput(tb_class_naming_rules,
+    CamTbAddLib.processUserToolInput(exagerated_rules_example,
                                     shape_name = s,
                                     tb_base_name = s + "_example",
                                     tb_base_nr = 20000,
@@ -133,16 +136,16 @@ print("\t...Example 4 finished.\n")
 
 
 # -----------------------------------------------------------------------
-print("Example 5. User boboxx Example: 2F-D6.35-L31.076, FC issue:12823")
+print("Example 5. User boboxx naming rules Example: 2F-D6.35-L31.076, FC issue:12823")
 boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
-CamTbAddLib.processUserToolInput(boboxx_rules)
+CamTbAddLib.processUserToolInput(boboxx_rulesShape)
 
 print("\t...Example 5 finished.\n")
 # -----------------------------------------------------------------------
 
 
 # -----------------------------------------------------------------------
-print("Example 6. Demonstrate that empty rules produce an empty '' name.")
+print("Example 6. Demonstrate that empty naming rules produce an empty '' name.")
 print("    Although in Tool Library name literally becomes '.fctb'.")
 all_empty_rules = ex_rules.AllRulesTemplate(shape_name='not used ATM')
 CamTbAddLib.processUserToolInput(all_empty_rules)

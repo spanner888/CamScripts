@@ -205,7 +205,7 @@ def get_mat_machinability(doc, mat_obj, printing=False):
 
     # Machining has very DRAFT materials with SurfaceSpeedCarbide/HSS
     # mat = MaterialManager.getMaterialByPath('Machining/Aluminum-Cast.FCMat', 'System')
-    mat = MaterialManager.getMaterialByPath('Machining/Aluminum-6061.FCMat', 'System')
+    mat = MaterialManager.getMaterialByPath('Machining/AluminumCastAlloy.FCMat', 'System')
 
     # print(mat.Name)
     # Ideal = add material to shape, before creating Job.
