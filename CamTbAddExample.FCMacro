@@ -1,5 +1,303 @@
 # -*- coding: utf-8 -*-
 
+# g & z4 erorr notes
+if 1==2:
+    pass
+    #TODO IMPORT: test that other data in btl/???
+
+    #&, spaces in path??
+    #/home/spanner888/.local/share/FreeCAD_lappy&z400/toolsFC/tools_shared/Library/
+    #hmm 1,2 say ok, but nothing in lib
+    #z400 ...simialr macro & tb/lib setup changes ...erors, BUT DIFFERENT!!!
+
+    #debug sys+user dir info & fc ver & path/cam...
+    #already some forum macro or addon mgr???
+
+    #ConfigGet
+    #ConfigSet
+    #ParamGet
+    #Version
+    #__ModDirs__
+    #getResourceDir
+    #getTempPath
+    #getUserAppDataDir
+    #getUserCachePath
+    #getUserConfigDir
+    #getUserMacroDir
+
+    #saveParameter
+
+    #FreeCAD.ConfigDump()    easiest get dump/save all??
+    #AppHomePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/
+    #AppTempPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/temp/
+    #BinPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/bin/
+    #BuildRevision': '38495 (Git)
+    #DocPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/doc/
+    #ExeVersion': '0.22.0
+    #LoggingFileName': '142sq_acSU_38499_z400.log
+    #OpenFileCount': '
+    #PATH': '/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+    #PYTHONHOME': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr
+    #PYTHONPATH': '
+    #PYTHON_VERSION': '3.11.9
+    #PythonSearchPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/lib/python311.zip:/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/lib/python3.11:/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/lib/python3.11/lib-dynload
+    #SystemParameter': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/system_dev_mlappy.cfg
+    #UserAppData': '/home/spanner888/.local/share/FreeCAD/
+    #UserCachePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/temp/
+    #UserConfigPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/
+    #UserHomePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy
+    #UserMacroPath': '/home/spanner888/.local/share/FreeCAD/
+    #UserParameter': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/user_dev_mlappy.cfg
+
+
+
+    #LastFileToolLibrary /home/spanner888/.local/share/FreeCAD_lappy&z400/toolsFC/tools_shared/Library/Default.fctl
+    #LastPathToolBit     /home/spanner888/.local/share/FreeCAD/Macro/tools/Bit
+    #LastPathToolLibrary /home/spanner888/.local/share/FreeCAD_lappy&z400/toolsFC/tools_shared/Library
+    #** did just change lib loc as was wrong or at least due to errors below
+        #>>> LastPathToolBit     /home/spanner888/.local/share/FreeCAD/Macro/tools/Bit
+        
+        #??more robust check if lib/bit dirs exist??
+        #update prefs or prompt user & how ...
+
+
+    #11:25:51  Examples 1 and 2 use a sample set of ToolBit naming rules.
+    #11:25:51  Example 3 matches naming rules suggested by github user boboxx
+    #11:25:51  Example 4 uses exagerated_rules_example, to show how dif properties only appear when present.
+    #11:25:51  Example 5 add Shape name to RHS of boboxx rules.
+    #11:25:51  Example 6 Shows what happens with an empty naming rule set.
+    #11:25:51  
+    #11:25:51  Example 1. Add single example default endmill to current Library.
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 8.12 Name: 28120.0_8.12D_0F_endmill
+    #11:25:51  	...Example 1 finished.
+    #11:25:51  
+    #11:25:51  Example 2. Add SINGLE Tool 6.35 mm dia to current library, shows all settings
+    #11:25:51  BitLibrary.ERROR: Could not find tool #28120: 28120.0_8.12D_0F_endmill.fctb
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 6.35 Name: 26350.0_6.35D_0F_endmill
+    #11:25:51  	...Example 2 finished.
+    #11:25:51  
+    #11:25:51  Example 3. Create many tools: dia to dia_max, increment dia_inc
+    #11:25:51  BitLibrary.ERROR: Could not find tool #26350: 26350.0_6.35D_0F_endmill.fctb
+    #11:25:51  	ToolBit diameters to be created:  [8.2 8.4 8.6 8.8 9. ]
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 8.2 mm Name: 0F_D8.2-L50.0_endmill
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 8.4 mm Name: 0F_D8.4-L50.0_endmill
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 8.6 mm Name: 0F_D8.6-L50.0_endmill
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 8.8 mm Name: 0F_D8.8-L50.0_endmill
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 9.0 mm Name: 0F_D9.0-L50.0_endmill
+    #11:25:51  	...Example 3 finished.
+    #11:25:51  
+    #11:25:51  Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library
+    #11:25:51  BitLibrary.ERROR: Could not find tool #28200: 0F_D8.2-L50.0_endmill.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #28400: 0F_D8.4-L50.0_endmill.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #28600: 0F_D8.6-L50.0_endmill.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #28800: 0F_D8.8-L50.0_endmill.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #29000: 0F_D9.0-L50.0_endmill.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: slittingsaw, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__312_slittingsaw_example
+    #11:25:51  	Adding ToolBit Shape: slittingsaw, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__325_slittingsaw_example
+    #11:25:51  	Adding ToolBit Shape: slittingsaw, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__337_slittingsaw_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__312_slittingsaw_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__325_slittingsaw_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__337_slittingsaw_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: ballend, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__312_ballend_example
+    #11:25:51  	Adding ToolBit Shape: ballend, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__325_ballend_example
+    #11:25:51  	Adding ToolBit Shape: ballend, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__337_ballend_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__312_ballend_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__325_ballend_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__337_ballend_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: chamfer, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__312_chamfer_example
+    #11:25:51  	Adding ToolBit Shape: chamfer, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__325_chamfer_example
+    #11:25:51  	Adding ToolBit Shape: chamfer, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__337_chamfer_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__312_chamfer_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__325_chamfer_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__337_chamfer_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: probe, Dia: 3.125 mm Name: 33125.0_3.125D_50.0L_probe__312_probe_example
+    #11:25:51  Sketch: Solving the sketch failed
+    #11:25:51  	Adding ToolBit Shape: probe, Dia: 3.25 mm Name: 33250.0_3.25D_50.0L_probe__325_probe_example
+    #11:25:51  Sketch: Solving the sketch failed
+    #11:25:51  	Adding ToolBit Shape: probe, Dia: 3.375 mm Name: 33375.0_3.375D_50.0L_probe__337_probe_example
+    #11:25:51  Sketch: Solving the sketch failed
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D_50.0L_probe__312_probe_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D_50.0L_probe__325_probe_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D_50.0L_probe__337_probe_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__312_endmill_example
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__325_endmill_example
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__337_endmill_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__312_endmill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__325_endmill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__337_endmill_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: drill, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__312_drill_example
+    #11:25:51  	Adding ToolBit Shape: drill, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__325_drill_example
+    #11:25:51  	Adding ToolBit Shape: drill, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__337_drill_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__312_drill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__325_drill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__337_drill_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: v-bit, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__312_v-bit_example
+    #11:25:51  	Adding ToolBit Shape: v-bit, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__325_v-bit_example
+    #11:25:51  	Adding ToolBit Shape: v-bit, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__337_v-bit_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__312_v-bit_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__325_v-bit_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__337_v-bit_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: dovetail, Dia: 3.125 mm Name: 33125.0_3.125D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__312_dovetail_example
+    #11:25:51  	Adding ToolBit Shape: dovetail, Dia: 3.25 mm Name: 33250.0_3.25D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__325_dovetail_example
+    #11:25:51  	Adding ToolBit Shape: dovetail, Dia: 3.375 mm Name: 33375.0_3.375D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__337_dovetail_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__312_dovetail_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__325_dovetail_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__337_dovetail_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: thread-mill, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__312_thread-mill_example
+    #11:25:51  	Adding ToolBit Shape: thread-mill, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__325_thread-mill_example
+    #11:25:51  	Adding ToolBit Shape: thread-mill, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__337_thread-mill_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__312_thread-mill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__325_thread-mill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__337_thread-mill_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: bullnose, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__312_bullnose_example
+    #11:25:51  	Adding ToolBit Shape: bullnose, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__325_bullnose_example
+    #11:25:51  	Adding ToolBit Shape: bullnose, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__337_bullnose_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__312_bullnose_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #332
+
+    #50: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__325_bullnose_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__337_bullnose_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: slittingsaw, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__312_slittingsaw_example
+    #11:25:51  	Adding ToolBit Shape: slittingsaw, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__325_slittingsaw_example
+    #11:25:51  	Adding ToolBit Shape: slittingsaw, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__337_slittingsaw_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__312_slittingsaw_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__325_slittingsaw_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__bt3.0__50.0L_19.05DS_slittingsaw__337_slittingsaw_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: ballend, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__312_ballend_example
+    #11:25:51  	Adding ToolBit Shape: ballend, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__325_ballend_example
+    #11:25:51  	Adding ToolBit Shape: ballend, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__337_ballend_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__312_ballend_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__325_ballend_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_50.0L_3.0DS_ballend__337_ballend_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: chamfer, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__312_chamfer_example
+    #11:25:51  	Adding ToolBit Shape: chamfer, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__325_chamfer_example
+    #11:25:51  	Adding ToolBit Shape: chamfer, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__337_chamfer_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__312_chamfer_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__325_chamfer_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_6.35CL_30.0L_6.35DS_td5.0deg_chamfer__337_chamfer_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: probe, Dia: 3.125 mm Name: 33125.0_3.125D_50.0L_probe__312_probe_example
+    #11:25:51  Sketch: Solving the sketch failed
+    #11:25:51  	Adding ToolBit Shape: probe, Dia: 3.25 mm Name: 33250.0_3.25D_50.0L_probe__325_probe_example
+    #11:25:51  Sketch: Solving the sketch failed
+    #11:25:51  	Adding ToolBit Shape: probe, Dia: 3.375 mm Name: 33375.0_3.375D_50.0L_probe__337_probe_example
+    #11:25:51  Sketch: Solving the sketch failed
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D_50.0L_probe__312_probe_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D_50.0L_probe__325_probe_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D_50.0L_probe__337_probe_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__312_endmill_example
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__325_endmill_example
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__337_endmill_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__312_endmill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__325_endmill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__Forward__30.0CL_50.0L_3.0DS_endmill__337_endmill_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: drill, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__312_drill_example
+    #11:25:51  	Adding ToolBit Shape: drill, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__325_drill_example
+    #11:25:51  	Adding ToolBit Shape: drill, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__337_drill_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__312_drill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__325_drill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__50.0L_ta119.0deg_drill__337_drill_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: v-bit, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__312_v-bit_example
+    #11:25:51  	Adding ToolBit Shape: v-bit, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__325_v-bit_example
+    #11:25:51  	Adding ToolBit Shape: v-bit, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__337_v-bit_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__312_v-bit_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__325_v-bit_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__90.0deg_1.0CL_20.0L_5.0DS_td1.0deg_v-bit__337_v-bit_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: dovetail, Dia: 3.125 mm Name: 33125.0_3.125D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__312_dovetail_example
+    #11:25:51  	Adding ToolBit Shape: dovetail, Dia: 3.25 mm Name: 33250.0_3.25D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__325_dovetail_example
+    #11:25:51  	Adding ToolBit Shape: dovetail, Dia: 3.375 mm Name: 33375.0_3.375D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__337_dovetail_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__312_dovetail_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__325_dovetail_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D8F_0.0CL__HSS__60.0deg_9.0CL_54.2L_8.0ND_5.0NH_9.53DS_td5.0deg_dovetail__337_dovetail_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: thread-mill, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__312_thread-mill_example
+    #11:25:51  	Adding ToolBit Shape: thread-mill, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__325_thread-mill_example
+    #11:25:51  	Adding ToolBit Shape: thread-mill, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__337_thread-mill_example
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__312_thread-mill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__325_thread-mill_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__60.0deg_50.0L_3.0ND_20.0NL_5.0DS_thread-mill__337_thread-mill_example.fctb
+    #11:25:51  	ToolBit diameters to be created:  [3.125 3.25  3.375]
+    #11:25:51  	Adding ToolBit Shape: bullnose, Dia: 3.125 mm Name: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__312_bullnose_example
+    #11:25:51  	Adding ToolBit Shape: bullnose, Dia: 3.25 mm Name: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__325_bullnose_example
+    #11:25:51  	Adding ToolBit Shape: bullnose, Dia: 3.375 mm Name: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__337_bullnose_example
+    #11:25:51  	...Example 4 finished.
+    #11:25:51  
+    #11:25:51  Example 5. User boboxx naming rules Example: 2F-D6.35-L31.076, FC issue:12823
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33125: 33125.0_3.125D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__312_bullnose_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33250: 33250.0_3.25D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__325_bullnose_example.fctb
+    #11:25:51  BitLibrary.ERROR: Could not find tool #33375: 33375.0_3.375D0F_0.0CL__HSS__40.0CL_1.5FR_50.0L_3.0DS_bullnose__337_bullnose_example.fctb
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 8.12 Name: 0F_D8.12-L50.0_endmill
+    #11:25:51  	...Example 5 finished.
+    #11:25:51  
+    #11:25:51  Example 6. Demonstrate that empty naming rules produce an empty '' name.
+    #11:25:51      Although in Tool Library name literally becomes '.fctb'.
+    #11:25:51  BitLibrary.ERROR: Could not find tool #28120: 0F_D8.12-L50.0_endmill.fctb
+    #11:25:51  	Adding ToolBit Shape: endmill, Dia: 8.12 Name: 
+    #11:25:51  	...Example 6 finished.
+    #11:25:51  
+    #11:25:51  
+    #11:25:51  CamTbAddLibExample.FcMacro finished.
+    #11:25:51  
+
+
+
+    #z400
+    #14:03:54  NOTICE: Addon "/home/spanner888/.local/share/FreeCAD/Mod/btl" disabled by presence of ADDON_DISABLED stopfile
+    #14:03:55  flag
+    #14:03:55  flag2
+    #14:03:55  NOTICE: Addon "/home/spanner888/.local/share/FreeCAD/Mod/FeedsAndSpeeds" disabled by presence of ADDON_DISABLED stopfile
+    #14:03:56  osf: Trying FreeCAD mode
+    #14:03:56  osf: Success: imported "Pathfs" in FreeCAD mode
+    #14:03:56  moduleName SF_app freecad /home/spanner888/.local/share/FreeCAD/Mod/nswb_2023/freecad/SF_app
+    #14:03:56  /home/spanner888/.local/share/FreeCAD/Mod/nswb_2023/freecad/SF_app
+    #14:03:56   Success: imported "Pathfs" as namespace.package.module
+    #14:03:56  addonTitle PathfsGui_Ysfp
+    #14:04:11  Examples 1 and 2 use a sample set of ToolBit naming rules.
+    #14:04:11  Example 3 matches naming rules suggested by github user boboxx
+    #14:04:11  Example 4 uses exagerated_rules_example, to show how dif properties only appear when present.
+    #14:04:11  Example 5 add Shape name to RHS of boboxx rules.
+    #14:04:11  Example 6 Shows what happens with an empty naming rule set.
+    #14:04:11  
+    #14:04:11  Example 1. Add single example default endmill to current Library.
+    #14:04:11  	Adding ToolBit Shape: endmill, Dia: 8.12 Name: 28120.0_8.12D_0F_endmill
+    #14:04:11  Bit.ERROR: Could not save tool 28120.0_8.12D_0F_endmill to /home/spanner888/.local/share/FreeCAD/Macro/Bit/28120.0_8.12D_0F_endmill.fctb ([Errno 2] No such file or directory: '/home/spanner888/.local/share/FreeCAD/Macro/Bit/28120.0_8.12D_0F_endmill.fctb')
+    #14:04:11  pyException: Traceback (most recent call last):
+    #File "/home/spanner888/.local/share/FreeCAD/CamScripts/CamTbAddExample.FCMacro", line 307, in <module>
+        #CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=True)
+    #File "/home/spanner888/.local/share/FreeCAD/CamScripts/CamTbAddLib.py", line 456, in processUserToolInput
+        #addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
+    #File "/home/spanner888/.local/share/FreeCAD/CamScripts/CamTbAddLib.py", line 238, in addToolToCurrentLibrary
+        #toolBitNew(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
+    #File "/home/spanner888/.local/share/FreeCAD/CamScripts/CamTbAddLib.py", line 200, in toolBitNew
+        #library.temptool.Proxy.saveToFile(library.temptool, fullpath)
+    #File "/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/Mod/CAM/Path/Tool/Bit.py", line 442, in saveToFile
+        #with open(path, "w") as fp:
+            #^^^^^^^^^^^^^^^
+    #<class 'FileNotFoundError'>: [Errno 2] No such file or directory: '/home/spanner888/.local/share/FreeCAD/Macro/Bit/28120.0_8.12D_0F_endmill.fctb'
+
+
+#NB below z400 fails ex1...g was fail ex3!!!
+#14:04:11  Example 1. Add single example default endmill to current Library.
+#14:04:11  	Adding ToolBit Shape: endmill, Dia: 8.12 Name: 28120.0_8.12D_0F_endmill
+#14:04:11  Bit.ERROR: Could not save tool 28120.0_8.12D_0F_endmill to /home/spanner888/.local/share/FreeCAD/Macro/Bit/28120.0_8.12D_0F_endmill.fctb ([Errno 2] No such file or directory: '/home/spanner888/.local/share/FreeCAD/Macro/Bit/28120.0_8.12D_0F_endmill.fctb')
+
 
 # NEXT try match one set new/old rules & match both OUTPUT names!!!
 #if OK. clean up code, then more more tests as per fixmes & todos!!!

@@ -44,6 +44,17 @@ else:
 #     For every use of EITHER *old* var:
 #         rename *and* dup code or ADD module to process second set/both sets if module
 
+# ABOVE prob done - review
+# excwept ...now import ~4.5mins on lappy & ?? on z40
+# >>>>>>>can see for every         dia or tb?? that ALL SHAPES oepnig or at least ...pening recompute
+#   z400 ...what state are the sys AND users shapes in ??? resaved/muddled/?????
+# AND shape/line to small warnigns.....
+# as well as all the dup Tool NUmbers...
+# >>>>>>dolphin console says finished ...FC report ....40+secs to finish
+# could not scroll back to start to meadure z400 duration ...but as/longer!!!!
+# oops was callign this @#166 getAllShapeDetails() & at import!!!
+# FIXED ,,,now ~1 sec??
+
 
 ###################################################################
 def getShapeNamesFromDir(shapeDir):
@@ -152,7 +163,7 @@ def get_list_all_shape_names():
     # Shape names can be in System and User directories
     # In this example, BOTH lists are retreived & joined
     # so that ToolBits for EVERY AAVILABLE shape will be created.
-    avail_shape_details = getAllShapeDetails()
+    # WTF called at import avail_shape_details = getAllShapeDetails()
     shape_names = avail_shape_details["user"]['shape_names'] +\
                     avail_shape_details["system"]['shape_names']
     return shape_names
@@ -197,23 +208,109 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
     tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     tool_props["name"] = tb_name
 
-    s_dir_type, s_dir = find_shape_location(shape_name)
+    
+    #AppHomePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/
+    #AppTempPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/temp/
+    #BinPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/bin/
+    #BuildRevision': '38495 (Git)
+    #DocPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/doc/
+    #ExeVersion': '0.22.0
+    #LoggingFileName': '142sq_acSU_38499_z400.log
+    #OpenFileCount': '
 
-    bit_dir = Path.Preferences.lastPathToolBit()
-    bit_dir = os.path.dirname(bit_dir)
-    if len(bit_dir) > 0:
-        tb_full_path_nr_name =  bit_dir + "/Bit/" + tool_props["name"] + ".fctb"
+    #SystemParameter': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/system_dev_mlappy.cfg
+    #UserParameter': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/user_dev_mlappy.cfg
+
+    #UserAppData': '/home/spanner888/.local/share/FreeCAD/
+    #UserCachePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/temp/
+
+    #UserConfigPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/
+    #UserHomePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy
+    #UserMacroPath': '/home/spanner888/.local/share/FreeCAD/
+
+
+    #manuall read from prefs just now:
+    #LastFileToolLibrary /home/spanner888/.local/share/FreeCAD_lappy&z400/toolsFC/tools_shared/Library/Default.fctl
+    #LastPathToolBit     /home/spanner888/.local/share/FreeCAD/Macro/tools/Bit
+    #LastPathToolLibrary /home/spanner888/.local/share/FreeCAD_lappy&z400/toolsFC/tools_shared/Library
+    
+    ##
+    ## MaKE THIS CHECK A FUNCTION!!!
+    ##
+    
+    #HMM below checks GOOD...but maybe better just say Assunming CURRENT LIB ...so Bit dir has to be in Same tools(whatever named)
+        #& if writable proced!!
+        
+    #msg to use: CAM - Lib - Ad existing...
+    #NB you can have multiple libs, but sometimes LastPathToolBit is NOT inside curernt lib = issue 
+    #MAYBE below & 2xmsgs add together & dump if issue???
+    #if path contians squashfs ...warning not writable?? <<<no CHECKING further down.
+    
+    #if roots not same - MSG - not warn
+    #LastPathToolBit
+    #LastFileToolBit ???not exist on z4
+    
+    #if roots not same - MSG - not warn
+    #LastFileToolLibrary
+    #LastPathToolLibrary
+    
+    
+    #if roots not same - WARNING
+    #LastPathToolBit
+    #LastPathToolLibrary
+
+
+
+    #s_dir_type, s_dir = find_shape_location(shape_name)
+
+    #test if path 
+        #exists
+        #is writable
+        #is not empty <<<yes, in case trying split to get to the bits...
+        #??location relative to Lib ...if saved OUTSIDE current lib = issues!!!
+            #at least warn!!!
+        
+    #    os.path.commonpath(paths)
+    #    os.path.dirname(path)
+    #    os.path.exists(path)
+    #     os.path.isfile(path)
+    #     os.path.isdir(path)
+    # os.path.split(path)
+    #    Split the pathname path into a pair, (head, tail) where tail is the last pathname component and head is everything leading up to that. The tail part will never contain a slash; if path ends in a slash, tail will be empty. If there is no slash in path, head will be empty. If path is empty, both head and tail are empty. Trailing slashes are stripped from head unless it is the root (one or more slashes only). In all cases, join(head, tail) returns a path to the same location as path (but the strings may differ). Also see the functions dirname() and basename().
+
+    # https://stackoverflow.com/questions/2113427/determining-whether-a-directory-is-writeable
+    # OK, BUT do this in init somewhere!!!! (Lib, & Bit dirs ONLY?? ...not writing to Shape)
+    # It may seem strange to suggest this, but a common Python idiom is
+    #     It's easier to ask for forgiveness than for permission
+    # Following that idiom, one might say:
+    # Try writing to the directory in question, and catch the error if you don't have the permission to do so.
+    #
+    #
+    #  ****g pc - ex1 SAYS finished ...then i ex2 msg missing ex1 tb!!! <<<so sim issue, diff symptoms
+    lib_dir = Path.Preferences.lastPathToolLibrary()
+    # bit_dir = Path.Preferences.lastPathToolBit()
+    print(lib_dir)
+    print(os.path.split(lib_dir))
+    # print(bit_dir)
+    head, tail = os.path.split(lib_dir)
+    if not (tail == "Library"):
+        print("Cannot find Tools Library directory!")
+        return
+
+    if len(head) > 0:
+        tb_full_path_nr_name =  head + "/Bit/" + tool_props["name"] + ".fctb"
     else:
-        print("Preference LastPathToolBit is empty, cannot proceed.")
+        print("Cannot find Tools Library parent directory!")
         return
 
     tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
 
+    s_location, s_dir = find_shape_location(shape_name)
     shape_full_path_fname = s_dir + shape_name + ".fcstd"
     shape_full_path_fname_as_path = osPath(shape_full_path_fname)
 
     if shape_full_path_fname_as_path.is_file():
-        shape_full_path_fname_attrs = avail_shape_details[s_dir_type]['attr'][shape_name]
+        shape_full_path_fname_attrs = avail_shape_details[s_location]['attr'][shape_name]
             
         params = shape_full_path_fname_attrs["parameter"]
 
@@ -224,6 +321,9 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
                         tool_props['name']
                         )
             )
+        dbg_print = True
+        if dbg_print:
+            print(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
         toolBitNew(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
 
         library.temptool = None

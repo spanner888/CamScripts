@@ -204,7 +204,10 @@ def get_mat_machinability(doc, mat_obj, printing=False):
     # mat = MaterialManager.getMaterialByPath('Standard/Metal/Steel/CalculiX-Steel.FCMat', 'System')
 
     # Machining has very DRAFT materials with SurfaceSpeedCarbide/HSS
-    # mat = MaterialManager.getMaterialByPath('Machining/Aluminum-Cast.FCMat', 'System')
+    
+    # OLDER bulds:    # mat = MaterialManager.getMaterialByPath('Machining/Aluminum-Cast.FCMat', 'System')
+    
+    # LATEST builds
     mat = MaterialManager.getMaterialByPath('Machining/AluminumCastAlloy.FCMat', 'System')
 
     # print(mat.Name)
