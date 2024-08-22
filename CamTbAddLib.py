@@ -208,90 +208,10 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
     tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     tool_props["name"] = tb_name
 
-    
-    #AppHomePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/
-    #AppTempPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/temp/
-    #BinPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/bin/
-    #BuildRevision': '38495 (Git)
-    #DocPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/usr/doc/
-    #ExeVersion': '0.22.0
-    #LoggingFileName': '142sq_acSU_38499_z400.log
-    #OpenFileCount': '
-
-    #SystemParameter': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/system_dev_mlappy.cfg
-    #UserParameter': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/user_dev_mlappy.cfg
-
-    #UserAppData': '/home/spanner888/.local/share/FreeCAD/
-    #UserCachePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/temp/
-
-    #UserConfigPath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy/
-    #UserHomePath': '/home/spanner888/Documents/_APPSz400/FC_wkly-38495/squashfs-root/config_dev_mlappy
-    #UserMacroPath': '/home/spanner888/.local/share/FreeCAD/
-
-
-    #manuall read from prefs just now:
-    #LastFileToolLibrary /home/spanner888/.local/share/FreeCAD_lappy&z400/toolsFC/tools_shared/Library/Default.fctl
-    #LastPathToolBit     /home/spanner888/.local/share/FreeCAD/Macro/tools/Bit
-    #LastPathToolLibrary /home/spanner888/.local/share/FreeCAD_lappy&z400/toolsFC/tools_shared/Library
-    
-    ##
-    ## MaKE THIS CHECK A FUNCTION!!!
-    ##
-    
-    #HMM below checks GOOD...but maybe better just say Assunming CURRENT LIB ...so Bit dir has to be in Same tools(whatever named)
-        #& if writable proced!!
-        
-    #msg to use: CAM - Lib - Ad existing...
-    #NB you can have multiple libs, but sometimes LastPathToolBit is NOT inside curernt lib = issue 
-    #MAYBE below & 2xmsgs add together & dump if issue???
-    #if path contians squashfs ...warning not writable?? <<<no CHECKING further down.
-    
-    #if roots not same - MSG - not warn
-    #LastPathToolBit
-    #LastFileToolBit ???not exist on z4
-    
-    #if roots not same - MSG - not warn
-    #LastFileToolLibrary
-    #LastPathToolLibrary
-    
-    
-    #if roots not same - WARNING
-    #LastPathToolBit
-    #LastPathToolLibrary
-
-
-
-    #s_dir_type, s_dir = find_shape_location(shape_name)
-
-    #test if path 
-        #exists
-        #is writable
-        #is not empty <<<yes, in case trying split to get to the bits...
-        #??location relative to Lib ...if saved OUTSIDE current lib = issues!!!
-            #at least warn!!!
-        
-    #    os.path.commonpath(paths)
-    #    os.path.dirname(path)
-    #    os.path.exists(path)
-    #     os.path.isfile(path)
-    #     os.path.isdir(path)
-    # os.path.split(path)
-    #    Split the pathname path into a pair, (head, tail) where tail is the last pathname component and head is everything leading up to that. The tail part will never contain a slash; if path ends in a slash, tail will be empty. If there is no slash in path, head will be empty. If path is empty, both head and tail are empty. Trailing slashes are stripped from head unless it is the root (one or more slashes only). In all cases, join(head, tail) returns a path to the same location as path (but the strings may differ). Also see the functions dirname() and basename().
-
-    # https://stackoverflow.com/questions/2113427/determining-whether-a-directory-is-writeable
-    # OK, BUT do this in init somewhere!!!! (Lib, & Bit dirs ONLY?? ...not writing to Shape)
-    # It may seem strange to suggest this, but a common Python idiom is
-    #     It's easier to ask for forgiveness than for permission
-    # Following that idiom, one might say:
-    # Try writing to the directory in question, and catch the error if you don't have the permission to do so.
-    #
-    #
-    #  ****g pc - ex1 SAYS finished ...then i ex2 msg missing ex1 tb!!! <<<so sim issue, diff symptoms
+    # As lastPathBitLibrary etc can be empty or point to entirely different library,
+    # ...now deriving Bit dir from Lib dir, as ALL the example macros
+    # work with CURRENT library, so Bit dir must also be in same Lib.
     lib_dir = Path.Preferences.lastPathToolLibrary()
-    # bit_dir = Path.Preferences.lastPathToolBit()
-    print(lib_dir)
-    print(os.path.split(lib_dir))
-    # print(bit_dir)
     head, tail = os.path.split(lib_dir)
     if not (tail == "Library"):
         print("Cannot find Tools Library directory!")
@@ -321,9 +241,9 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
                         tool_props['name']
                         )
             )
-        dbg_print = True
         if dbg_print:
             print(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
+
         toolBitNew(library, tb_full_path_nr_name, shape_name, shape_full_path_fname, tool_props)
 
         library.temptool = None
@@ -430,7 +350,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
                     .format(avail_shape_details["system"]['shape_names']))
             print()
 
-            return
+            return False
         tool_props = deepcopy_toolprops(avail_shape_details[s_location]['attr'][shape_name])
         mandatory_imported_t_props_found['shape'] = True
         # force Diameter = 0, in case error traps below fail...
@@ -458,11 +378,11 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
                 tool_props['parameter']['Diameter'])
     else:
         print("\t ignoring shape name: {}. It is not in user shapes folder:".format(shape_name))
-        return
+        return False
 
     if mandatory_imported_t_props_found['parameter']['Diameter'] == False:
         print("Mandatory property 'Diameter' not found, ignoring this tool bit" )
-        return
+        return False
     else:
         pass
         # FIXME review @least location of this "rule" & other TB name rules
@@ -482,6 +402,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
 
     addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
 
+    return True
 
 # TODO replace ALL tb_base_name var from default rules
 def processUserToolInput(tb_name_rules,
