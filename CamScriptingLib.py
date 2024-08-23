@@ -177,7 +177,7 @@ def addTc(job, tcProps, byNr=False):
 
 # Retreive "Machinability" cutting data from
 # early WIP in the new Materials WorkBench.
-def get_mat_machinability(doc, mat_obj, printing=False):
+`def get_mat_machinability(doc, mat_obj, printing=False):
 
     # Worked out below from Materials test code AND CAM-Sanity:
 

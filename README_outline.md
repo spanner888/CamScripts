@@ -1,22 +1,38 @@
-TOP LEVEL
-3 macro scripts
-Add ToolBits to FreeCAD Tool library using using either:
-        Script 1. Single or Bulk Creation               +++SCRIPT NAME
-        Script 2. Import from csv                       +++SCRIPT NAME
-    An Extensive rule system to provided to auto create Tolbit names.
-    This can use ANY ToolBit property and allows setting order of each component,
+
+Three FreeCAD macros demonstrating *every* step of CAM process:
+    1. CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
+    2. CamTbAddExample has seven examples of creating ToolBits in code and using the above naming rules.
+    3. CamFullProcessExample....
+
+Two parts of the above are worth special mention:
+    1. An Extensive rule system to provided to auto create Tolbit names.
+    This can use ANY ToolBit property and allows setting order of each component as well as
     leading/trailing seperators and abbreviations.
     For example:
         2F-D6.35-L31
         1F_D3.0-L50.0_endmill
         3F_D4.0-L50.0_roughing
         28600.0_8.6D_0F_860_em
-    A ridulous example used for testing imported v-bits etc with uncommon properties:
+        Last item above also shows one example of an auto-numbered name.
+
+    A ridulous example used for testing imported Tools with uncommon properties:
         30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
         30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
         40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
 
-    
+    2. The demonstration of CAM Speeds and Feeds uses the new Materials workbench and a Material Machining Model as well as cutting data, all of which are functional, but incomplete. So this design work is highlighted to get more attention and contributions. For example see mat forum...that Mat Maching PR.
+
+Above code is simplified by two supplied python libraries and one excelent lib from Russ
+To get all features, requires very recent FC v.....
+
+Easy install via single install....
+
+LINKS to 3x readmes and other background???
+
+
+
+
+
 CAM Full Process blurb - Script 3.....
     ...
     The csv import is very flexible, thanks to @imm, but if you wish data to match default ToolBit properties,
