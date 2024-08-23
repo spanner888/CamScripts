@@ -26,6 +26,7 @@ if False:
 else:
     Path.Log.setLevel(Path.Log.Level.INFO, Path.Log.thisModule())
 
+# TODO update ridiculous rules OR INPUT data?? to skip THREE shape/names all same.
 
 # FIXME FIXME 0: DO not get SYSTEM shapes from user dir!!!
 #                 DO still *also* get user shapes....

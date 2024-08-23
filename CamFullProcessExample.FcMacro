@@ -66,14 +66,17 @@ above: get_material_preferred_directory() is:
     >>ONLY LAST  preferred = val is returned!!!
         ....AND LSAT ONE SET BASED ON what prefs = True!!!
         AND only for user = custom dir, the actual dir must exist, else not set/used!
-
+    >>>>& ESP remember only if your code uses AND obeys output from get_material_preferred_directory()!!!!
+    ...there is a diff method for save
+    & GUESS inheritance works DIFFERENTLY???
+        esp if 2+ dirs selected in prefs ...ie more than one set data chained/inherits???
 
 >>> from materialtools.cardutils import get_material_preferred_directory
 >>> get_material_preferred_directory()
 '/home/spanner888/Documents/_APPS_lappy/FC_wkly-38495/squashfs-root/appd_mlappy_new/Material'
 but still need test if writable ...and yest s'o'flow said best way test is to write...& catch error!!
 
-BUT still Q about add resources/Materials & Models or assume already there??
+BUT still Question about add resources/Materials & Models or assume already there??
     ...which have seen many times are NOT for use_mat_from_config_dir
 
 

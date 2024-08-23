@@ -7,13 +7,22 @@
 
 ## About
 
-CamScripts demonstrates *every* step of CAM process:
+CamScripts macros to create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
 
-1. CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
+Images below, capture output of the macros which created all Library ToolBits, Operations, ToolControllers and many key properties, including assigning ToolControllers to Operations.
 
-2. CamTbAddExample has seven examples of creating ToolBits in code and using the above naming rules.
+Speed and Feed example calculations from new Materials Machinabilty work is shown in report view.
 
-3. CamFullProcessExample....
+PostProcessed gcode and Sanity check report were also created and saved, but not shown.
+
+Tool data can be imported from csv and added in bulk to the current FreeCAD Tool Library Tool list. Powerful automatic naming rules can be used. Examples are shown in IMAGEXXX
+
+TODO update image.
+1. ???test in github inline images instead of 1 combined??
+2. smaller LHS + show imported tools<<< TRIMMED selction with MANY dif NAME rules!!!!!!!
+3. RHS include report view SF CALCs <<OR + 3rd image @bottom to better show report
+
+![CamFullProcessExample Tools&Tree](./images/CamFullProcessExample Tools&Tree scaled.png)
 
 ## Special mention:
 
@@ -37,22 +46,17 @@ So please consider reading and contributing to all aspects of this work. For exa
 
 Above code is simplified by two supplied python libraries and one excelent lib from Russ
 
-Sample code from imm and jrb??? for latest SF code/model.....
+Sample code from imm and jbaehr for latest SF code/model.....
 
 ...and FC & FC CAM and FC new Materials.... and many many forums users.
 
 ## Documentation
 
-To get all features, requires very recent FC v.....
+To get all features, requires very recent FC v.....some warnings or errors may occur if older version of FreeCAD is use.
 
 Easy install via single install....
 
-CamTbAdd_Importing
-
-CamTbAddExample
-
-CamFullProcessExample
-
+?? Materials with late FC, BUT IF MY example MODS Tell user where/how/???
 
 ## Background informatiion
 
@@ -73,15 +77,13 @@ Job-ToolController has properties for Rapids, Feeds, Speed
 
 ### Machinability & RPM
 
-The early work using the new Materials Workbench to add default group of "Machining" materials that have "Machinability" properties is also demonstrated in the second script 'CamFullProcessExample.FcMacro'.
+The early work using the new Materials Workbench to add a default group of "Machining" materials, 8 common metal and 5 wood, that have "Machinability" properties is also demonstrated in the second script 'CamFullProcessExample.FcMacro'.
 
-Spindle RPM is calculated, by retreiving ToolController material type of HSS or Carbide and then retreiving the corresponding HSS or Carbide surfaceSpeed from the Material data of the Job-Stock, which would be inherited from the design object.
+Spindle RPM <<MORE UPDATE is calculated, by retreiving ToolController material type of HSS or Carbide and then retreiving the corresponding HSS or Carbide surfaceSpeed from the Material data of the Job-Stock, which would be inherited from the design object.
 
 Note "ToolController material type" is an existing ToolController property and is not a "new Material", but maybe in future, [follow or join the design process]()
 
-??This a demonstration of the very early work to design Speeds and Feeds for FreeCAD. SEE XXXXX
 In future the ToolController material, might be set via a "new Material", depending on how we all decide to progress Speeds and Feeds.
-
 
 Note: The cutting machinability data and calculated RPM are real, usable values, but are not yet matched with background information on the expected machine capability and limitations. For example is the cutting machine:
 * a very rigid milling machine, with 20kW spindle @20,000 RPM (as seen in many tool catalogs)
@@ -94,8 +96,7 @@ Implied by above is the need to adapt the cutting parameters such as Spindle RPM
 
 This is also demonstrated in Tool catalogs by all of the footnotes and asterix and appendix that provide some guidance on how to change the cutting parameters for a wide variety of situations.
 
-These catalogs usually state that the data is "starting values" or some "maximum values" and maybe other
-
+These catalogs usually state that the data is "starting values" or some "maximum values" and maybe other.....
 
 
 ## References and Credits

@@ -1,5 +1,11 @@
 CamLibTbAdd Library
 
+
+CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
+
+CamTbAddExample has seven examples of creating ToolBits in code and using the above naming rules.
+
+
 Example 1. Add single example default endmill to current Library.
 
 Example 2. Add SINGLE Tool 6.35 mm dia to current library
