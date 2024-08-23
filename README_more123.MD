@@ -1,3 +1,5 @@
+THIS IS FIRST ATTEMPT/OLDER ...SO ONLY REVIEW/split/dump!!!
+
 
 
 CAM Full Process blurb - Script 3.....
