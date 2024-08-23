@@ -7,6 +7,37 @@
 # FIXME test for odd props like in vbits, ballend etc
 
 
+# TODO TODO below => CANNOT auto install in AppImage & ???? as it is read only!!
+# https://wiki.freecad.org/Material Inheritance....One use case is to provide the ability to tweak models without breaking other documents. For example, in cases where a property type is different, you can define a derived property model that only changes that specific property without breaking any existing documents that reference it. 
+   #Inherits:
+     #- Density:
+       #UUID: '454661e5-265b-4320-8e6f-fcf6223ac3af'
+     #- IsotropicLinearElastic:
+       #UUID: 'f6f9e48c-b116-4e82-ad7f-3659a9219c50'
+# TRY copy BOTH to USERS Materials & Models dirs??? <<<PROB NEED LOOK AT CODE to see how to get locations!!!
+    #mm= Materials.ModelManager()
+    #>>> mm.ModelLibraries
+    #[('System', '/home/spanner888/Documents/_APPSz400/FC_wkly-38459/squashfs-root/usr/share/Mod/Material/Resources/Models', ':/icons/freecad.svg')]
+
+    #>>> matm= Materials.MaterialManager()
+    #>>> matm.MaterialLibraries
+    #[('System', '/home/spanner888/Documents/_APPSz400/FC_wkly-38459/squashfs-root/usr/share/Mod/Material/Resources/Materials', ':/icons/freecad.svg'), ('User', '/home/spanner888/.local/share/FreeCAD/Material', ':/icons/preferences-general.svg')]
+    
+    ### NB above shows/implies setting DID NOT SEE IN PREFS!!!!!
+    #               alos susggests Models is defaulting to App/usr{share?}/...
+
+#   >>>prefs : CustomMaterialsDir
+#   ??does Materials have a first run to set some/CustomMaterialsDir dir??????
+
+#MAYBE addon manager can accept 2nd (macro) path & copy mat/mod...or just resources dir/subs...or dummy a SECOND macro???
+# cstom install script in my code somewhere if mod/mat not found???
+
+# ++++remember if pref not set key/s might not exist!!!!!
+# >>>test materials wb FIRST run....force new prefs/cfg
+#     ....BUT CANNOT SET THE DIR EXISTING BUG??
+
+# TODO TODO material model - needs to APPEND to end of existing file. <<<POSS can create SEP COMPLETE model file instead of interferrign with "defualt/prod" file
+# TODO TODO material - sample/s CAN be seperate files which can inherit...NB care if using the German materials. ARE they translated in the PR?? 
 
 
 # TODO TODO make sure create TBs required by: CamFullProcessExample.FcMacro!!!!!!!!

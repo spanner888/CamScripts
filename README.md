@@ -1,53 +1,62 @@
+## Table of Contents
+- [About](#-about)
+- [How to Install](#-how-to-install)
+- [Documentation](#-documentation)
+- [Limitations, Feedback and Contributions](#-limations-feedback-and-contributions)
+- [License](#-license)
 
-Three FreeCAD macros demonstrating *every* step of CAM process:
-    1. CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
-    2. CamTbAddExample has seven examples of creating ToolBits in code and using the above naming rules.
-    3. CamFullProcessExample....
+## About
 
-Two parts of the above are worth special mention:
-    1. An Extensive rule system to provided to auto create Tolbit names.
-    This can use ANY ToolBit property and allows setting order of each component as well as
-    leading/trailing seperators and abbreviations.
-    For example:
-        2F-D6.35-L31
-        1F_D3.0-L50.0_endmill
-        3F_D4.0-L50.0_roughing
-        28600.0_8.6D_0F_860_em
-        Last item above also shows one example of an auto-numbered name.
+CamScripts demonstrates *every* step of CAM process:
 
-    A ridulous example used for testing imported Tools with uncommon properties:
-        30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
-        30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
-        40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
+1. CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
 
-    2. The demonstration of CAM Speeds and Feeds uses the new Materials workbench and a Material Machining Model as well as cutting data, all of which are functional, but incomplete. So this design work is highlighted to get more attention and contributions. For example see mat forum...that Mat Maching PR.
+2. CamTbAddExample has seven examples of creating ToolBits in code and using the above naming rules.
+
+3. CamFullProcessExample....
+
+## Special mention:
+
+1. An Extensive ToolBit rule based naming system which allows use of ANY ToolBit property and allows setting order of each component as well as leading/trailing seperators and abbreviations.
+
+For example:
+    2F-D6.35-L31
+    1F_D3.0-L50.0_endmill
+    3F_D4.0-L50.0_roughing
+    28600.0_8.6D_0F_860_em
+    Last item above also shows one example of an auto-numbered name.
+
+A ridulous example used for testing imported Tools with uncommon properties:
+    30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
+    30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
+    40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
+
+2. Demonstration of possiblities of FreeCAD CAM Speeds and Feeds calculations using the new Materials workbench and Material Machining Model containing cutting data, all of which are functional, but the design work and data collection, curation, documantation and inclusion are all at very early stages.
+
+So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
 Above code is simplified by two supplied python libraries and one excelent lib from Russ
+
+Sample code from imm and jrb??? for latest SF code/model.....
+
+...and FC & FC CAM and FC new Materials.... and many many forums users.
+
+## Documentation
+
 To get all features, requires very recent FC v.....
 
 Easy install via single install....
 
-LINKS to 3x readmes and other background???
+CamTbAdd_Importing
+
+CamTbAddExample
+
+CamFullProcessExample
 
 
-## Limitations & Issues
+## Background informatiion
 
-SEVERAL ALREADY ABOVE ...just remove the section????
-See the github repo issues for latest information.
-
-# Credits????
-The two scripts and
-
-The third library which provides most of the core Job features for `CamFullProcessExample.FcMacro` was created by Russ..
-Excelent example code is provided in this library in the Test## functions.
-
-++ He worked on CAM changes to make scripting have less user intervention to answer dialogs...???
-
-Path and Material developers and forum users including Russ, onekk, CSV guy...
-
-# Background informatiion
-
-## FreeCAD CAM Terminology:
+### FreeCAD CAM Terminology:
 ToolBitLibrary: provides way to manage many libraries each with many Tools
   all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
   Each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
@@ -62,7 +71,7 @@ Tool-Shape file contains a sketch profile of cutting tool,
 Job-ToolController has properties for Rapids, Feeds, Speed
   and contains copy of the Tool-Bit used with all the specific sizes/properties.
 
-## Machinability & RPM
+### Machinability & RPM
 
 The early work using the new Materials Workbench to add default group of "Machining" materials that have "Machinability" properties is also demonstrated in the second script 'CamFullProcessExample.FcMacro'.
 
@@ -87,26 +96,28 @@ This is also demonstrated in Tool catalogs by all of the footnotes and asterix a
 
 These catalogs usually state that the data is "starting values" or some "maximum values" and maybe other
 
-## References
-* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
-* JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
-...all the materials
 
-## Credits????
-The two scripts containing examples each kept simple by use of a related library.
+
+## References and Credits
+
+* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
+* Material forum in particular [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242)
+* JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
 
 The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by Russ..
 Excelent example code is provided in this library in the Test## functions.
-Those exapmles have been included here and extended with many other features to give the full scripted end to end CAM process.
+Those examples have been extended here with many aded features to give the full scripted end to end CAM process.
 
 ??++ He also worked on CAM changes to make scripting have less user intervention to answer dialogs...???
 
 Path and Material developers and forum users including Russ, onekk, CSV guy...
 
-## References
-* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
-* JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
-...all the materials
+
+## Limitations, Feedback and Contributions
+
+SEVERAL ALREADY ABOVE ...just remove the section????
+See the github repo issues for latest information.
+
 
 # Release notes:
 
@@ -114,33 +125,18 @@ Path and Material developers and forum users including Russ, onekk, CSV guy...
     * Initial release, 2 scripts/macros with 3 libraries and support information.
     * Scripting all features of FreeCAD CAM for a complete end to end process
 
-* V0.1  2024-08-16: Initial release
-                    - creates start to finish FreeCAD CAM process
-                    - 2 scripts/macros, 3 libraries & support information.
-
-* V0.1  2024-08-16: Initial release
-            - creates start to finish FreeCAD CAM process
-            - 2 scripts/macros, 3 libraries & support information.
-
 * V0.1  2024-08-16:
             - Initial release
             - creates start to finish FreeCAD CAM process
-            - 2 scripts/macros, 3 libraries & support information.
-
-* V0.1  2024-08-16:
-            - Initial release
-            - creates start to finish FreeCAD CAM process
-            - 2 scripts/macros, 3 libraries & support information.
-
-* V0.1  2024-08-16:
-            - Initial release
-            - creates start to finish FreeCAD CAM process
-            - 2 scripts/macros, 3 libraries & support information.
-
-* V0.1  2024-08-16:
-            - Initial release
-            - creates start to finish FreeCAD CAM process
-            - 2 scripts/macros, 3 libraries & support information.
+            - demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
+            - csv Tool import
+            - scripted tool bit creation
 
 ## License
-LGPL-2.1-or-later (see [LICENSE](LICENSE))
+
+JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](JobUtils.py)
+
+All other files in CamScripts are Copyright 22024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
+
+
+
