@@ -25,19 +25,16 @@ PostProcessed gcode and Sanity check report were also created and saved, but not
     - Last item above also shows one example of an auto-numbered name.
 
   - A ridulous example used for testing imported Tools with uncommon properties:
-      - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
+      - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__
       - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
-      - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
+      - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
+        - Note double underscores are were included above to show that properites NOT present in a ToolBit type do not cause errors.
 
 2. Demonstration of possiblities of FreeCAD CAM Speeds and Feeds calculations using the new Materials workbench and Material Machining Model containing cutting data, all of which are functional, but the design work and data collection, curation, documantation and inclusion are all at very early stages.
 
 So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
-Above code is simplified by two supplied python libraries and one excelent lib from Russ
-
-Sample code from imm and jbaehr for latest SF code/model.....
-
-...and FC & FC CAM and FC new Materials.... and many many forums users.
+Example macro code is simplified by two supplied python libraries and one excelent JobUtils lib from russ4262 and also include sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
 
 ## Documentation
 
