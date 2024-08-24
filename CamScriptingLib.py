@@ -252,6 +252,16 @@ def get_mat_machinability(doc, mat_obj, printing=False):
         if not found_machinining_prop:
             print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
 
+    # TODO TODO maybe mod this to ?????
+    # >>>...GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
+    # ATM 2 more props:  ChipThicknessExponent, UnitCuttingForce
+    # BUT me want extend to 2x Arrays
+    #     1 VcToolMat & SurfaceSpeed
+    #     2 FzToolMat(no dup vars!!), fzIntercept, fzSlope <<<maybe 3x for polynomial(??)
+    #     & ToolMat LIST only
+    #     ++ all the advice/adj/.....
+    # ...so maybe just validate basics of mat here & return the obj for detailed checks, then grab data...
+    #     +++ all the inital plotting & curating & tweaking & ESP COMPARING...cf nsw code support script
     return SurfaceSpeedCarbide, SurfaceSpeedHSS
 
 
@@ -655,7 +665,7 @@ def postProcSaveGcode(postProcessorOutputFile):
 # tc2.SpindleSpeed = RPM_CBD_value
 # print(tc1.SpindleSpeed, tc2.SpindleSpeed)
 
-# A cross check caulation using SurfaceSpeeds from a 3rd party calculator
+# A cross check caculation using SurfaceSpeeds from a 3rd party calculator
 # other_ss_hss = 146300 # mm/min
 # other_ss_cbd = 331300 # mm/min
 # no * 60 as Vc/ss NOT using FC.Quantity below
@@ -676,10 +686,10 @@ def postProcSaveGcode(postProcessorOutputFile):
 # calculated_output	        	     adjustment_var
 # RPM=(Vc*1000) / (Tool_Dia * PI)	      Vc
 #
-# hFeed = RPM*chipload*Tool_Z	          chipload
+# hFeed = RPM*chipload*Tool_Z	          chipload, else dif Tool_Z, else RPM
 # vFeed = RPM*chipload*Tool_Z	          chipload
 #
-# mrr=hFeed*ap*ae/1000	                  ap
+# mrr=hFeed*ap*ae/1000	                  ap mainly, ae already restricted > 50% & > chipthining val.
 # Power = mrr * kx	                      kx
 # PowerFactor=Power*C
 # PowerWear = Power*W
