@@ -7,11 +7,7 @@
 
 ## About
 
-<<<<<<< HEAD
 CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
-=======
-CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
->>>>>>> main
 
 Images below, capture output of the macros which created all Library ToolBits, Operations, ToolControllers and many key properties, including assigning ToolControllers to Operations.
 
@@ -21,12 +17,7 @@ PostProcessed gcode and Sanity check report were also created and saved, but not
 
 Tool data can be imported from csv and added in bulk to the current FreeCAD Tool Library Tool list. Powerful automatic naming rules can be used. Examples are shown in IMAGEXXX
 
-TODO update image.
-1. ???test in github inline images instead of 1 combined??
-2. smaller LHS + show imported tools<<< TRIMMED selction with MANY dif NAME rules!!!!!!!
-3. RHS include report view SF CALCs <<OR + 3rd image @bottom to better show report
-
-![Naming rules example](./images/Naming rules example.png)![CamFullProcessExample](./images/CamFullProcessExample.png)
+![Naming rules example](./images/Naming_rules_example.png)![Cam Full Process Example](./images/CamFullProcessExample.png)
 
 ## Special mention:
 
