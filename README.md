@@ -1,10 +1,3 @@
-## Table of Contents
-- [About](#-about)
-- [How to Install](#-how-to-install)
-- [Documentation](#-documentation)
-- [Limitations, Feedback and Contributions](#-limations-feedback-and-contributions)
-- [License](#-license)
-
 ## About
 
 CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
