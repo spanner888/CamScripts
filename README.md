@@ -26,7 +26,7 @@ TODO update image.
 2. smaller LHS + show imported tools<<< TRIMMED selction with MANY dif NAME rules!!!!!!!
 3. RHS include report view SF CALCs <<OR + 3rd image @bottom to better show report
 
-![CamFullProcessExample Tools&Tree](./images/CamFullProcessExample Tools&Tree scaled.png)
+![Naming rules example](./images/Naming rules example.png)![CamFullProcessExample](./images/CamFullProcessExample.png)
 
 ## Special mention:
 
