@@ -1,10 +1,3 @@
-## Table of Contents
-- [About](#-about)
-- [How to Install](#-how-to-install)
-- [Documentation](#-documentation)
-- [Limitations, Feedback and Contributions](#-limations-feedback-and-contributions)
-- [License](#-license)
-
 ## About
 
 CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
@@ -17,12 +10,7 @@ PostProcessed gcode and Sanity check report were also created and saved, but not
 
 Tool data can be imported from csv and added in bulk to the current FreeCAD Tool Library Tool list. Powerful automatic naming rules can be used. Examples are shown in IMAGEXXX
 
-TODO update image.
-1. ???test in github inline images instead of 1 combined??
-2. smaller LHS + show imported tools<<< TRIMMED selction with MANY dif NAME rules!!!!!!!
-3. RHS include report view SF CALCs <<OR + 3rd image @bottom to better show report
-
-![CamFullProcessExample Tools&Tree](./images/CamFullProcessExample Tools&Tree scaled.png)
+![Naming rules example](./images/Naming_rules_example.png)![Cam Full Process Example](./images/CamFullProcessExample.png)
 
 ## Special mention:
 
@@ -137,7 +125,4 @@ See the github repo issues for latest information.
 
 JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](JobUtils.py)
 
-All other files in CamScripts are Copyright 22024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
-
-
-
+All other files in CamScripts are Copyright 2024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
