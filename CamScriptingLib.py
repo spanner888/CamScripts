@@ -23,11 +23,13 @@
 
 import FreeCAD
 import Path
-import Materials
 import JobUtils
 from PySide import QtGui
-import math
 import webbrowser
+
+import Materials;
+from math import sin, cos, acos, tan, atan, sqrt, pi
+from math import degrees, radians, pi
 
 # ###################################################################
 # Functions using JobUtils Library
@@ -267,7 +269,7 @@ def calcRpm(tc, SurfaceSpeedCarbide, SurfaceSpeedHSS):
     .format(tc.Tool.Label, tc.Tool.Material))
         exit(0)
 
-    rpm = ss / (tc.Tool.Diameter * math.pi)
+    rpm = ss / (tc.Tool.Diameter * pi)
 
     q = FreeCAD.Units.Quantity
     print("\t**Calculated** RPM for {} tool is {} RPM"
@@ -282,8 +284,8 @@ def calcRpm(tc, SurfaceSpeedCarbide, SurfaceSpeedHSS):
     #TODO read print above - code to set calc rpm in TC
     return rpm
 
-
-def calcLots():
+# now old - replacing with modded code from Wood PR
+def calcLots_TO_RETIRE():
     #  https://github.com/FreeCAD/FreeCAD/pull/15910
     from math import acos, sqrt, sin
     from math import degrees, radians, pi
@@ -382,6 +384,180 @@ def calcLots():
 
     print("Console Hint: P, Mc, n, vf = CamScriptingLib.calcLots()\n after you 'import CamScriptingLib'")
     return P, Mc, n, vf
+
+
+def users_material_cfg_summary():
+    # Examine Users Material settings & Directories.
+    from materialtools.cardutils import get_material_preferred_directory, get_material_preferred_save_directory
+
+    mat_prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
+    use_built_in_materials = mat_prefs.GetBool("UseBuiltInMaterials", True)
+    use_mat_from_config_dir = mat_prefs.GetBool("UseMaterialsFromConfigDir", True)
+    use_mat_from_custom_dir = mat_prefs.GetBool("UseMaterialsFromCustomDir", True)
+    use_mat_from_ext_wb_dir = mat_prefs.GetBool("UseMaterialsFromWorkbenches", True)
+
+    mat_dir = get_material_preferred_directory()
+    save_dir = get_material_preferred_save_directory()
+    if mat_dir is None:
+        mat_dir = FreeCAD.getResourceDir() + "Mod/Material"
+
+    print("use_built_in_materials {}".format(use_built_in_materials))
+    print("use_mat_from_config_dir {}".format(use_mat_from_config_dir))
+    print("use_mat_from_custom_dir) {}".format(use_mat_from_custom_dir))
+    print("use_mat_from_ext_wb_dir) {}".format(use_mat_from_ext_wb_dir))
+    print("mat_dir :", mat_dir)
+    print("save_dir :", save_dir)
+
+
+def detailed_calcs(mat):
+
+    # ------------------------------------------------------------------
+    #Related files:
+        #Appearance/Wood.FCMat
+
+        #Machining/BalsaWood.FCMat
+        #Machining/HardWood.FCMat
+        #Machining/MDFWood.FCMat
+        #Machining/ParticleBoard.FCMat
+        #Machining/SoftWood.FCMat
+
+        #>>>>>  Standard/Wood/StandardWood.FCMat
+
+    # #??possible install these + model??? ...and the metal mat files???
+    # >>>so TRY ...do NOT add to sys/squashfs .... but user dir/s!!!!!!
+
+    # Working cfgs ie prefs as shown & files in dir shown ...always need reload FC:
+    #     19:26:02  use_built_in_materials True
+    #     19:26:02  use_mat_from_config_dir True
+    #     19:26:02  use_mat_from_custom_dir) True
+    #     19:26:02  use_mat_from_ext_wb_dir) True
+    #     19:26:02  mat_dir : /home/spanner888/.local/share/FreeCAD/CamScripts/materials-temp/
+
+    # 19:32:15  use_built_in_materials True
+    # 19:32:15  use_mat_from_config_dir True
+    # 19:32:15  use_mat_from_custom_dir) False
+    # 19:32:15  use_mat_from_ext_wb_dir) True
+    # 19:32:15  mat_dir : /home/spanner888/Documents/_APPS_lappy/FC_wkly-38495/squashfs-root/appd_mlappy_new/Material
+
+
+
+    # Do this first, so can have info if getting material fails.
+    # FIXME: works as sep macro, max recursion depth error here!!!
+    # ....well on first run here, now fine!!!
+    users_material_cfg_summary()
+
+    ToolDiameter = FreeCAD.Units.Quantity('3 mm')
+    ToolNumberOfFlutes = 2
+    ToolRakeAngle = FreeCAD.Units.Quantity('30°')
+    ToolHelixAngle = FreeCAD.Units.Quantity('15°')
+
+    ToolMaxChipLoad = FreeCAD.Units.Quantity('0.030 mm') # not a tool setting; differs per material! (ToolMaxTorque would be nice but no vendor specifies this. And for soft materials large chips jam the bit before max torque is reached)
+
+    ae = FreeCAD.Units.Quantity('3 mm') # width of cut (radial)
+    ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
+    # ------------------------------------------------------------------
+
+
+    print("material :", mat.Name)
+    # print("Desc :", mat.Description)
+
+    kc11 = FreeCAD.Units.Quantity(mat.PhysicalProperties['UnitCuttingForce'])
+    h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
+    mc = float(mat.PhysicalProperties['ChipThicknessExponent'])
+
+    # project angle: https://math.stackexchange.com/questions/2207665/projecting-an-angle-from-one-plane-to-another-plane
+    # not really worth taking the helix into account here; below 40° the effect is neglectable
+    gamma_eff = degrees(atan(tan(ToolRakeAngle.getValueAs("rad")/cos(ToolHelixAngle.getValueAs("rad")))))
+    gamma = ToolRakeAngle.getValueAs("deg")
+    Kg = 1 - 0.01 * gamma_eff # correction factor for rake angle
+
+    kapr = radians(90) # straight milling cutter, i.e. chamfer=90° aka no chamfer
+
+    D = ToolDiameter
+
+    phie = acos(1 - (2 * ae / D)) # engangement angle
+
+    # TODO: honor chip-thinning: calculate fz from h_max (not h_mean!) when phi_e < 90°
+    fz = ToolMaxChipLoad # feed per tooth
+
+    Sb = D * pi * (phie / (2*pi)) # chip arc length
+    hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
+
+        # Book is Kver
+    Kw = 1.2 # correction factor for tool wear: 1 for new sharp tools, 1.2 for used tools, 1.5 for dull tools that need to be replaced
+        # 4 corrections in all:
+            # book/here
+            # Kver/Kw Tool wear 1 to 1.5
+            # Kgamma symbol/Kg Correction factor rake angle
+            #     Kg = 1 - (g - g0)/100
+            #     g0 basic rake angle: + 6° for steel, + 2° for cast iron
+            #     g actual rake angle
+            # Kvc/NONE Cutting speed correction factor
+            #     lookup table
+            #                         Vc range    Kvc
+            #                         m/min
+            #     HSS                 30 to 60    1.2
+            #     HM (hardened Mat?)  60 to 300   1
+            #     Ceramic             180 to 500  0.85
+            # Ksp/NONE Chip compression correction factor
+            #                 ^^??Chip thinning?? ...cf other refs for formula & MY work on MC...
+            #                                                 moved into adjustemnts at end of work??
+            #     Manufacturing process               Ksp
+            #     External turning                    1.0
+            #     Broaching, planing, slotting        1.1
+            #     Drilling, milling, internal turning 1.2
+            #     Parting off turning, plunge turning 1.3
+
+
+    # Complex lookups, even *nested lookups**,
+    #    depends on Tool D/Mat, Rake, Vc, Cutting/Manufact process....
+    # CAN BE broken into simpler steps as down throughout here
+    # 2 corrections ignored ATM
+    # +++ User will want adjust - eg tool wear...
+    # ++ INSERT style calculations and adv machining????
+    kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting force
+
+    # ??extended calc?? for this with tool rotation angle ....for the vibration/force min/max/diag!!!
+    Fcz = ap * hm * kc # cutting force per flute
+
+    z = ToolNumberOfFlutes
+
+    ze = phie * z / (2*pi) # engaged flutes # <<<<< STUDY ...prob NOT in ref to vibration/force min/max/diag
+
+    Fc = Fcz * ze # cutting force	 	#<< max?? & not vary with angle.
+
+    # vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
+    vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
+    vc_set.getValueAs("m/min")
+
+    n_set = vc_set / (pi * D) # spindle speed
+    n_set.getValueAs("1/min")
+
+    n_max = FreeCAD.Units.Quantity("30000/min")
+    n = min(n_set, n_max)
+    n.getValueAs("1/min")
+    print("RPM ", n.getValueAs("1/min").toStr(0), 'RPM')
+
+    vc = n * (pi * D)
+    vc.getValueAs("m/min")
+
+    Pc = Fc * vc # mechanical cutting power
+
+    eff = 0.85 # machine efficiency:
+    P = Pc / eff # electrical spindle power
+    P.getValueAs("kW")
+    print("electrical spindle power ", P.getValueAs("kW").toStr(3), "kW")
+
+    Mc = Fc * D / 2 # cutting torque (maybe better base this on h_max instead of h_mean?)
+    Mc.getValueAs("Nm")
+    print("Mc cutting torque", Mc.getValueAs("Nm").toStr(5),"Nm")
+
+
+    vf = n * z * fz # feed rate
+    print("vf ", vf.getValueAs("mm/min").toStr(0), "mm/min")
+    vf.getValueAs("mm/min")
+
+    #TODO return vals...
 
 
 def saveSanityreport(job, sanity_report):

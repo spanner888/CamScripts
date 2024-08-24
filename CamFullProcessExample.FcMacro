@@ -81,6 +81,7 @@
 
 
 
+
 # TODO TODO material model - needs to APPEND to end of existing file. <<<POSS can create SEP COMPLETE model file instead of interferrign with "defualt/prod" file
 # TODO TODO material - sample/s CAN be seperate files which can inherit...NB care if using the German materials. ARE they translated in the PR?? 
 
@@ -278,6 +279,18 @@ print("\t\tHSS: {}, CBD: {}, TC1 dia: {}"
 rpm = CamScriptingLib.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
 # ---------------------------------------------------------
 
+
+
+materialManager = Materials.MaterialManager()
+
+selected_material_al = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
+selected_material_hw = materialManager.getMaterial('ba2474ee-f62c-45f5-b388-823ea105847f')
+
+print()
+CamScriptingLib.detailed_calcs(selected_material_al)
+print()
+CamScriptingLib.detailed_calcs(selected_material_hw)
+print()
 
 # ---------------------------------------------------------
 # set some example printing vars & print header for
