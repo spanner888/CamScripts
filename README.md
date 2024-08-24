@@ -2,13 +2,14 @@
 
 CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
 
-Images below, capture output of the macros which created all Library ToolBits, Operations, ToolControllers and many key properties, including assigning ToolControllers to Operations.
+Image below shows output created by macros including:
 
-Speed and Feed example calculations from new Materials Machinabilty work is shown in report view.
+  - Imported csv data created Library ToolBits using different automatic naming and numbering rules,
+  - Operations, ToolControllers, with key properties values set,
+  - Assigning ToolControllers to Operations,
+  - Speed and Feed example calculations from new Materials Machinabilty work is shown in report view.
 
 PostProcessed gcode and Sanity check report were also created and saved, but not shown.
-
-Tool data can be imported from csv and added in bulk to the current FreeCAD Tool Library Tool list. Powerful automatic naming rules can be used. Examples are shown in IMAGEXXX
 
 ![Import, Rules, Full process condensed example](./images/Import_RulesFull_process.png)
 
