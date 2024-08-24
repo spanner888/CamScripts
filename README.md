@@ -7,7 +7,11 @@
 
 ## About
 
-CamScripts macros to create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
+<<<<<<< HEAD
+CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
+=======
+CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
+>>>>>>> main
 
 Images below, capture output of the macros which created all Library ToolBits, Operations, ToolControllers and many key properties, including assigning ToolControllers to Operations.
 
