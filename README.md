@@ -10,23 +10,23 @@ PostProcessed gcode and Sanity check report were also created and saved, but not
 
 Tool data can be imported from csv and added in bulk to the current FreeCAD Tool Library Tool list. Powerful automatic naming rules can be used. Examples are shown in IMAGEXXX
 
-![Naming rules example](./images/Naming_rules_example.png)![Cam Full Process Example](./images/CamFullProcessExample.png)
+![Import, Rules, Full process condensed example](./images/Import_RulesFull_process.png)
 
 ## Special mention:
 
 1. An Extensive ToolBit rule based naming system which allows use of ANY ToolBit property and allows setting order of each component as well as leading/trailing seperators and abbreviations.
 
-For example:
-    2F-D6.35-L31
-    1F_D3.0-L50.0_endmill
-    3F_D4.0-L50.0_roughing
-    28600.0_8.6D_0F_860_em
-    Last item above also shows one example of an auto-numbered name.
+  - For example:
+    - 2F-D6.35-L31
+    - 1F_D3.0-L50.0_endmill
+    - 3F_D4.0-L50.0_roughing
+    - 28600.0_8.6D_0F_860_em
+    - Last item above also shows one example of an auto-numbered name.
 
-A ridulous example used for testing imported Tools with uncommon properties:
-    30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
-    30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
-    40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
+  - A ridulous example used for testing imported Tools with uncommon properties:
+      - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
+      - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
+      - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
 
 2. Demonstration of possiblities of FreeCAD CAM Speeds and Feeds calculations using the new Materials workbench and Material Machining Model containing cutting data, all of which are functional, but the design work and data collection, curation, documantation and inclusion are all at very early stages.
 
