@@ -38,6 +38,15 @@ exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 # --------------------------------------------------------
 
 
+
+# TODO look at importing WhitesideBitData.xlsx      csv => test2.csv
+# "read CSV tool bit descriptions and create FreeCad JSON tool bit files.
+# In the "test" directory you will find:
+#     WhitesideBitData.xlsx, Data provided by the Whiteside Machine Company https://www.whitesiderouterbits.com/
+#     test2.csv the data above formatted as a csv file
+# "https://github.com/ShamanTcler/FreeCadToolBitImport
+
+
 # FIXME stop duplicating Tool#s - change dia's or # rule or the base#....
 #   ...or just change the csv data!!!!!
 

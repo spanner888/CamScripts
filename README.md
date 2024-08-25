@@ -99,8 +99,13 @@ Those examples have been extended here with many aded features to give the full 
 
 ??++ He also worked on CAM changes to make scripting have less user intervention to answer dialogs...???
 
-Path and Material developers and forum users including Russ, onekk, CSV guy...
+Path and Material developers and forum users including Russ, onekk, imm...
 
+Sliptonic's and both of baehr pr's below are VERY informative & worth the read!
+![ Machining model and materials #14460 ](https://github.com/FreeCAD/FreeCAD/pull/14460)
+![Material: Add metal cards with machining model](https://github.com/FreeCAD/FreeCAD/pull/15910)
+![Material: Add wood cards with machining model](https://github.com/FreeCAD/FreeCAD/pull/16021)
+Much of the speeds and Feeds calculation code is based examples from the latter two PRs.
 
 ## Limitations, Feedback and Contributions
 

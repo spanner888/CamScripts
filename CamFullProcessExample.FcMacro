@@ -163,6 +163,7 @@ j_props.vRapid = '150/60 mm/s'
 
 # FIXME make below empty default, then test if empty and prompt user to set!!
 # FIXME cross plat ...or get some dir from prefs or???? AND SEARCH ANY MORE spanner888
+# FC has "doc dir" concept somewhere?? ...but NEEDS own subdir??
 sanity_report = '/home/spanner888/Documents/cam_sanity/sanity_auto.html'
 
 # JOB-TC & TB properties/defaults.
