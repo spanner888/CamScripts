@@ -96,7 +96,19 @@ exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 # Shape names in the csv file AND in the FC Tools - Shape dir
 #   are case sensitive on Linux and must match exactly.
 
-file1 = "cutting_tool_data/cuttingtools1.csv"
+# file1 = "cutting_tool_data/cuttingtools1.csv"
+
+# If want to test missing mandatory columns: 'shape', 'Diameter' <<must match case!
+# <class 'KeyError'>: ('shape',)
+#  Mandatory property 'Diameter' not found, ignoring this tool bit
+#no_shape_col ,no_dia_col
+# file1 = "cutting_tool_data/no_dia_col.csv"
+
+# To test Rake_Helix_Angles for Speeds & Feeds from new materials machinabilty.
+# Not you need create (or copy example shapes in cutting_tool_data/) to your USER Tools/Shape dir.
+# Not recommend edit FreeCAD default shapes.
+file1 = "cutting_tool_data/Rake_Helix_Angles_TESTS.csv"
+
 
 print()
 print("Importing : ", file1)
