@@ -466,23 +466,31 @@ def detailed_calcs(mat):
     # ....well on first run here, now fine!!!
     users_material_cfg_summary()
 
+    # PROPERTIES RETREIVED FROM specified operation or TC-TB
     # TODO instead pass in Op
-    op = doc.getObject("Profile001")
 
-    op.ToolController.Tool.Diameter
-    op.StepDown
-    op.ToolController.Tool.Flutes
+    # FIXME need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
+    # esp ToolRakeAngle, ToolHelixAngle
+    op = FreeCAD.ActiveDocument.getObject("Profile001")
+    # ToolDiameter = FreeCAD.Units.Quantity('3 mm')
+    ToolDiameter = op.ToolController.Tool.Diameter
+    # ToolNumberOfFlutes = 2
+    ToolNumberOfFlutes = op.ToolController.Tool.Flutes
 
+    # ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
+    ap = op.StepDown
 
-    ToolDiameter = FreeCAD.Units.Quantity('3 mm')
-    ToolNumberOfFlutes = 2
+    # currently HARCODED properties ...future work
     ToolRakeAngle = FreeCAD.Units.Quantity('30°')
     ToolHelixAngle = FreeCAD.Units.Quantity('15°')
 
     ToolMaxChipLoad = FreeCAD.Units.Quantity('0.030 mm') # not a tool setting; differs per material! (ToolMaxTorque would be nice but no vendor specifies this. And for soft materials large chips jam the bit before max torque is reached)
 
+    # Not easy to get from doc/op.
+    # 1st approx = distance from Model to outside of stock...but that will NOT be constant distance
+    # ..but that dist can be wider than tool dia...
+    # Then add in are offsets...
     ae = FreeCAD.Units.Quantity('3 mm') # width of cut (radial)
-    ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
     # ------------------------------------------------------------------
 
 
