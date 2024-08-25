@@ -216,6 +216,11 @@ def get_mat_machinability(doc, mat_obj, printing=False):
     # Ideal = add material to shape, before creating Job.
     # But would need split library code (easy, but trying for msotly KISS here ATM)
     # Hence applay Material to bot shape & Job-Stock(which is used by CAM - Sanity report)
+
+    # FYI: Machining model and materials.... button in the job dialog to assign a material.
+    # https://github.com/FreeCAD/FreeCAD/pull/14460
+    # Job - Setup - Layout ...need make pane WIDE...to see the little round material button!!!
+
     shp.ShapeMaterial = mat
     stk.ShapeMaterial = mat
     # obj.ShapeMaterial.Name
@@ -252,8 +257,10 @@ def get_mat_machinability(doc, mat_obj, printing=False):
         if not found_machinining_prop:
             print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
 
-    # TODO TODO maybe mod this to ?????
-    # >>>...GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
+    # 1st goal try get ALL "tool/user settings from exsting TC etc...."
+    # >>>...TODO 2nd GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
+    #           eg mod this funtion to return materila obj to aid getting data for the adv calcs....
+    # TODO 3rd - is calc fz=chipload if so, COMPARE/PLOT calc to the telenbach{??} data eg in ods just created/plotted!!!
     # ATM 2 more props:  ChipThicknessExponent, UnitCuttingForce
     # BUT me want extend to 2x Arrays
     #     1 VcToolMat & SurfaceSpeed
@@ -420,7 +427,10 @@ def users_material_cfg_summary():
 
 
 def detailed_calcs(mat):
-
+    # Both of github user: baehr pr's below are VERY informative & worth the read!
+    # https://github.com/FreeCAD/FreeCAD/pull/15910
+    # https://github.com/FreeCAD/FreeCAD/pull/16021
+    # code below is based examples from above PRs.
     # ------------------------------------------------------------------
     #Related files:
         #Appearance/Wood.FCMat
@@ -431,7 +441,7 @@ def detailed_calcs(mat):
         #Machining/ParticleBoard.FCMat
         #Machining/SoftWood.FCMat
 
-        #>>>>>  Standard/Wood/StandardWood.FCMat
+        #FIXME or wait for weekly release>>>>>  Standard/Wood/StandardWood.FCMat
 
     # #??possible install these + model??? ...and the metal mat files???
     # >>>so TRY ...do NOT add to sys/squashfs .... but user dir/s!!!!!!
@@ -455,6 +465,14 @@ def detailed_calcs(mat):
     # FIXME: works as sep macro, max recursion depth error here!!!
     # ....well on first run here, now fine!!!
     users_material_cfg_summary()
+
+    # TODO instead pass in Op
+    op = doc.getObject("Profile001")
+
+    op.ToolController.Tool.Diameter
+    op.StepDown
+    op.ToolController.Tool.Flutes
+
 
     ToolDiameter = FreeCAD.Units.Quantity('3 mm')
     ToolNumberOfFlutes = 2
@@ -601,100 +619,3 @@ def postProcSaveGcode(postProcessorOutputFile):
 
     if restore_users_current_policy:
         Path.Preferences.setOutputFileDefaults(postProcessorOutputFile, users_current_policy)
-
-
-
-
-
-
-# DUMPING STUFF HERE TEMP UNTIL RE-ORG MAIN CALLIGN SCRIPT/S
-
-# output substitions/ordering - wiki MISSING some subs
-#     ++ missing some can be used in path &name & others ONLY path or only name
-#     ++ some ONLY active if Job Order by FOR THAT SUBS {& MAYBE also need split by???}
-# CAM-Path-Post-Utils.py
-#         validPathSubstitutions = ["D", "d", "M", "j"]
-#         validFilenameSubstitutions = ["j", "d", "T", "t", "W", "O", "S"]
-#
-#             "%D": os.path.dirname(self.job.Document.FileName or "."),
-#             "%d": self.job.Document.Label,
-#             "%j": self.job.Label,
-#             "%M": os.path.dirname(FreeCAD.getUserMacroDir()),
-#
-#             "%d": self.job.Document.Label,
-#             "%j": self.job.Label,
-#             "%T": self.subpartname,  # Tool     \ name/# or TC/tb names?????
-#             "%t": self.subpartname,  # Tool     /   gives -1
-#             "%W": self.subpartname,  # Fixture
-#             "%O": self.subpartname,  # Operation
-#
-#             %S ??? had idea was Fixture(s) but already W.
-#               Currently = "0" in filename, WITH Split Output False
-#
-#                 ____0-G54 <<< Fixture ...also can see Job-Fixtures [G54]
-#
-# T, t, W, O: need select Job-output-"split" for these to work!!!
-# & only ONE works at a time as only one order by level: Order by: Fixture, Tool, Operation
-# -----------------------------------------------------------------
-
-
-
-
-
-
-
-# *** SLIPTONIC IN 2017 ABOUT "data model" & MATERIALS...
-#     IN THREAD: "Towards a feeds & speeds tool"
-#     https://forum.freecad.org/viewtopic.php?t=23325
-#
-# hmmm new FC materials - MIGHT HAVE property "SpecificCuttingForce"...not yet populated
-#     https://github.com/FreeCAD/FreeCAD/issues/14867 <<<ISSUE IS STILL OPEN!!!!!!
-# ...above GOOD ...just renaming of UnitCuttingForce??
-# ...but is NOT when SurfaceSpeeds introduced
-
-# Machining model and materials #14460 https://github.com/FreeCAD/FreeCAD/pull/14460
-
-
-
-
-# print(tc1.SpindleSpeed, tc2.SpindleSpeed)
-# RPM_HSS_value = q(round(q(RPM_HSS).getValueAs('1/min'), 1)).Value
-# RPM_CBD_value = q(round(q(RPM_CBD).getValueAs('1/min'), 1)).Value
-# print(RPM_HSS_value, RPM_CBD_value)
-# tc1.SpindleSpeed = RPM_HSS_value
-# tc2.SpindleSpeed = RPM_CBD_value
-# print(tc1.SpindleSpeed, tc2.SpindleSpeed)
-
-# A cross check caculation using SurfaceSpeeds from a 3rd party calculator
-# other_ss_hss = 146300 # mm/min
-# other_ss_cbd = 331300 # mm/min
-# no * 60 as Vc/ss NOT using FC.Quantity below
-# otherRPM_HSS=(other_ss_hss) / (tc1.Tool.Diameter * math.pi)
-# otherRPM_CBD=(other_ss_cbd) / (tc1.Tool.Diameter * math.pi)
-# print("other_ss RPM HSS: {}, CBD: {}\n".format(otherRPM_HSS, otherRPM_CBD))
-# other_ss RPM HSS: 19403, CBD: 43940 ....witihn ~1% of other calc.
-# obj.Tool.Chipload << is NOT from material, but tool
-
-
-# Related info....
-# StepDown, Stepover, OpToolDiameter
-# Hmmm FC Profile Op only does single layerxlayer cut top to bot,
-# ie it has NO consideration of Stepover & multiple passes to clear outside stock
-# MillFace op has StepOver (default=50%)
-#
-# 4Equations.csv
-# calculated_output	        	     adjustment_var
-# RPM=(Vc*1000) / (Tool_Dia * PI)	      Vc
-#
-# hFeed = RPM*chipload*Tool_Z	          chipload, else dif Tool_Z, else RPM
-# vFeed = RPM*chipload*Tool_Z	          chipload
-#
-# mrr=hFeed*ap*ae/1000	                  ap mainly, ae already restricted > 50% & > chipthining val.
-# Power = mrr * kx	                      kx
-# PowerFactor=Power*C
-# PowerWear = Power*W
-# PowerCutter = Power/E
-# Torque = (Power*60*1000)/(PI*RPM)
-#
-# ++ example calcs in https://github.com/FreeCAD/FreeCAD/pull/15910
-#   NB may need to add `sin` import.
