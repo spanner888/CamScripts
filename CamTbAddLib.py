@@ -341,6 +341,8 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     shape_name = imported_t_props['shape']
     shape_names = get_list_all_shape_names()
 
+    s_location = ""
+    s_dir = ""
     if shape_name in shape_names:
         s_location, s_dir = find_shape_location(shape_name)
         if s_location is None:
@@ -369,7 +371,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             if tak in imported_t_props.keys():
                 ta[tak] = float(convert_imported_val(tak, imported_t_props[tak]))
 
-        # FIXME +++PROB need for othr props like len & deg... - so make method!!!
+        # FIXME +++PROB need for other props like len & deg... - so make method!!!
         dia = float(convert_imported_val('Diameter', tool_props['parameter']['Diameter']))
         try:
             # Keep FC:Quantity if possible for future unit management in Speeds & Feeds calculations
@@ -378,7 +380,8 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             print("\t\tWARNING: Warning 'Diameter' is NOT a valid number: ",
                 tool_props['parameter']['Diameter'])
     else:
-        print("\t ignoring shape name: {}. It is not in user shapes folder:".format(shape_name))
+        print("\t ignoring shape name: {}. It is not in user shapes folder {}:"
+              .format(shape_name, os.path.dirname(Path.Preferences.lastPathToolLibrary())))
         return False
 
     if mandatory_imported_t_props_found['parameter']['Diameter'] == False:
