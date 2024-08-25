@@ -177,7 +177,8 @@ sanity_report = '/home/spanner888/Documents/cam_sanity/sanity_auto.html'
 # ---------------------------------------------------------
 tcProps1 = CamScriptingLib.tc_props()
 
-tcProps1.bitName = "28120.0_8.12D_0F_endmill"
+# tcProps1.bitName = "28120.0_8.12D_0F_endmill"
+tcProps1.bitName = "3F_D4.0-L50.0_roughing"
 # tcProps2.lib_tool_nr =        # Adding this TC by name, not number
 tcProps1.hfeed = '200 mm/min'
 tcProps1.vfeed = '100 mm/min'
@@ -189,7 +190,8 @@ tcProps1.spindleSpeed = 5000.0
 tcProps2 = CamScriptingLib.tc_props()
 
 tcProps2.bitName = ""
-tcProps2.lib_tool_nr = 26350
+# tcProps2.lib_tool_nr = 26350
+tcProps2.lib_tool_nr = 26000
 tcProps2.hfeed = '213 mm/min'
 tcProps2.vfeed = '123 mm/min'
 

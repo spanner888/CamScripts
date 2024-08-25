@@ -481,6 +481,13 @@ def detailed_calcs(mat):
     ap = op.StepDown
 
     # currently HARCODED properties ...future work
+
+    so WIP - have modded roughing shape & added to user dir
+    + an import csv with rake/helix and IMPORT works.
+    BUT FullProcess:
+13:52:26  Add TC using toolname: '3F_D4.0-L50.0_roughing' and set h/v feeds & spindle speed.
+13:52:26  Bit.ERROR: Could not find shape file roughing.fcstd for tool bit ToolBit001
+& dif erro adding by#!!!
     ToolRakeAngle = FreeCAD.Units.Quantity('30°')
     ToolHelixAngle = FreeCAD.Units.Quantity('15°')
 
