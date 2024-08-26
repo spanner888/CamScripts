@@ -24,9 +24,6 @@
 import FreeCAD
 import Path
 import JobUtils
-# next two remove if get JobUtils updated to find Shape dir
-import Path.Tool.Bit as Bit
-import CamTbAddLib
 from PySide import QtGui
 import webbrowser
 import sys, os
@@ -34,6 +31,27 @@ import sys, os
 import Materials;
 from math import sin, cos, acos, tan, atan, sqrt, pi
 from math import degrees, radians, pi
+
+# ---------------------------------------------------------------------------
+# remove this block if get JobUtils updated to find Shape dir
+# ...and five marked functions further down...
+import Path.Tool.Bit as Bit
+import CamTbAddLib
+
+if FreeCAD.GuiUp:
+    import Path.Main.Gui.Job as JobGui
+
+    Job = JobGui.PathJob
+    GUI_UP = True
+else:
+    import Path.Main.Job as Job
+
+    GUI_UP = False
+
+ToolController = Job.PathToolController
+ToolBit = ToolController.PathToolBit
+# ---------------------------------------------------------------------------
+
 
 # ###################################################################
 # Functions using JobUtils Library
@@ -153,7 +171,39 @@ def initDocJob(job_props, clear_console_pane, clear_report_pane):
     return doc, job
 
 
+# ---------------------------------------------------------------------------
+# remove this block if get JobUtils updated to find Shape dir
 #modding from JobUtils
+def _get_tool_by_number(number):
+    """
+    _get_tool_by_number(number)
+    Arguments:
+        number:  number of toolbit stored in tool library
+    Returns a tool number and toolbit object as a tuple if the number is found.
+    Taken from Path.Tool.Gui.BitLibrary.ModelFactory.findLibraries()
+    """
+
+    s_dir = None
+    libraries = JobUtils._get_available_tool_library_paths()
+
+    for libLoc, libFN, libFile in libraries:
+        for toolNum, toolDict, bitPath in JobUtils._read_library(libFile):
+            print(toolDict)
+            if toolNum == number:
+                s_name = toolDict['shape']
+                s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
+                toolBit = Bit.Factory.CreateFromAttrs(toolDict, toolDict["name"], s_dir)
+                if hasattr(toolBit, "ViewObject") and hasattr(
+                    toolBit.ViewObject, "Visibility"
+                ):
+                    toolBit.ViewObject.Visibility = False
+                return (toolNum, toolBit)
+
+    print(f"No tool found with number '{number}'")
+
+    return None, None
+
+
 def _get_tool_by_filename(name):
     """
     _get_tool_by_filename(name)
@@ -166,28 +216,28 @@ def _get_tool_by_filename(name):
     s_dir = None
     libraries = JobUtils._get_available_tool_library_paths()
     for libLoc, libFN, libFile in libraries:
-        print(f"CS#166 {libLoc}, {libFN}, {libFile}")
+        #print(f"CS#166 {libLoc}, {libFN}, {libFile}")
         for toolNum, toolDict, bitPath in JobUtils._read_library(libFile):
-            print("CS#169", toolNum, toolDict, bitPath)
+            #print("CS#169", toolNum, toolDict, bitPath)
             loc, fnlong = os.path.split(bitPath)
-            print("CS#170")
+            #print("CS#170")
             fn, ext = os.path.splitext(fnlong)
-            print(f"CS#173 {fn}, {ext}, {name}<<name is 3rd val")
+            #print(f"CS#173 {fn}, {ext}, {name}<<name is 3rd val")
             if fn == name:
                 print()
                 s_name = toolDict['shape']
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
-                print("CS#178 s_dir: ", s_dir)
+                print("CS#180 s_dir: ", s_dir)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict, name, s_dir)
                 if hasattr(toolBit, "ViewObject") and hasattr(
                     toolBit.ViewObject, "Visibility"
                 ):
                     toolBit.ViewObject.Visibility = False
-                return (toolNum, toolBit, s_dir)
+                return (toolNum, toolBit)
 
     print(f"No tool found with name '{name}'")
 
-    return None, None, None
+    return None, None
 
 
 #modding from JobUtils
@@ -211,7 +261,7 @@ def _add_tool_to_job(job, tool):
         toolNr = max([tc.ToolNumber for tc in job.Tools.Group]) + 1
 
     # Create tool controller object
-    if GUI_UP:
+    if FreeCAD.GuiUp:
         tc = ToolController.Create("TC: {}".format(tool.Label), tool, toolNr)
     else:
         tc = ToolController.Create(
@@ -252,12 +302,14 @@ def add_toolcontroller_by_number(job, number):
     tn, tool = _get_tool_by_number(number)
 
     return _add_tool_to_job(job, tool)
+# ---------------------------------------------------------------------------
+
 
 # Add ToolController using either Name or Library Tool Number
 # and also set user defined TC properties.
 def addTc(job, tcProps, byNr=False):
     tc = None
-    print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
+    #print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
 
     # try:
     if byNr:
@@ -290,13 +342,10 @@ def addTc(job, tcProps, byNr=False):
 
     return tc
 
-
 # Retreive "Machinability" cutting data from
 # early WIP in the new Materials WorkBench.
 def get_mat_machinability(doc, mat_obj, printing=False):
-
     # Worked out below from Materials test code AND CAM-Sanity:
-
     machinining_props = ["SurfaceSpeedCarbide", "SurfaceSpeedHSS"]
 
     # Only using MaterialManager ATM, others left for later...

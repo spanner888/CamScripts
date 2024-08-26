@@ -116,7 +116,7 @@ print("\t...Example 3 finished.\n")
 print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
 # Shape names can be in System and User directories
 # In this example, BOTH lists are retreived & joined
-# so that ToolBits for EVERY AAVILABLE shape will be created.
+# so that ToolBits for EVERY AVILABLE shape will be created.
 # avail_shape_details = CamTbAddLib.getAllShapeDetails()
 # shape_names = avail_shape_details["user"]['shape_names'] +\
 #                 avail_shape_details["system"]['shape_names']
