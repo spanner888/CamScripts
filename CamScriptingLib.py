@@ -342,6 +342,8 @@ def addTc(job, tcProps, byNr=False):
 
     return tc
 
+
+#   >>>KEEP<<<< ACTIVELY USED!!!
 # Retreive "Machinability" cutting data from
 # early WIP in the new Materials WorkBench.
 def get_mat_machinability(doc, mat_obj, printing=False):
@@ -353,72 +355,59 @@ def get_mat_machinability(doc, mat_obj, printing=False):
     MaterialManager = Materials.MaterialManager()
     uuids = Materials.UUIDs()
 
-    # doc = App.ActiveDocument
-    shp = doc.getObject("Box")
-    mdl = doc.getObject("Model-Cube")
-    stk = doc.getObject("Stock")
-
-    # print default material machinability info.
-    # get_mat_machining_summary(obj, print_machinability)
-    # get_mat_machining_summary(stk, print_machinability)
-
-    # get material by known UUID
-    # steel = MaterialManager.getMaterial("92589471-a6cb-4bbc-b748-d425a17dea7d")
-    # get same material by path & Name.
-    #   NB 'System' are default materials. ONE of other options is 'User'
-    # mat = MaterialManager.getMaterialByPath('Standard/Metal/Steel/CalculiX-Steel.FCMat', 'System')
-
-    # Machining has very DRAFT materials with SurfaceSpeedCarbide/HSS
-    
-    # OLDER bulds:    # mat = MaterialManager.getMaterialByPath('Machining/Aluminum-Cast.FCMat', 'System')
-    
-    # LATEST builds
-    mat = MaterialManager.getMaterialByPath('Machining/AluminumCastAlloy.FCMat', 'System')
-
-    # print(mat.Name)
-    # Ideal = add material to shape, before creating Job.
-    # But would need split library code (easy, but trying for msotly KISS here ATM)
-    # Hence applay Material to bot shape & Job-Stock(which is used by CAM - Sanity report)
-
-    # FYI: Machining model and materials.... button in the job dialog to assign a material.
-    # https://github.com/FreeCAD/FreeCAD/pull/14460
-    # Job - Setup - Layout ...need make pane WIDE...to see the little round material button!!!
-
-    shp.ShapeMaterial = mat
-    stk.ShapeMaterial = mat
-    # obj.ShapeMaterial.Name
-    # obj.ShapeMaterial.UUID
-
-    # get from the Cube
-    # get_mat_machining_summary(obj, print_machinability)
-    #get from the Job Stock - which is used by the CAM Sanity report.
-
     q = FreeCAD.Units.Quantity
 
     SurfaceSpeedCarbide = None
     SurfaceSpeedHSS = None
-    if hasattr(mat_obj, "ShapeMaterial"):
-        if mat_obj.ShapeMaterial is not None:
-            m_name = mat_obj.ShapeMaterial.Name
-            if printing:
-                print("Material machining summary for object: {}, material: {}.".format(mat_obj.Name, m_name))
+    # if hasattr(mat_obj, "ShapeMaterial"):
+        # if mat_obj.ShapeMaterial is not None:
+    # m_name = mat_obj.ShapeMaterial.Name
+    # if printing:
+    #     print("Material machining summary for object: {}, material: {}.".format(mat_obj.Name, m_name))
 
-        found_machinining_prop = False
-        props = mat_obj.ShapeMaterial.PhysicalProperties
-        if "SurfaceSpeedHSS" in props:
-            m_ss_hss = q(props["SurfaceSpeedHSS"]).UserString
-            found_machinining_prop = True
-            SurfaceSpeedHSS = q(props["SurfaceSpeedHSS"])
-            if printing:
-                print("\tSurfaceSpeedHSS:     ", m_ss_hss)
-        if "SurfaceSpeedCarbide" in props:
-            m_ss_cbd = q(props["SurfaceSpeedCarbide"]).UserString
-            found_machinining_prop = True
-            SurfaceSpeedCarbide = q(props["SurfaceSpeedCarbide"])
-            if printing:
-                print("\tSurfaceSpeedCarbide: ", m_ss_cbd)
-        if not found_machinining_prop:
-            print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
+    found_machinining_prop = False
+    # props = mat_obj.ShapeMaterial.PhysicalProperties
+    props = mat_obj.PhysicalProperties
+
+    print(props)
+
+
+    ToolMat = mat_obj.getPhysicalValue("ToolMat")
+    print(ToolMat)
+
+    Vc2Column = mat_obj.getPhysicalValue("Vc2Column")
+    print(Vc2Column.Array)
+    # Vc2Column.Columns
+    # Vc2Column.Rows
+    # Vc2Column.getRow(1)
+
+    Fz3Column = mat_obj.getPhysicalValue("Fz3Column")
+    print(Fz3Column.Array)
+
+    # Yay ..still with bodged non-inherited model...!
+    # 20:03:06  material : AlCastAlloyINHERITED+fz
+    # 20:03:06
+    # 20:03:06  {'ChipThicknessExponent': '0.27', 'Father': 'Metal', 'Fz3Column': '', 'KindOfMaterial': 'Aluminium', 'SurfaceSpeedCarbide': '2000 mm/s', 'SurfaceSpeedHSS': '1333.33 mm/s', 'ToolMat': '', 'UnitCuttingForce': '927000 kg/(mm*s^2)', 'Vc2Column': ''}
+    # 20:03:06  ['HSS', 'Carbide', 'HSS coated', 'Carbide coated', 'Ceramic']
+    # 20:03:06  [[1.0, 183.33333333333334 mm/s], [2.0, 350.0 mm/s], [3.0, 516.6666666666667 mm/s]]
+    # 20:03:06  [[1.0, 0.1, 11.0 mm], [2.0, 1.2, 21.0 mm], [3.0, 3.21, 31.0 mm]]
+    # 20:03:06  	SurfaceSpeedHSS:      79999.80 mm/min
+    # 20:03:06  	SurfaceSpeedCarbide:  120000.00 mm/min
+
+    if "SurfaceSpeedHSS" in props:
+        m_ss_hss = q(props["SurfaceSpeedHSS"]).UserString
+        found_machinining_prop = True
+        SurfaceSpeedHSS = q(props["SurfaceSpeedHSS"])
+        if printing:
+            print("\tSurfaceSpeedHSS:     ", m_ss_hss)
+    if "SurfaceSpeedCarbide" in props:
+        m_ss_cbd = q(props["SurfaceSpeedCarbide"]).UserString
+        found_machinining_prop = True
+        SurfaceSpeedCarbide = q(props["SurfaceSpeedCarbide"])
+        if printing:
+            print("\tSurfaceSpeedCarbide: ", m_ss_cbd)
+    if not found_machinining_prop:
+        print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
 
     # >>>...TODO 2nd GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
     #           eg mod this funtion to return materila obj to aid getting data for the adv calcs....
@@ -494,7 +483,7 @@ def detailed_calcs(mat):
     # Do this first, so can have info if getting material fails.
     # FIXME: works as sep macro, max recursion depth error here!!!
     # ....well on first run here, now fine!!!
-    users_material_cfg_summary()
+    # users_material_cfg_summary()
 
     # ---------------------------------------------------------
     # PROPERTIES RETREIVED FROM specified Operation or TC-TB
@@ -533,13 +522,17 @@ def detailed_calcs(mat):
     ae = FreeCAD.Units.Quantity('3 mm') # width of cut (radial)
 
     # Spindle max RPM = User/Machine Limit/Setting
-    n_max = FreeCAD.Units.Quantity("30000/min")
+    n_max = FreeCAD.Units.Quantity("20000/min")
     # ------------------------------------------------------------------
 
     # ------------------------------------------------------------------
     # Now get data from Material - Machinability proprerties:
     print("material :", mat.Name)
     # print("Desc :", mat.Description)
+    print()
+    doc = FreeCAD.ActiveDocument
+    get_mat_machinability(doc, mat, printing=True)
+    print()
 
     kc11 = FreeCAD.Units.Quantity(mat.PhysicalProperties['UnitCuttingForce'])
     h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
@@ -621,7 +614,8 @@ def detailed_calcs(mat):
 
     if n_set > n_max:
         print("INFO: Limiting Calculated RPM of {} to max setting of {}."
-              .format(n_set, n_max))
+              .format(n_set.getValueAs("1/min").toStr(0),
+                      n_max.getValueAs("1/min").toStr(0)))
 
     n = min(n_set, n_max)
     n.getValueAs("1/min")

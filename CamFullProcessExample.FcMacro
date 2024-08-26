@@ -216,7 +216,7 @@ def printExPrefix(exampleNr, prefix="", ExampleDesc="", topRow=False, bottomRow=
     if bottomRow:
         print("-"*80)
     return exampleNr
-#----------------------------------------
+#----------------------------------------= materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
 
 #---------------------------------------------------------
 ExampleDesc="New doc & Job, optionaly clear report/python panes.\n\t\t\t"
@@ -270,13 +270,15 @@ stk = doc.getObject("Stock")
 # FIXME NEED GIVE ADVICE **AND** CHECK USER SETUP
 #     - PREFS
 #     - REQ MAT EXIST.....
+CamScriptingLib.users_material_cfg_summary()
 materialManager = Materials.MaterialManager()
 
+selected_material_alfz = materialManager.getMaterial('72814d63-f200-469b-9d99-5b6d9c526daa')
 selected_material_al = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
 selected_material_hw = materialManager.getMaterial('ba2474ee-f62c-45f5-b388-823ea105847f')
 
 print()
-CamScriptingLib.detailed_calcs(selected_material_al)
+CamScriptingLib.detailed_calcs(selected_material_alfz)
 print()
 CamScriptingLib.detailed_calcs(selected_material_hw)
 print()
