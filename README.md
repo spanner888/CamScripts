@@ -1,42 +1,40 @@
-## About
+## About CamScripts
 
 CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
 
-Images below, capture output of the macros which created all Library ToolBits, Operations, ToolControllers and many key properties, including assigning ToolControllers to Operations.
+Image below shows output created by CamScripts macros including:
 
-Speed and Feed example calculations from new Materials Machinabilty work is shown in report view.
+  - Import csv tool data to create Library ToolBits using different automatic naming and numbering rules,
+  - Operations, ToolControllers, with key properties values set,
+  - Assigning ToolControllers to Operations,
+  - Speed and Feed example calculations from new Materials Machinabilty work is shown in report view.
 
 PostProcessed gcode and Sanity check report were also created and saved, but not shown.
 
-Tool data can be imported from csv and added in bulk to the current FreeCAD Tool Library Tool list. Powerful automatic naming rules can be used. Examples are shown in IMAGEXXX
-
-![Naming rules example](./images/Naming_rules_example.png)![Cam Full Process Example](./images/CamFullProcessExample.png)
+![Import, Rules, Full process condensed example](./images/Import_RulesFull_process.png)
 
 ## Special mention:
 
 1. An Extensive ToolBit rule based naming system which allows use of ANY ToolBit property and allows setting order of each component as well as leading/trailing seperators and abbreviations.
 
-For example:
-    2F-D6.35-L31
-    1F_D3.0-L50.0_endmill
-    3F_D4.0-L50.0_roughing
-    28600.0_8.6D_0F_860_em
-    Last item above also shows one example of an auto-numbered name.
+  - For example:
+    - 2F-D6.35-L31
+    - 1F_D3.0-L50.0_endmill
+    - 3F_D4.0-L50.0_roughing
+    - 28600.0_8.6D_0F_860_em
+    - Last item above also shows one example of an auto-numbered name.
 
-A ridulous example used for testing imported Tools with uncommon properties:
-    30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__dovetail
-    30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
-    40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__chamfer
+  - A ridulous example used for testing imported Tools with uncommon properties:
+      - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__
+      - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
+      - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
+        - Note double underscores included above show missing properties in a ToolBit do not cause errors.
 
-2. Demonstration of possiblities of FreeCAD CAM Speeds and Feeds calculations using the new Materials workbench and Material Machining Model containing cutting data, all of which are functional, but the design work and data collection, curation, documantation and inclusion are all at very early stages.
+2. Demonstration of possiblities of FreeCAD CAM Speeds and Feeds calculations using the new Materials workbench and Material Machining Model containing cutting data, all of which are functional, but the design work and data collection, curation, documentation and inclusion are all at very early stages.
 
 So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
-Above code is simplified by two supplied python libraries and one excelent lib from Russ
-
-Sample code from imm and jbaehr for latest SF code/model.....
-
-...and FC & FC CAM and FC new Materials.... and many many forums users.
+Example macro code is simplified by two supplied python libraries and one excelent JobUtils library from russ4262 and also includes sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
 
 ## Documentation
 
@@ -89,7 +87,7 @@ These catalogs usually state that the data is "starting values" or some "maximum
 
 ## References and Credits
 
-* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
+* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/)
 * Material forum in particular [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242)
 * JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecad.org/viewtopic.php?t=33328)
 
@@ -101,11 +99,6 @@ Those examples have been extended here with many aded features to give the full 
 
 Path and Material developers and forum users including Russ, onekk, imm...
 
-Sliptonic's and both of baehr pr's below are VERY informative & worth the read!
-![ Machining model and materials #14460 ](https://github.com/FreeCAD/FreeCAD/pull/14460)
-![Material: Add metal cards with machining model](https://github.com/FreeCAD/FreeCAD/pull/15910)
-![Material: Add wood cards with machining model](https://github.com/FreeCAD/FreeCAD/pull/16021)
-Much of the speeds and Feeds calculation code is based examples from the latter two PRs.
 
 ## Limitations, Feedback and Contributions
 
@@ -130,7 +123,4 @@ See the github repo issues for latest information.
 
 JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](JobUtils.py)
 
-All other files in CamScripts are Copyright 22024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
-
-
-
+All other files in CamScripts are Copyright 2024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
