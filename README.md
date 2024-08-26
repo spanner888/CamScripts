@@ -87,7 +87,7 @@ These catalogs usually state that the data is "starting values" or some "maximum
 
 ## References and Credits
 
-* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
+* FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/)
 * Material forum in particular [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242)
 * JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecad.org/viewtopic.php?t=33328)
 
