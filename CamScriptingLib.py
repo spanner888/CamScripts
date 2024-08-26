@@ -188,7 +188,7 @@ def _get_tool_by_number(number):
 
     for libLoc, libFN, libFile in libraries:
         for toolNum, toolDict, bitPath in JobUtils._read_library(libFile):
-            print(toolDict)
+            #print(toolDict)
             if toolNum == number:
                 s_name = toolDict['shape']
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
@@ -227,7 +227,7 @@ def _get_tool_by_filename(name):
                 print()
                 s_name = toolDict['shape']
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
-                print("CS#180 s_dir: ", s_dir)
+                #print("CS#180 s_dir: ", s_dir)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict, name, s_dir)
                 if hasattr(toolBit, "ViewObject") and hasattr(
                     toolBit.ViewObject, "Visibility"
@@ -420,10 +420,8 @@ def get_mat_machinability(doc, mat_obj, printing=False):
         if not found_machinining_prop:
             print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
 
-    # 1st goal try get ALL "tool/user settings from exsting TC etc...."
     # >>>...TODO 2nd GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
     #           eg mod this funtion to return materila obj to aid getting data for the adv calcs....
-    # TODO 3rd - is calc fz=chipload if so, COMPARE/PLOT calc to the telenbach{??} data eg in ods just created/plotted!!!
     # ATM 2 more props:  ChipThicknessExponent, UnitCuttingForce
     # BUT me want extend to 2x Arrays
     #     1 VcToolMat & SurfaceSpeed
@@ -629,7 +627,8 @@ def detailed_calcs(mat):
     # ....well on first run here, now fine!!!
     users_material_cfg_summary()
 
-    # PROPERTIES RETREIVED FROM specified operation or TC-TB
+    # ---------------------------------------------------------
+    # PROPERTIES RETREIVED FROM specified Operation or TC-TB
     # TODO instead pass in Op
 
     # FIXME need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
@@ -643,35 +642,42 @@ def detailed_calcs(mat):
     # ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
     ap = op.StepDown
 
+    ToolHelixAngle = op.ToolController.Tool.HelixAngle
+    ToolRakeAngle = op.ToolController.Tool.RakeAngle
+    # ToolHelixAngle = FreeCAD.Units.Quantity('15°')
+    # ToolRakeAngle = FreeCAD.Units.Quantity('30°')
+    # ---------------------------------------------------------
+
+
+    # ---------------------------------------------------------
     # currently HARCODED properties ...future work
-
-    # FIXME TODO HERE:    so WIP - have modded roughing shape & added to user dir
-    #     + an import csv with rake/helix and IMPORT works.
-    #     BUT FullProcess:
-    # 13:52:26  Add TC using toolname: '3F_D4.0-L50.0_roughing' and set h/v feeds & spindle speed.
-    # 13:52:26  Bit.ERROR: Could not find shape file roughing.fcstd for tool bit ToolBit001
-    # & dif erro adding by#!!!
-
-
-    ToolRakeAngle = FreeCAD.Units.Quantity('30°')
-    ToolHelixAngle = FreeCAD.Units.Quantity('15°')
-
     ToolMaxChipLoad = FreeCAD.Units.Quantity('0.030 mm') # not a tool setting; differs per material! (ToolMaxTorque would be nice but no vendor specifies this. And for soft materials large chips jam the bit before max torque is reached)
 
-    # Not easy to get from doc/op.
-    # 1st approx = distance from Model to outside of stock...but that will NOT be constant distance
+    # SOME operations have StepOver, eg Pocket.
+    # Profile & other Ops do not, so Not easy to get from FC doc/op.
+    # 1st approx = distance from Model to outside of stock
+    #   ...but that will NOT be constant distance, & ONLY for Profile Op
     # ..but that dist can be wider than tool dia...
-    # Then add in are offsets...
+    # Then there are offsets...
     ae = FreeCAD.Units.Quantity('3 mm') # width of cut (radial)
+
+    # Spindle max RPM
+    n_max = FreeCAD.Units.Quantity("30000/min")
     # ------------------------------------------------------------------
 
-
+    # ------------------------------------------------------------------
+    # Now get data from Material - Machinability proprerties:
     print("material :", mat.Name)
     # print("Desc :", mat.Description)
 
     kc11 = FreeCAD.Units.Quantity(mat.PhysicalProperties['UnitCuttingForce'])
     h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
     mc = float(mat.PhysicalProperties['ChipThicknessExponent'])
+
+    # vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
+    vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
+    # vc_set.getValueAs("m/min")
+    # ------------------------------------------------------------------
 
     # project angle: https://math.stackexchange.com/questions/2207665/projecting-an-angle-from-one-plane-to-another-plane
     # not really worth taking the helix into account here; below 40° the effect is neglectable
@@ -692,7 +698,11 @@ def detailed_calcs(mat):
     hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
 
         # Book is Kver
-    Kw = 1.2 # correction factor for tool wear: 1 for new sharp tools, 1.2 for used tools, 1.5 for dull tools that need to be replaced
+    Kw = 1.2 # correction factor for tool wear:
+             # 1 for new sharp tools,
+             # 1.2 for used tools,
+             # 1.5 for dull tools that need to be replaced
+
         # 4 corrections in all:
             # book/here
             # Kver/Kw Tool wear 1 to 1.5
@@ -734,14 +744,14 @@ def detailed_calcs(mat):
 
     Fc = Fcz * ze # cutting force	 	#<< max?? & not vary with angle.
 
-    # vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
-    vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
-    vc_set.getValueAs("m/min")
 
     n_set = vc_set / (pi * D) # spindle speed
     n_set.getValueAs("1/min")
 
-    n_max = FreeCAD.Units.Quantity("30000/min")
+    if n_set > n_max:
+        print("INFO: Limiting Calculated RPM of {} to max setting of {}."
+              .format(n_set, n_max))
+
     n = min(n_set, n_max)
     n.getValueAs("1/min")
     print("RPM ", n.getValueAs("1/min").toStr(0), 'RPM')

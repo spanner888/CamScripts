@@ -284,6 +284,13 @@ rpm = CamScriptingLib.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
 
 
 
+
+
+
+# FIXME NEED GIVE ADVICE **AND** CHECK USER SETUP
+#     - PREFS
+#     - REQ MAT EXIST.....
+
 materialManager = Materials.MaterialManager()
 
 selected_material_al = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
