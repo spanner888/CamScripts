@@ -89,7 +89,7 @@ These catalogs usually state that the data is "starting values" or some "maximum
 
 * FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
 * Material forum in particular [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242)
-* JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecadweb.org/viewtopic.php?f=3&t=60818)
+* JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecad.org/viewtopic.php?t=33328)
 
 The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by Russ..
 Excelent example code is provided in this library in the Test## functions.
