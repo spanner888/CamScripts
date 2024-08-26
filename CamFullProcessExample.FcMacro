@@ -260,37 +260,16 @@ JobUtils.FreeCAD.ActiveDocument.recompute()
 # ---------------------------------------------------------
 # set some example printing vars & print header for RPM calc example
 prefix = "CamScriptingLib:"
-ExampleDesc="Machinability & SpindleSpeed RPM calculation:\n\t\t"
+ExampleDesc="Job-Operation & TC props + Machinability data to calculate:\n\t\t\
+ RPM, Vf(hor feed), Power, cutting torque"
 exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow=False)
 
 # Get the stock object of desired CAM-Job
 stk = doc.getObject("Stock")
 
-# Get HSS & Carbide Surface Speeds.
-# Note: Not tested with Material that has no SurfaceSpeedCarbide and SurfaceSpeedHSS
-SurfaceSpeedCarbide, SurfaceSpeedHSS = CamScriptingLib.get_mat_machinability(doc, stk, printing=print_machinability)
-
-print("Retrieved Stock Material SurfaceSpeeds & tc1 Diameter\n\
-\t\t\tin common base Units of mm/s & mm, to Calculate cutting RPM")
-print("\t\tHSS: {}, CBD: {}, TC1 dia: {}"
-      .format(SurfaceSpeedHSS, SurfaceSpeedCarbide, tc1.Tool.Diameter))
-
-# CALCULATE & print RPM,
-# ONLY for SurfaceSpeed TYPE that matches Tool material type
-# ATM Tool material type retreived from ToolController.Tool.Material
-# Does not yet apply a new Material to Tools and then use that material type.
-rpm = CamScriptingLib.calcRpm(tc1, SurfaceSpeedCarbide, SurfaceSpeedHSS)
-# ---------------------------------------------------------
-
-
-
-
-
-
 # FIXME NEED GIVE ADVICE **AND** CHECK USER SETUP
 #     - PREFS
 #     - REQ MAT EXIST.....
-
 materialManager = Materials.MaterialManager()
 
 selected_material_al = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
@@ -301,6 +280,8 @@ CamScriptingLib.detailed_calcs(selected_material_al)
 print()
 CamScriptingLib.detailed_calcs(selected_material_hw)
 print()
+# ---------------------------------------------------------
+
 
 # ---------------------------------------------------------
 # set some example printing vars & print header for

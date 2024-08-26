@@ -433,137 +433,6 @@ def get_mat_machinability(doc, mat_obj, printing=False):
     return SurfaceSpeedCarbide, SurfaceSpeedHSS
 
 
-def calcRpm(tc, SurfaceSpeedCarbide, SurfaceSpeedHSS):
-    #   Default TC-Tool DOES have Material: 'Generic material with density of 1'
-    #   ...so expect FUTURE will have material AND more detailed Tool Machinability(other name?) properties.
-    #   For now, use tc.Tool.Material & ONLY calc accoriding to that ie HSS tool or Carbide Tool
-    if tc.Tool.Material == "HSS":
-        ss = SurfaceSpeedHSS
-    elif tc.Tool.Material == "Carbide":
-        ss = SurfaceSpeedCarbide
-    else:
-        print("TC.Tool {} has invalid Tool material type: {} \
-    ie is not 'HSS' or 'Carbide', exiting macro."
-    .format(tc.Tool.Label, tc.Tool.Material))
-        exit(0)
-
-    rpm = ss / (tc.Tool.Diameter * pi)
-
-    q = FreeCAD.Units.Quantity
-    print("\t**Calculated** RPM for {} tool is {} RPM"
-        .format(tc.Tool.Material, round(q(rpm).getValueAs('1/min'), 1)))
-    # print()
-    print("\tformula: SurfaceSpeed / (Diameter * math.pi)")
-    print("\tNB: FreeCAD Units are all normalised in metric, so SurfaceSpeed*1000 is not required.")
-
-    # print()
-    print("Calculated SpindleSpeed RPM has not been set in ToolController SpindleSpeed.")
-    print("You can do this manualy, or uncomment code in line below this print statement in the macro.")
-    #TODO read print above - code to set calc rpm in TC
-    return rpm
-
-# now old - replacing with modded code from Wood PR
-def calcLots_TO_RETIRE():
-    #  https://github.com/FreeCAD/FreeCAD/pull/15910
-    from math import acos, sqrt, sin
-    from math import degrees, radians, pi
-    import Materials;
-
-    materialManager = Materials.MaterialManager()
-    alu = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
-    alu.Name
-    alu.Description
-
-    kc11 = FreeCAD.Units.Quantity(alu.PhysicalProperties['UnitCuttingForce']) # why is the property a string, not a Quantity as defined by the model???
-    h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
-    mc = float(alu.PhysicalProperties['ChipThicknessExponent']) # why is the property a string, not a float as defined by the model???
-
-    ToolRakeAngle = FreeCAD.Units.Quantity('20°')
-    Kg = 1 - 0.01 * ToolRakeAngle.getValueAs("deg") # correction factor for rake angle
-
-    ToolDiameter = FreeCAD.Units.Quantity('6 mm')
-    D = ToolDiameter
-
-    ae = FreeCAD.Units.Quantity('2.5 mm') # width of cut (radial)
-    ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
-
-    ToolNumberOfFlutes = 3
-    z = ToolNumberOfFlutes
-
-    ToolHelixAngle = FreeCAD.Units.Quantity('35°')
-
-    #kapr = radians(90 - ToolHelixAngle.getValueAs("deg")) # this looks wired! to be investigated
-    kapr = radians(90) # straight milling cutter, i.e. chamfer=90° aka no chamfer
-
-    fz = FreeCAD.Units.Quantity('0.03 mm') # feed per tooth
-
-    phie = acos(1 - (2 * ae / D)) # engangement angle
-
-    #hm = sqrt(ae/D) * fz * sin(kapr) # mean undeformed chip thickness; good approximation for ae << D; 20%-30% too large for ae=D
-    Sb = D * pi * (phie / (2*pi)) # chip arc length
-    hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
-
-             # Book Kver
-    Kw = 1.2 # correction factor for tool wear: 1 for new sharp tools, 1.2 for used tools, 1.5 for dull tools that need to be replaced
-            # 4 corrections in all:
-                # book/here
-                # Kver/Kw Tool wear 1 to 1.5
-                # Kgamma symbol/Kg Correction factor rake angle
-                #     Kg = 1 - (g - g0)/100
-                #     g0 basic rake angle: + 6° for steel, + 2° for cast iron
-                #     g actual rake angle
-                # Kvc/NONE Cutting speed correction factor
-                #     lookup table
-                #                         Vc range    Kvc
-                #                         m/min
-                #     HSS                 30 to 60    1.2
-                #     HM (hardened Mat?)  60 to 300   1
-                #     Ceramic             180 to 500  0.85
-                # Ksp/NONE Chip compression correction factor
-                #                 ^^??Chip thinning?? ...cf other refs for formula & MY work on MC...
-                #                                                 moved into adjustemnts at end of work??
-                #     Manufacturing process               Ksp
-                #     External turning                    1.0
-                #     Broaching, planing, slotting        1.1
-                #     Drilling, milling, internal turning 1.2
-                #     Parting off turning, plunge turning 1.3
-
-    # Extremely complex lookups, even *nested lookups**,
-    #    depends on Tool D/Mat, Rake, Vc, Cutting/Manufact process....
-    # CAN BE broken into simpler steps as down throughout here
-    # 2 corrections ignored ATM
-    # +++ User will want adjust - eg tool wear...
-    # ++ INSERT style calculations and adv machining????
-    kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting force
-
-    # ??extended calc?? for this with tool rotation angle ....for the vibration/force min/max/diag!!!
-    Fcz = ap * hm * kc # cutting force per flute
-
-    ze = phie * z / (2*pi) # engaged flutes # <<<<< STUDY ...prob NOT in ref to vibration/force min/max/diag
-
-    Fc = Fcz * ze # cutting force           #<< max?? & not vary with angle.
-
-    vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
-
-    Pc = Fc * vc # mechanical cutting power
-
-    eff = 0.85 # machine efficiency:
-    P = Pc / eff # electrical spindle power
-    print("electrical spindle power ", P.getValueAs("kW").toStr(3), "kW")
-
-    Mc = Fc * D / 2 # cutting torque
-    print("Mc cutting torque", Mc.getValueAs("Nm").toStr(5),"Nm")
-
-    n = vc / (pi * D) # spindle speed
-    print("RPM ", n.getValueAs("1/min").toStr(0), 'RPM')
-
-    vf = n * z * fz # feed rate
-    print("vf ", vf.getValueAs("mm/min").toStr(0), "mm/min")
-
-    print("Console Hint: P, Mc, n, vf = CamScriptingLib.calcLots()\n after you 'import CamScriptingLib'")
-    return P, Mc, n, vf
-
-
 def users_material_cfg_summary():
     # Examine Users Material settings & Directories.
     from materialtools.cardutils import get_material_preferred_directory, get_material_preferred_save_directory
@@ -651,6 +520,8 @@ def detailed_calcs(mat):
 
     # ---------------------------------------------------------
     # currently HARCODED properties ...future work
+
+    # TODO: book has fz vs dia tables
     ToolMaxChipLoad = FreeCAD.Units.Quantity('0.030 mm') # not a tool setting; differs per material! (ToolMaxTorque would be nice but no vendor specifies this. And for soft materials large chips jam the bit before max torque is reached)
 
     # SOME operations have StepOver, eg Pocket.
@@ -661,7 +532,7 @@ def detailed_calcs(mat):
     # Then there are offsets...
     ae = FreeCAD.Units.Quantity('3 mm') # width of cut (radial)
 
-    # Spindle max RPM
+    # Spindle max RPM = User/Machine Limit/Setting
     n_max = FreeCAD.Units.Quantity("30000/min")
     # ------------------------------------------------------------------
 
