@@ -171,7 +171,12 @@ def get_list_all_shape_names():
 
 
 def find_shape_location(shape_name):
+    if shape_name.endswith(".fcstd"):
+        shape_name = shape_name[:-len(".fcstd")]
+
+    print(shape_name)
     s_location = None
+    s_dir = None
     if shape_name in avail_shape_details["user"]['shape_names']:
         s_location = "user"
     elif shape_name in avail_shape_details["system"]['shape_names']:
@@ -407,6 +412,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
     addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
 
     return True
+
 
 # TODO replace ALL tb_base_name var from default rules
 def processUserToolInput(tb_name_rules,

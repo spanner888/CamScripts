@@ -24,8 +24,12 @@
 import FreeCAD
 import Path
 import JobUtils
+# next two remove if get JobUtils updated to find Shape dir
+import Path.Tool.Bit as Bit
+import CamTbAddLib
 from PySide import QtGui
 import webbrowser
+import sys, os
 
 import Materials;
 from math import sin, cos, acos, tan, atan, sqrt, pi
@@ -96,27 +100,6 @@ def printAvailableLibraryTools():
     if len(toolNames) == 0:
         print("No tool files found.")
     return toolNames
-# -------------------------------------------------------------------
-
-
-def initDocJob(job_props, clear_console_pane, clear_report_pane):
-    clearConsolePane(clear=clear_console_pane)
-    clearReportPane(clear=clear_report_pane)
-
-    doc, job = JobUtils._testPrep()
-
-    # -----------------------------------------------------------------
-    # now apply your JOB properties/defaults
-    job.Label = job_props.jobname
-    job.PostProcessor = job_props.postProcessor
-    # job.PostProcessor = "refactored_grbl"
-    job.PostProcessorArgs = job_props.postProcessorArgs
-    job.PostProcessorOutputFile = job_props.postProcessorOutputFile
-    job.SetupSheet.HorizRapid = job_props.hRapid
-    job.SetupSheet.VertRapid = job_props.vRapid
-    # -----------------------------------------------------------------
-    
-    return doc, job
 
 # helper classes to make it easier to pass related properties
 class job_props:
@@ -139,7 +122,7 @@ class job_props:
 
 class tc_props:
     def __init__(self):
-        self.bitName = "tool bit"    # Not a TC prop, but for TC.Tool.Name
+        self.bitName = "Please add YOUR tool Name!"    # Not a TC prop, but for TC.Tool.Name
         self.lib_tool_nr = 1         # Not a TC prop, number of Tool in current Library
         self.hfeed = '0 mm/min'
         self.vfeed = '0 mm/min'
@@ -147,32 +130,163 @@ class tc_props:
 
     def wtf(self):
         print("Hello  " + self.bitName + " " + self.tool_nr)
+# -------------------------------------------------------------------
 
+
+def initDocJob(job_props, clear_console_pane, clear_report_pane):
+    clearConsolePane(clear=clear_console_pane)
+    clearReportPane(clear=clear_report_pane)
+
+    doc, job = JobUtils._testPrep()
+
+    # -----------------------------------------------------------------
+    # now apply your JOB properties/defaults
+    job.Label = job_props.jobname
+    job.PostProcessor = job_props.postProcessor
+    # job.PostProcessor = "refactored_grbl"
+    job.PostProcessorArgs = job_props.postProcessorArgs
+    job.PostProcessorOutputFile = job_props.postProcessorOutputFile
+    job.SetupSheet.HorizRapid = job_props.hRapid
+    job.SetupSheet.VertRapid = job_props.vRapid
+    # -----------------------------------------------------------------
+    
+    return doc, job
+
+
+#modding from JobUtils
+def _get_tool_by_filename(name):
+    """
+    _get_tool_by_filename(name)
+    Arguments:
+        name: name of toolbit file without extension
+    Returns a tool number and toolbit object as a tuple if the name file is found.
+    Taken from Path.Tool.Gui.BitLibrary.ModelFactory.findLibraries()
+    """
+
+    s_dir = None
+    libraries = JobUtils._get_available_tool_library_paths()
+    for libLoc, libFN, libFile in libraries:
+        print(f"CS#166 {libLoc}, {libFN}, {libFile}")
+        for toolNum, toolDict, bitPath in JobUtils._read_library(libFile):
+            print("CS#169", toolNum, toolDict, bitPath)
+            loc, fnlong = os.path.split(bitPath)
+            print("CS#170")
+            fn, ext = os.path.splitext(fnlong)
+            print(f"CS#173 {fn}, {ext}, {name}<<name is 3rd val")
+            if fn == name:
+                print()
+                s_name = toolDict['shape']
+                s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
+                print("CS#178 s_dir: ", s_dir)
+                toolBit = Bit.Factory.CreateFromAttrs(toolDict, name, s_dir)
+                if hasattr(toolBit, "ViewObject") and hasattr(
+                    toolBit.ViewObject, "Visibility"
+                ):
+                    toolBit.ViewObject.Visibility = False
+                return (toolNum, toolBit, s_dir)
+
+    print(f"No tool found with name '{name}'")
+
+    return None, None, None
+
+
+#modding from JobUtils
+def _add_tool_to_job(job, tool):
+    """
+    _add_tool_to_job(job, tool)
+    Arguments:
+        job:  target parent job object for tool controller
+        tool:  toolbit object as base for tool controller
+    Adds a new tool controller based on the tool argument to the target job object provided.
+    Code based on Path.Main.Gui.Controller.CommandPathToolController.Activated()
+    """
+
+    # Identify correct tool number
+    toolNr = None
+    for tc in job.Tools.Group:
+        if tc.Tool == tool:
+            toolNr = tc.ToolNumber
+            break
+    if not toolNr:
+        toolNr = max([tc.ToolNumber for tc in job.Tools.Group]) + 1
+
+    # Create tool controller object
+    if GUI_UP:
+        tc = ToolController.Create("TC: {}".format(tool.Label), tool, toolNr)
+    else:
+        tc = ToolController.Create(
+            "TC: {}".format(tool.Label), tool, toolNr, assignViewProvider=False
+        )
+
+    # Add tool controller to job
+    job.Proxy.addToolController(tc)
+    FreeCAD.ActiveDocument.recompute()
+
+    return tc
+
+
+#modding from JobUtils
+def add_toolcontroller_by_filename(job, name):
+    """
+    add_toolcontroller_by_filename(job, name)
+    Arguments:
+        job:  target parent job object for tool controller
+        name:  filename (without extension) of file to be used as base for tool controller
+    Adds a new tool controller based on the name argument to the target job object provided.
+    Returns tool controller object.
+    """
+    tn, tool = _get_tool_by_filename(name)
+
+    return _add_tool_to_job(job, tool)
+
+
+#modding from JobUtils
+def add_toolcontroller_by_number(job, number):
+    """
+    add_toolcontroller_by_number(job, number)
+    Arguments:
+        job:  target parent job object for tool controller
+        number:  number of tool as returned from 'available_tool_filenames()' to be used as base for tool controller
+    Adds a new tool controller referenced by the number argument to the target job object provided.
+    """
+    tn, tool = _get_tool_by_number(number)
+
+    return _add_tool_to_job(job, tool)
 
 # Add ToolController using either Name or Library Tool Number
 # and also set user defined TC properties.
 def addTc(job, tcProps, byNr=False):
     tc = None
-    #print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
+    print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
 
-    try:
-        if byNr:
-            print("Add TC using tool#: '{}' and set h/v feeds & spindle speed."
-                .format(tcProps.lib_tool_nr))
-            tc = JobUtils.add_toolcontroller_by_number(job, tcProps.lib_tool_nr)
-        else:
-            print("Add TC using toolname: '{}' and set h/v feeds & spindle speed."
-                .format(tcProps.bitName))
-            tc = JobUtils.add_toolcontroller_by_filename(job, tcProps.bitName)
+    # try:
+    if byNr:
+        print("Add TC using tool#: '{}' and set h/v feeds & spindle speed."
+            .format(tcProps.lib_tool_nr))
+        # tc = JobUtils.add_toolcontroller_by_number(job, tcProps.lib_tool_nr)
+        tc = add_toolcontroller_by_number(job, tcProps.lib_tool_nr)
+    else:
+        if len(tcProps.bitName) < 1:
+            print("Please add a bitName to tcProps")
+            return
+        print("Add TC using toolname: '{}' and set h/v feeds & spindle speed."
+            .format(tcProps.bitName))
+        # Allowing for User shapes in User Tools/Shapes,
+        # must pass path to add_toolcontroller_by_filename ...then to FC Bit.ToolBitFactory.CreateFromAttrs
+        # ....so at least for testing need copy/mod JobUtils _get_tool_by_filename & add_toolcontroller_by_filename
+        # ????but was OK before helix/rake???? ...assume for now did not see issue...still need fix above
+
+        # tc = JobUtils.add_toolcontroller_by_filename(job, tcProps.bitName)
+        tc = add_toolcontroller_by_filename(job, tcProps.bitName)
 
         tc.HorizFeed = tcProps.hfeed
         tc.VertFeed = tcProps.vfeed
         tc.SpindleSpeed = tcProps.spindleSpeed
-    except:
-        print("\t*Could NOT find above tool. Please review above \
-            'Available tool files' list.", tc)
-        print("Exiting macro!")
-        exit(0)
+    # except:
+    #     print("\t*Could NOT find above tool. Please review above \
+    #         'Available tool files' list.", tc)
+    #     print("Exiting macro!")
+    #     sys.exit(1)
 
     return tc
 
@@ -482,12 +596,14 @@ def detailed_calcs(mat):
 
     # currently HARCODED properties ...future work
 
-    so WIP - have modded roughing shape & added to user dir
-    + an import csv with rake/helix and IMPORT works.
-    BUT FullProcess:
-13:52:26  Add TC using toolname: '3F_D4.0-L50.0_roughing' and set h/v feeds & spindle speed.
-13:52:26  Bit.ERROR: Could not find shape file roughing.fcstd for tool bit ToolBit001
-& dif erro adding by#!!!
+    # FIXME TODO HERE:    so WIP - have modded roughing shape & added to user dir
+    #     + an import csv with rake/helix and IMPORT works.
+    #     BUT FullProcess:
+    # 13:52:26  Add TC using toolname: '3F_D4.0-L50.0_roughing' and set h/v feeds & spindle speed.
+    # 13:52:26  Bit.ERROR: Could not find shape file roughing.fcstd for tool bit ToolBit001
+    # & dif erro adding by#!!!
+
+
     ToolRakeAngle = FreeCAD.Units.Quantity('30°')
     ToolHelixAngle = FreeCAD.Units.Quantity('15°')
 
