@@ -371,56 +371,78 @@ def get_mat_machinability(doc, mat_obj, printing=False):
 
     print(props)
 
+    # FIXME FIXME ++ BIG NOTE: I have bodgied current Machinability model just appened my tests
+    #     ***BUT same UUID and ONLY one material has new model props!!!!
+    # fz.hasPhysicalProperty('ToolMat')
+    # True
+    # fz.hasPhysicalProperty('ToolMats')
+    # False
+`   # BELOW has *two* dif wasy check if prop actually exists in the material
 
-    ToolMat = mat_obj.getPhysicalValue("ToolMat")
-    print(ToolMat)
+    # if mat_obj.hasPhysicalProperty('Fz3Column'): & if "SurfaceSpeedHSS" in props:
 
-    Vc2Column = mat_obj.getPhysicalValue("Vc2Column")
-    print(Vc2Column.Array)
-    # Vc2Column.Columns
-    # Vc2Column.Rows
-    # Vc2Column.getRow(1)
+    # Test if this material supports Machinability model.
+    tool_mat_nr = None
+    if mat_obj.hasPhysicalModel(uuids.Machinability):
+        if mat_obj.hasPhysicalProperty('ToolMats'):
+            toolMats = mat_obj.getPhysicalValue("ToolMat")
+            print(toolMats)
+            tool_mat_nr = toolMats.index("HSS")
+            print(toolMats, toolMats[tool_mat_nr])
 
-    Fz3Column = mat_obj.getPhysicalValue("Fz3Column")
-    print(Fz3Column.Array)
+        if mat_obj.hasPhysicalProperty('Vc2Column'):
+            Vc = mat_obj.getPhysicalValue("Vc2Column")
+            print(Vc.Array, Vc.Array[tool_mat_nr][1])
+            # Vc2Column.Columns
+            # Vc2Column.Rows
+            # Vc2Column.getRow(1)
 
-    # Yay ..still with bodged non-inherited model...!
-    # 20:03:06  material : AlCastAlloyINHERITED+fz
-    # 20:03:06
-    # 20:03:06  {'ChipThicknessExponent': '0.27', 'Father': 'Metal', 'Fz3Column': '', 'KindOfMaterial': 'Aluminium', 'SurfaceSpeedCarbide': '2000 mm/s', 'SurfaceSpeedHSS': '1333.33 mm/s', 'ToolMat': '', 'UnitCuttingForce': '927000 kg/(mm*s^2)', 'Vc2Column': ''}
-    # 20:03:06  ['HSS', 'Carbide', 'HSS coated', 'Carbide coated', 'Ceramic']
-    # 20:03:06  [[1.0, 183.33333333333334 mm/s], [2.0, 350.0 mm/s], [3.0, 516.6666666666667 mm/s]]
-    # 20:03:06  [[1.0, 0.1, 11.0 mm], [2.0, 1.2, 21.0 mm], [3.0, 3.21, 31.0 mm]]
-    # 20:03:06  	SurfaceSpeedHSS:      79999.80 mm/min
-    # 20:03:06  	SurfaceSpeedCarbide:  120000.00 mm/min
+        if mat_obj.hasPhysicalProperty('Fz3Column'):
+            Fz = mat_obj.getPhysicalValue("Fz3Column")
+            print(Fz.Array, Fz.Array[tool_mat_nr][1],
+                            Fz.Array[tool_mat_nr][2])
 
-    if "SurfaceSpeedHSS" in props:
-        m_ss_hss = q(props["SurfaceSpeedHSS"]).UserString
-        found_machinining_prop = True
-        SurfaceSpeedHSS = q(props["SurfaceSpeedHSS"])
-        if printing:
-            print("\tSurfaceSpeedHSS:     ", m_ss_hss)
-    if "SurfaceSpeedCarbide" in props:
-        m_ss_cbd = q(props["SurfaceSpeedCarbide"]).UserString
-        found_machinining_prop = True
-        SurfaceSpeedCarbide = q(props["SurfaceSpeedCarbide"])
-        if printing:
-            print("\tSurfaceSpeedCarbide: ", m_ss_cbd)
-    if not found_machinining_prop:
-        print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
+            # Yay ..still with bodged non-inherited model...!
+            # 20:03:06  material : AlCastAlloyINHERITED+fz
+            # 20:03:06
+            # 20:03:06  {'ChipThicknessExponent': '0.27', 'Father': 'Metal', 'Fz3Column': '', 'KindOfMaterial': 'Aluminium', 'SurfaceSpeedCarbide': '2000 mm/s', 'SurfaceSpeedHSS': '1333.33 mm/s', 'ToolMat': '', 'UnitCuttingForce': '927000 kg/(mm*s^2)', 'Vc2Column': ''}
+            # 20:03:06  ['HSS', 'Carbide', 'HSS coated', 'Carbide coated', 'Ceramic']
+            # 20:03:06  [[1.0, 183.33333333333334 mm/s], [2.0, 350.0 mm/s], [3.0, 516.6666666666667 mm/s]]
+            # 20:03:06  [[1.0, 0.1, 11.0 mm], [2.0, 1.2, 21.0 mm], [3.0, 3.21, 31.0 mm]]
+            # 20:03:06  	SurfaceSpeedHSS:      79999.80 mm/min
+            # 20:03:06  	SurfaceSpeedCarbide:  120000.00 mm/min
 
-    # >>>...TODO 2nd GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
-    #           eg mod this funtion to return materila obj to aid getting data for the adv calcs....
-    # ATM 2 more props:  ChipThicknessExponent, UnitCuttingForce
-    # BUT me want extend to 2x Arrays
-    #     1 VcToolMat & SurfaceSpeed
-    #     2 FzToolMat(no dup vars!!), fzIntercept, fzSlope <<<maybe 3x for polynomial(??)
-    #     & ToolMat LIST only
-    #     ++ all the advice/adj/.....
-    # ...so maybe just validate basics of mat here & return the obj for detailed checks, then grab data...
-    #     +++ all the inital plotting & curating & tweaking & ESP COMPARING...cf nsw code support script
-    return SurfaceSpeedCarbide, SurfaceSpeedHSS
+        if "SurfaceSpeedHSS" in props:
+            m_ss_hss = q(props["SurfaceSpeedHSS"]).UserString
+            found_machinining_prop = True
+            SurfaceSpeedHSS = q(props["SurfaceSpeedHSS"])
+            if printing:
+                print("\tSurfaceSpeedHSS:     ", m_ss_hss)
+        if "SurfaceSpeedCarbide" in props:
+            m_ss_cbd = q(props["SurfaceSpeedCarbide"]).UserString
+            found_machinining_prop = True
+            SurfaceSpeedCarbide = q(props["SurfaceSpeedCarbide"])
+            if printing:
+                print("\tSurfaceSpeedCarbide: ", m_ss_cbd)
+        if not found_machinining_prop:
+            print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
 
+        # >>>...TODO 2nd GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
+        #           eg mod this funtion to return materila obj to aid getting data for the adv calcs....
+        # ATM 2 more props:  ChipThicknessExponent, UnitCuttingForce
+        # BUT me want extend to 2x Arrays
+        #     1 VcToolMat & SurfaceSpeed
+        #     2 FzToolMat(no dup vars!!), fzIntercept, fzSlope <<<maybe 3x for polynomial(??)
+        #     & ToolMat LIST only
+        #     ++ all the advice/adj/.....
+        # ...so maybe just validate basics of mat here & return the obj for detailed checks, then grab data...
+        #     +++ all the inital plotting & curating & tweaking & ESP COMPARING...cf nsw code support script
+        return SurfaceSpeedCarbide, SurfaceSpeedHSS
+
+    else:
+        print(f"Material {mat_obj.name} does not support Machinability materials model")
+
+    return None, None
 
 def users_material_cfg_summary():
     # Examine Users Material settings & Directories.
