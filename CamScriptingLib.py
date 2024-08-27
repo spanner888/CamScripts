@@ -489,7 +489,7 @@ def users_material_cfg_summary():
     print("save_dir :", save_dir)
 
 
-def detailed_calcs(mat):
+def detailed_calcs(mat, print_machinability=False):
     # Both of github user: baehr pr's below are VERY informative & worth the read!
     # https://github.com/FreeCAD/FreeCAD/pull/15910
     # https://github.com/FreeCAD/FreeCAD/pull/16021
@@ -501,7 +501,8 @@ def detailed_calcs(mat):
 
     # FIXME need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
     # esp ToolRakeAngle, ToolHelixAngle
-    op = FreeCAD.ActiveDocument.getObject("Profile001")
+    doc = FreeCAD.ActiveDocument
+    op = doc.getObject("Profile001")
     # ToolDiameter = FreeCAD.Units.Quantity('3 mm')
     ToolDiameter = op.ToolController.Tool.Diameter
     # ToolNumberOfFlutes = 2
@@ -552,14 +553,12 @@ def detailed_calcs(mat):
     # ------------------------------------------------------------------
     # Now get data from Material - Machinability properties:
 
-    users_material_cfg_summary()
-
     print("material :", mat.Name)
     # print("Desc :", mat.Description)
-    print()
-    doc = FreeCAD.ActiveDocument
-    get_mat_machinability(doc, mat, printing=True)
-    print()
+    if print_machinability:
+        print()
+        get_mat_machinability(doc, mat, printing=True)
+        print()
 
     kc11 = FreeCAD.Units.Quantity(mat.PhysicalProperties['UnitCuttingForce'])
     h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
