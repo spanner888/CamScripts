@@ -16,6 +16,7 @@ import Path.Base.Util as PathUtil
 from PySide.QtCore import Qt
 import numpy as np
 
+from enum import Enum
 import collections
 import ast
 import csv
@@ -25,36 +26,6 @@ if False:
     Path.Log.trackModule(Path.Log.thisModule())
 else:
     Path.Log.setLevel(Path.Log.Level.INFO, Path.Log.thisModule())
-
-# TODO update ridiculous rules OR INPUT data?? to skip THREE shape/names all same.
-
-# FIXME FIXME 0: DO not get SYSTEM shapes from user dir!!!
-#                 DO still *also* get user shapes....
-#     IDEA - MOST likely best NOT to use....but just note idea fyi
-#     could copy sys shapes to a DIFF dir under user tools
-# +++ macro to open/recalc/save *all* SYSTEM macros
-#
-# FreeCAD.getHomePath()
-# '/home/spanner888/Documents/_source/_APPS/FC_wkly-38459/squashfs-root/usr/'
-# /Mod/CAM/Tools/Shape/endmill.fcstd
-#
-# If NO user Tool dir or any type esp shape...ignore
-
-# SO NOW: next steps from rename of: shape_names, all_shape_attrs
-#     ...to below.
-#     For every use of EITHER *old* var:
-#         rename *and* dup code or ADD module to process second set/both sets if module
-
-# ABOVE prob done - review
-# excwept ...now import ~4.5mins on lappy & ?? on z40
-# >>>>>>>can see for every         dia or tb?? that ALL SHAPES oepnig or at least ...pening recompute
-#   z400 ...what state are the sys AND users shapes in ??? resaved/muddled/?????
-# AND shape/line to small warnigns.....
-# as well as all the dup Tool NUmbers...
-# >>>>>>dolphin console says finished ...FC report ....40+secs to finish
-# could not scroll back to start to meadure z400 duration ...but as/longer!!!!
-# oops was callign this @#166 getAllShapeDetails() & at import!!!
-# FIXED ,,,now ~1 sec??
 
 
 ###################################################################
@@ -491,8 +462,6 @@ def processUserToolInput(tb_name_rules,
 # TODO #1-ish Let user define alt Tool-prop names &/or just select default alternatives, from ISO, Imperial....
 #       & let user edit/add more templates/sets....
 
-from enum import Enum
-import collections
 # Each rule item, must be one of these types.
 class PropType(Enum):
     rule_prop = 'rule_prop',
@@ -741,10 +710,7 @@ def load_data(dataFile, print_csv_file_names=False):
 # Init these when this Library imported,
 #   so only need to do slow-ish open/close shape files IN FreeCAD once!
 
-
-# s_names_User, all_shp_attr_User, s_names_Sys, all_shp_attr_Sys = getAllShapeDetails()
 avail_shape_details = getAllShapeDetails()
-# print(avail_shape_details)
 # print("imported 'CamTbAddLib' and loaded all user & systems Tool shape_names & properties")
 # print("at import found User shapes: ", avail_shape_details["user"])
 # print("at import found System shapes: ", avail_shape_details["system"])
