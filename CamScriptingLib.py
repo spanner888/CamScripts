@@ -404,19 +404,26 @@ def get_mat_machinability(doc, mat_obj, printing=False):
             print(toolMats, tool_mat_nr)
             print(toolMats, toolMats[tool_mat_nr])
 
+            # TODO can prob also address array cols by name!!!!
+
             # if mat_obj.hasPhysicalProperty('Vc2Column'):
-            if "Vc2Column" in props:
-                Vc = mat_obj.getPhysicalValue("Vc2Column")
+            if "Vc" in props:
+                Vc = mat_obj.getPhysicalValue("Vc")
                 print(Vc.Array, q(Vc.Array[tool_mat_nr][1]).getValueAs("mm/min"))
                 # Vc2Column.Columns
                 # Vc2Column.Rows
                 # Vc2Column.getRow(1)
 
             # if mat_obj.hasPhysicalProperty('Fz3Column'):
-            if "Fz3Column" in props:
-                Fz = mat_obj.getPhysicalValue("Fz3Column")
+            if "Fz" in props:
+                Fz = mat_obj.getPhysicalValue("Fz")
                 print(Fz.Array, Fz.Array[tool_mat_nr][1],
-                                Fz.Array[tool_mat_nr][2])
+                                Fz.Array[tool_mat_nr][2],
+                                Fz.Array[tool_mat_nr][3])
+            dias = [6,8,10,12,16,20]
+            for dia in dias:
+                fz = dia*dia*Fz.Array[tool_mat_nr][1] + dia*Fz.Array[tool_mat_nr][2] + Fz.Array[tool_mat_nr][3]
+                print(f"Pretend fz for {dia} dia tool :", fz)
 
         if "SurfaceSpeedHSS" in props:
             m_ss_hss = q(props["SurfaceSpeedHSS"]).UserString
@@ -452,9 +459,11 @@ def get_mat_machinability(doc, mat_obj, printing=False):
 
     return None, None
 
+
 def users_material_cfg_summary():
     # Examine Users Material settings & Directories.
     from materialtools.cardutils import get_material_preferred_directory, get_material_preferred_save_directory
+    from materialtools.cardutils import get_material_libraries
 
     mat_prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
     use_built_in_materials = mat_prefs.GetBool("UseBuiltInMaterials", True)
@@ -466,6 +475,11 @@ def users_material_cfg_summary():
     save_dir = get_material_preferred_save_directory()
     if mat_dir is None:
         mat_dir = FreeCAD.getResourceDir() + "Mod/Material"
+
+    print("Material Library summary:")
+    for k, v in get_material_libraries().items():
+        print(k, v)
+    print()
 
     print("use_built_in_materials {}".format(use_built_in_materials))
     print("use_mat_from_config_dir {}".format(use_mat_from_config_dir))
@@ -480,40 +494,6 @@ def detailed_calcs(mat):
     # https://github.com/FreeCAD/FreeCAD/pull/15910
     # https://github.com/FreeCAD/FreeCAD/pull/16021
     # code below is based examples from above PRs.
-    # ------------------------------------------------------------------
-    #Related files:
-        #Appearance/Wood.FCMat
-
-        #Machining/BalsaWood.FCMat
-        #Machining/HardWood.FCMat
-        #Machining/MDFWood.FCMat
-        #Machining/ParticleBoard.FCMat
-        #Machining/SoftWood.FCMat
-
-        #FIXME or wait for weekly release>>>>>  Standard/Wood/StandardWood.FCMat
-
-    # #??possible install these + model??? ...and the metal mat files???
-    # >>>so TRY ...do NOT add to sys/squashfs .... but user dir/s!!!!!!
-
-    # Working cfgs ie prefs as shown & files in dir shown ...always need reload FC:
-    #     19:26:02  use_built_in_materials True
-    #     19:26:02  use_mat_from_config_dir True
-    #     19:26:02  use_mat_from_custom_dir) True
-    #     19:26:02  use_mat_from_ext_wb_dir) True
-    #     19:26:02  mat_dir : /home/spanner888/.local/share/FreeCAD/CamScripts/materials-temp/
-
-    # 19:32:15  use_built_in_materials True
-    # 19:32:15  use_mat_from_config_dir True
-    # 19:32:15  use_mat_from_custom_dir) False
-    # 19:32:15  use_mat_from_ext_wb_dir) True
-    # 19:32:15  mat_dir : /home/spanner888/Documents/_APPS_lappy/FC_wkly-38495/squashfs-root/appd_mlappy_new/Material
-
-
-
-    # Do this first, so can have info if getting material fails.
-    # FIXME: works as sep macro, max recursion depth error here!!!
-    # ....well on first run here, now fine!!!
-    # users_material_cfg_summary()
 
     # ---------------------------------------------------------
     # PROPERTIES RETREIVED FROM specified Operation or TC-TB
@@ -530,6 +510,8 @@ def detailed_calcs(mat):
     # ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
     ap = op.StepDown
 
+    # TODO - supply/offer sensible default vaules if NOT set in tool
+    #           ...else change so Cutting Force & Torque are not calculated.
     ToolHelixAngle = op.ToolController.Tool.HelixAngle
     ToolRakeAngle = op.ToolController.Tool.RakeAngle
     # ToolHelixAngle = FreeCAD.Units.Quantity('15°')
@@ -550,13 +532,28 @@ def detailed_calcs(mat):
     # ..but that dist can be wider than tool dia...
     # Then there are offsets...
     ae = FreeCAD.Units.Quantity('3 mm') # width of cut (radial)
+    # ------------------------------------------------------------------
 
-    # Spindle max RPM = User/Machine Limit/Setting
+    # ------------------------------------------------------------------
+    # User/Machine Limit/Setting - also could include:
+    #   Min RPM or even a Torque curve to set min RPM at Load
+    #   Max Spindle Power
+    #   max Hor & Vert Feed rates
+
+    # Spindle max RPM
     n_max = FreeCAD.Units.Quantity("20000/min")
+
+    # OTHER user settings:
+    # +++ User will want adjust - eg tool wear...
+    #   Might be a global default, but really should be a PER TOOL, or for convience, per op/TC??
+    # machine efficiency
     # ------------------------------------------------------------------
 
     # ------------------------------------------------------------------
-    # Now get data from Material - Machinability proprerties:
+    # Now get data from Material - Machinability properties:
+
+    users_material_cfg_summary()
+
     print("material :", mat.Name)
     # print("Desc :", mat.Description)
     print()
@@ -583,7 +580,7 @@ def detailed_calcs(mat):
 
     D = ToolDiameter
 
-    phie = acos(1 - (2 * ae / D)) # engangement angle
+    phie = acos(1 - (2 * ae / D)) # engagement angle
 
     # TODO: honor chip-thinning: calculate fz from h_max (not h_mean!) when phi_e < 90°
     fz = ToolMaxChipLoad # feed per tooth
@@ -598,7 +595,7 @@ def detailed_calcs(mat):
              # 1.5 for dull tools that need to be replaced
 
         # 4 corrections in all:
-            # book/here
+            # book/heremachine efficiency:
             # Kver/Kw Tool wear 1 to 1.5
             # Kgamma symbol/Kg Correction factor rake angle
             #     Kg = 1 - (g - g0)/100
@@ -621,22 +618,21 @@ def detailed_calcs(mat):
             #     Parting off turning, plunge turning 1.3
 
 
-    # Complex lookups, even *nested lookups**,
+    # lots lookups, even *nested lookups**,
     #    depends on Tool D/Mat, Rake, Vc, Cutting/Manufact process....
-    # CAN BE broken into simpler steps as down throughout here
-    # 2 corrections ignored ATM
+    # CAN BE broken into simpler steps as done throughout here
+    # 2 corrections ignored (ie NOT used/applied) ATM
     # +++ User will want adjust - eg tool wear...
     # ++ INSERT style calculations and adv machining????
-    kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting force
+    kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting forcmachine efficiency:e
 
-    # ??extended calc?? for this with tool rotation angle ....for the vibration/force min/max/diag!!!
     Fcz = ap * hm * kc # cutting force per flute
 
     z = ToolNumberOfFlutes
 
-    ze = phie * z / (2*pi) # engaged flutes # <<<<< STUDY ...prob NOT in ref to vibration/force min/max/diag
+    ze = phie * z / (2*pi) # engaged flutes
 
-    Fc = Fcz * ze # cutting force	 	#<< max?? & not vary with angle.
+    Fc = Fcz * ze # cutting force
 
 
     n_set = vc_set / (pi * D) # spindle speed
@@ -670,6 +666,7 @@ def detailed_calcs(mat):
     print("vf ", vf.getValueAs("mm/min").toStr(0), "mm/min")
     vf.getValueAs("mm/min")
 
+    #TODO  add mrr=hFeed*ap*ae some users require
     #TODO return vals...
 
 
