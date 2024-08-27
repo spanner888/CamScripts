@@ -174,7 +174,7 @@ def find_shape_location(shape_name):
     if shape_name.endswith(".fcstd"):
         shape_name = shape_name[:-len(".fcstd")]
 
-    print(shape_name)
+    # print(shape_name)
     s_location = None
     s_dir = None
     if shape_name in avail_shape_details["user"]['shape_names']:
