@@ -7,96 +7,14 @@ reload(CamTbAddLib)
 from importlib import reload
 import naming_rules.ex_naming_rules as ex_rules
 reload(ex_rules)
+
 boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 
 # TODO script AND lib & rules versioning!!!!
-# FIXME FIXME SANITISE MY TOOL DATA - BRANDS, PURCHASE INFO FILE LOCATIONS, COMMENTS.....
-
-# --------------------------------------------------------
-#FC: ver below HAS attr fix...as shown
-    #OS: Debian GNU/Linux 11 (bullseye) (XFCE/xfce)
-    #Word size of FreeCAD: 64-bit
-    #Version: 0.22.0dev.38429 (Git)
-    #Build type: Release
-    #Branch: main
-    #Hash: 362cf1c80edb89957d81c0dbe6e50ce35daaa6db
-    #Python 3.11.9, Qt 5.15.13, Coin 4.0.2, Vtk 9.2.6, OCC 7.7.2
-    #Locale: English/Australia (en_AU)
-
-#class ToolBitFactory(object):
-    #def CreateFromAttrs(self, attrs, name="ToolBit", path=None):
-        #Path.Log.track(attrs, path)
-        #obj = Factory.Create(name, attrs["shape"], path)
-        #obj.Label = attrs["name"]
-        #params = attrs["parameter"]
-        #for prop in params:
-            #PathUtil.setProperty(obj, prop, params[prop])
-        #attributes = attrs["attribute"]
-        #for att in attributes:
-            #PathUtil.setProperty(obj, att, attributes[att])
-# --------------------------------------------------------
-
-
-
-# TODO look at importing WhitesideBitData.xlsx      csv => test2.csv
-# "read CSV tool bit descriptions and create FreeCad JSON tool bit files.
-# In the "test" directory you will find:
-#     WhitesideBitData.xlsx, Data provided by the Whiteside Machine Company https://www.whitesiderouterbits.com/
-#     test2.csv the data above formatted as a csv file
-# "https://github.com/ShamanTcler/FreeCadToolBitImport
-
 
 # FIXME stop duplicating Tool#s - change dia's or # rule or the base#....
 #   ...or just change the csv data!!!!!
-
-# How to cope with other bits:
-#     roughing
-#     slot drill
-#     T slot = slitting saw???
-#     PCB drills - v diff rpm/material ...just cutting props
-#     PCB corn cutters ...like roughing endmill...need to know, but just dif cutting props
-
-#     One view is still endmills, but WHEN selecting for Op AND get/calc SF need know diff....
-#         Name - cannot use as get overridden by rules!!
-#         Family/Part not really
-#         ...or suggest SpecialUse col/data <<<NEEDS CODE then to carry info/show - eg via rule into name
-#             OR just new shape name....and just copy equiv shape in tool lib???
-
-# TODO print FOUND shape_names & tell user if Tool importing/creating shape does not match exactly, including case, will be ignored.
-#   if no Diameter prop ...with a number val...tool ignored
-
-
-# slotdrill, pcbdrill, pcbcorncutters - IGNORED
-# have removed spaces, set names in csv AND file sys all lower case
-# cannot see other prop in prop bag so????
-# ...JUST LOOK at my code!!!
-
-# TEST tool material from import!!!!
-
-
-# File CSV format. comma seperated, no commas WITHIN a cell.
-# Default number format is Float.
-# Import data scrubbing converts empty string to float=0.0,
-#   except if data "Flute", converted to int=0.
-# Other than above, any text in number cell = error like:
-# ....<class 'ValueError'>: could not convert string to float: '6-10'
-# Where the last '6-10' shows the text where a float was expected.
-# So you may end up with Diameter=0.0 or Flutes=0.
-# Diameter=0.0 will usually show errors like one or both of:
-#   "Updating geometry: Error build geometry(11): Both points are equal"
-#   "Sketch001: Solving the sketch failed"
-# So 0 is better than incorrect value with no error/warning.
-# Every time script is run:
-#   ToolBit files will be created or overwrite existing files
-#   ToolBits will be added to the current Tool library.
-# so ...include my aldtready wrtten doc: re use empty test lib.
-# or even an entire test Tool dir with default tools/shapes.
-# + Unwanted TB files can be deleted
-# Shape names in the csv file AND in the FC Tools - Shape dir
-#   are case sensitive on Linux and must match exactly.
-
-# file1 = "cutting_tool_data/cuttingtools1.csv"
 
 # If want to test missing mandatory columns: 'shape', 'Diameter' <<must match case!
 # <class 'KeyError'>: ('shape',)
@@ -104,11 +22,15 @@ exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 #no_shape_col ,no_dia_col
 # file1 = "cutting_tool_data/no_dia_col.csv"
 
-# To test Rake_Helix_Angles for Speeds & Feeds from new materials machinabilty.
-# Not you need create (or copy example shapes in cutting_tool_data/) to your USER Tools/Shape dir.
-# Not recommend edit FreeCAD default shapes.
-file1 = "cutting_tool_data/Rake_Helix_Angles_TESTS.csv"
+# large test import file:
+#    Imports 70 Tools & adds to current CAM Tool Library,  Skips or failed to import 21
+file1 = "cutting_tool_data/cuttingtools1.csv"
 
+# To test Rake_Helix_Angles for Speeds & Feeds from new materials machinabilty.
+# Note: Requires TB shapes with the required properties.
+#       Copy example shapes in cutting_tool_data/ to your USER Tools/Shape dir.
+# It is *NOT* recommended to edit FreeCAD default shapes.
+# file1 = "cutting_tool_data/Rake_Helix_Angles_TESTS.csv"
 
 print()
 print("Importing : ", file1)
@@ -120,6 +42,7 @@ data_list = CamTbAddLib.load_data(file1)
 # alternate naming rules:
     # exagerated_rules_example
     # boboxx_rulesShape
+
 count_success = 0
 count_fail = 0
 for row_dict in data_list:
@@ -135,33 +58,3 @@ for row_dict in data_list:
 print()
 print("Imported {} Tool details & added to current library.".format(count_success))
 print("Skipped or failed to import {} rows in csv file.".format(count_fail))
-
-    # below works, BUT can only set shape, name, dia!!!
-    #CamTbAddLib.processUserToolInput(boboxx_rules,
-                                    #shape_name = data_dict['shape'],
-                                    #tb_base_name = data_dict['shape'],
-                                    #tb_base_nr = 20000,
-                                    #tb_nr_inc = 100,
-                                    #dia = data_dict['Diameter'],
-                                    #dia_max = 0,
-                                    #dia_inc = 0,
-                                    #dbg_print=True)
-    #>>>>>TODO TODO +++++ as part of this seperating tool_props from lib!!!
-    # ie tool/shape type => property set wich attempt to read...
-    # ID some mandatory for each type???
-    # If prop NOT mandatory then need default val <> 0 can't have 0 mm for Tool!!!
-    # TODO TODO TODO TODO create easy way USER create EACH default TB type
-    #   eg 1x py file/type????
-
-# TODO next is massage MANDATORY (how identify - a **v short** list?? {shape, name?, Diameter}) -> toolprops dict format
-# +++ user setting/dict/dongxi to REMAP csv col name to MANDATORY name....not req do for non-mandatory... BUT PROB GOOD IDEA TO ALLOW ie NOT restrict!!
-# ++add OTHER USER settigns & tag as that in toolprops
-# incldes way for user to specify what to add (anything else ignored)
-
-
-
-#hmmmm what if user wants import Tool RANGE(s) based on:
-    #dia, OAL, CL        ...prob NOT flutes = diff cutting data??
-                        #ditto diff material
-#ATM approach = define toolprops and create range as per main example code.
-#any use allowing import INLCUDING specify a VAR with range???
