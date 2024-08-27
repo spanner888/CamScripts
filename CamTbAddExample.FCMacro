@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# g & z4 error notes ...only in dev branch now!
-# TEST G!!!
-
-
 # LICENSE: LGPL-2.1
 # need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
 # YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
@@ -66,7 +62,7 @@ tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='any')
 boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 
-# ??Seven examples on adding a Default, One or a list of Tools to current Library,
+# Six examples on adding a Default, One or a list of Tools to current Library,
 # with differing naming rule examples.
 print("Examples 1 and 2 use a sample set of ToolBit naming rules.")
 print("Example 3 matches naming rules suggested by github user boboxx")
@@ -77,7 +73,6 @@ print()
 # -----------------------------------------------------------------------
 print("Example 1. Add single example default endmill to current Library.")
 CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
-# CamTbAddLib.processUserToolInput(ex_rules.exagerated_naming_rules)
 print("\t...Example 1 finished.\n")
 # -----------------------------------------------------------------------
 
