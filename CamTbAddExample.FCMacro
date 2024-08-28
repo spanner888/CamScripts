@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# LICENSE: LGPL-2.1
-# need specify Copyright?? eg:Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>
-# YES: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC4
-
+# Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
 
 # allow edited library updates, without close/reopen FC.
 import CamTbAddLib

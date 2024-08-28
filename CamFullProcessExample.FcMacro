@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# TODO licence/macro info
+# Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
+
+# TODO macro info
 
 # TEST code on current stable & doc in macro supported ver info
 

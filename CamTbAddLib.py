@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# TODO licence/macro info
+# Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
 
 import os
 import sys
@@ -452,16 +452,8 @@ def processUserToolInput(tb_name_rules,
 
     # FIXME review @least location of this "rule" & other TB name rules
 
+
 # --- Rules using Classes -----------------------------
-
-# TODO add helpers eg:
-#       show props in order & example of the rule based name
-#       alert if dup order#s
-#       alert if order >0, but no other props set
-#       dump all props that have val
-# TODO #1-ish Let user define alt Tool-prop names &/or just select default alternatives, from ISO, Imperial....
-#       & let user edit/add more templates/sets....
-
 # Each rule item, must be one of these types.
 class PropType(Enum):
     rule_prop = 'rule_prop',

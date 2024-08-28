@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
+
 import CamTbAddLib
 from importlib import reload
 reload(CamTbAddLib)
