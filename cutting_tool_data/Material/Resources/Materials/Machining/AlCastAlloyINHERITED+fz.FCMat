@@ -1,0 +1,27 @@
+﻿---
+# File created by FreeCAD 0.22.0 Revision: 38459 (Git)
+General:
+  UUID: "72814d63-f200-469b-9d99-5b6d9c526daa"
+  Name: "AlCastAlloyINHERITED+fz"
+  License: "All rights reserved"
+Inherits:
+  AluminumCastAlloy:
+    UUID: "048ba0ec-1fc4-4e3c-9710-bde305a1503f"
+Models:
+  MachinabilityFz:
+    UUID: '9d81fcb2-bf81-48e3-bb57-d45ecf380096'
+    Vc:
+      - [["0", "80.00 m/min"],
+        ["1", "120.00 m/min"],
+        ["2", "31.00 m/min"]]
+    # Fz Only row 0=HSS has real data ATM
+    Fz:
+      - [["0", "-0.00024088", "0.00965887", "-0.037093"],
+        ["1", "-0.00024088", "0.00965887", "-0.037093"],
+        ["2", "-0.00024088", "0.00965887", "-0.037093"]]
+    ToolMat:
+      - "HSS"
+      - "Carbide"
+      - "HSS coated"
+      - "Carbide coated"
+      - "Ceramic"

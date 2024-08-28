@@ -1,0 +1,6 @@
+Brand,Family,Model,shape,Diameter,ShankDiameter,CuttingEdgeHeight,LengthTotal,LengthType,Flutes,FluteShape,TipShape,RakeAngle,HelixAngle,material,Cuts Material,Notes,Order#,Date,Order-Line#,Desc,,Qty,Cost/ea,,qty on hand,LOCATION,stk_note
+br2,,,endmill,6.1,6,13,57,stubby,4,spiral,,25.7,13,HSS,,,216,,13,,,4,1.45,,4,3-2,
+br2,,,endmill,1.5,6,6,51,stubby,4,spiral,,25.8,13.1,HSS,Acrylic_ Al_ Steel,,216,,14, ,,1,1.52,HSS marking,1,3-1,
+b6,,,chamfer,4,4,,50,,4,straight,90,29.8000000000001,17.1,CBD,Al (&steel?),,313,,3,chamfering,,1,6.03,,1,1-6,
+b6,,,roughing_HRangles,6.2,6,15,50,,3,spiral,,29.9000000000001,17.2,CBD,Al (&steel?) HRC 60,,313,,4,ROUGHING,,2,8.38,,2,1-5,
+b6,,,roughing_HRangles,4.1,4,11,50,,3,spiral,,30.0000000000001,17.3,CBD,Al (&steel?) HRC 60,,313,,5,ROUGHING,,4,3.975,,3,1-5,1x broken
