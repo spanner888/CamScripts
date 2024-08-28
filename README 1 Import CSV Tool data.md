@@ -12,6 +12,15 @@ If want to test missing mandatory columns: 'shape', 'Diameter' <<must match case
 
 
 
+Shape files:
+
+Copy to for USer CAM Library Shape directory.
+
+For the import testXXX and also for the Full-materials XXXXX
+CamScripts/cutting_tool_data/Shape/roughing_HRangles.fcstd
+
+
+
 DOC: How to cope with other bits:
   ** SAME as default shapes, btu if want to highlight in TC-TB need for diff Op/cutting-settings
     **roughing
