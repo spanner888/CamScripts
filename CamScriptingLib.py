@@ -6,6 +6,7 @@
 import FreeCAD
 import Path
 import JobUtils
+import Path.Post.Utils as postutils
 from PySide import QtGui
 import webbrowser
 import sys, os
@@ -116,20 +117,14 @@ class job_props:
         self.hRapid = '0/60 mm/s'
         self.vRapid = '0/60 mm/s'
 
-    def wtf(self):
-        print("Hello  " + self.jobname)
-
 
 class tc_props:
     def __init__(self):
         self.bitName = "Please add YOUR tool Name!"    # Not a TC prop, but for TC.Tool.Name
-        self.lib_tool_nr = 1         # Not a TC prop, number of Tool in current Library
+        self.lib_tool_nr = 1            # Not a TC prop, number of Tool in current Library
         self.hfeed = '0 mm/min'
         self.vfeed = '0 mm/min'
         self.spindleSpeed = 0.0
-
-    def wtf(self):
-        print("Hello  " + self.bitName + " " + self.tool_nr)
 # -------------------------------------------------------------------
 
 
@@ -198,18 +193,13 @@ def _get_tool_by_filename(name):
     s_dir = None
     libraries = JobUtils._get_available_tool_library_paths()
     for libLoc, libFN, libFile in libraries:
-        #print(f"CS#166 {libLoc}, {libFN}, {libFile}")
         for toolNum, toolDict, bitPath in JobUtils._read_library(libFile):
-            #print("CS#169", toolNum, toolDict, bitPath)
             loc, fnlong = os.path.split(bitPath)
-            #print("CS#170")
             fn, ext = os.path.splitext(fnlong)
-            #print(f"CS#173 {fn}, {ext}, {name}<<name is 3rd val")
             if fn == name:
                 print()
                 s_name = toolDict['shape']
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
-                #print("CS#180 s_dir: ", s_dir)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict, name, s_dir)
                 if hasattr(toolBit, "ViewObject") and hasattr(
                     toolBit.ViewObject, "Visibility"
@@ -293,39 +283,32 @@ def addTc(job, tcProps, byNr=False):
     tc = None
     #print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
 
-    # try:
-    if byNr:
-        print("Add TC using tool#: '{}' and set h/v feeds & spindle speed."
-            .format(tcProps.lib_tool_nr))
-        # tc = JobUtils.add_toolcontroller_by_number(job, tcProps.lib_tool_nr)
-        tc = add_toolcontroller_by_number(job, tcProps.lib_tool_nr)
-    else:
-        if len(tcProps.bitName) < 1:
-            print("Please add a bitName to tcProps")
-            return
-        print("Add TC using toolname: '{}' and set h/v feeds & spindle speed."
-            .format(tcProps.bitName))
-        # Allowing for User shapes in User Tools/Shapes,
-        # must pass path to add_toolcontroller_by_filename ...then to FC Bit.ToolBitFactory.CreateFromAttrs
-        # ....so at least for testing need copy/mod JobUtils _get_tool_by_filename & add_toolcontroller_by_filename
-        # ????but was OK before helix/rake???? ...assume for now did not see issue...still need fix above
+    try:
+        if byNr:
+            print("Add TC using tool#: '{}' and set h/v feeds & spindle speed."
+                .format(tcProps.lib_tool_nr))
+            tc = add_toolcontroller_by_number(job, tcProps.lib_tool_nr)
+        else:
+            if len(tcProps.bitName) < 1:
+                print("Please add a bitName to tcProps")
+                return
+            print("Add TC using toolname: '{}' and set h/v feeds & spindle speed."
+                .format(tcProps.bitName))
 
-        # tc = JobUtils.add_toolcontroller_by_filename(job, tcProps.bitName)
-        tc = add_toolcontroller_by_filename(job, tcProps.bitName)
+            tc = add_toolcontroller_by_filename(job, tcProps.bitName)
 
-        tc.HorizFeed = tcProps.hfeed
-        tc.VertFeed = tcProps.vfeed
-        tc.SpindleSpeed = tcProps.spindleSpeed
-    # except:
-    #     print("\t*Could NOT find above tool. Please review above \
-    #         'Available tool files' list.", tc)
-    #     print("Exiting macro!")
-    #     sys.exit(1)
+            tc.HorizFeed = tcProps.hfeed
+            tc.VertFeed = tcProps.vfeed
+            tc.SpindleSpeed = tcProps.spindleSpeed
+    except:
+        print("\t*Could NOT find above tool. Please review above \
+            'Available tool files' list.", tc)
+        print("Exiting macro!")
+        sys.exit(1)
 
     return tc
 
 
-#   >>>KEEP<<<< ACTIVELY USED!!!
 # Retreive "Machinability" cutting data from
 # early WIP in the new Materials WorkBench.
 def get_mat_machinability(doc, mat_obj, printing=False):
@@ -367,7 +350,8 @@ def get_mat_machinability(doc, mat_obj, printing=False):
     # Test if this material supports Machinability model.
     tool_mat_nr = None
     if mat_obj.hasPhysicalModel(uuids.Machinability):
-        # FIXME FIXME ++ BIG NOTE: I have bodgied current Machinability model just appened my tests
+        # FIXME FIXME ++ BIG NOTE: I have bodgied current MY INSTALLED COPY
+        # of Machinability model just appended my tests - need work out Model Inheritance
         #     ***BUT same UUID and ONLY one material has new model props!!!!
         # fz.hasPhysicalProperty('ToolMat')
         # True
@@ -681,8 +665,12 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     #TODO return vals...
 
 
-def saveSanityreport(job, sanity_report):
+def saveSanityreport(job, sanity_report_name):
     print("Processing file outputs: Sanity Job common errors report & PostProcess Gcode")
+
+    fg = postutils.FilenameGenerator(job)
+    filepath = fg.qualified_path
+    sanity_report = filepath + os.path.sep + sanity_report_name
 
     # FreeCAD/src/Mod/CAM/Path/Main/Gui/SanityCmd.py
     sanity_checker = Path.Main.Sanity.Sanity.CAMSanity(job, sanity_report)
