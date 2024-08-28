@@ -119,14 +119,11 @@ See the github repo issues for latest information.
 
 # Release notes:
 
-* V0.1  2024-08-08:  Initial release
-    * Initial release, 2 scripts/macros with 3 libraries and support information.
-    * Scripting all features of FreeCAD CAM for a complete end to end process
-
-* V0.1  2024-08-16:
+* V0.1  2024-08-31:
             - Initial release
             - creates start to finish FreeCAD CAM process
             - demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
+            - Extended machinability with Fz in equation form
             - csv Tool import
             - scripted tool bit creation
 
