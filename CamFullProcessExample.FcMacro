@@ -90,8 +90,8 @@ sanity_report = '/home/spanner888/Documents/cam_sanity/sanity_auto.html'
 #   Example 1, 2 in CamTbAddExample.FCMacro                   <<<<<<<?????
 tcProps1 = CamScriptingLib.tc_props()
 
-# tcProps1.bitName = "28120.0_8.12D_0F_endmill"
-tcProps1.bitName = "3F_D4.1-L50.0_roughing_HRangles"
+tcProps1.bitName = "28120.0_8.12D_0F_endmill"
+# tcProps1.bitName = "3F_D4.1-L50.0_roughing_HRangles"
 # tcProps1.lib_tool_nr =        # Adding this TC by name, not number
 tcProps1.hfeed = '200 mm/min'
 tcProps1.vfeed = '100 mm/min'
@@ -103,8 +103,7 @@ tcProps1.spindleSpeed = 5000.0
 tcProps2 = CamScriptingLib.tc_props()
 
 tcProps2.bitName = ""
-# tcProps2.lib_tool_nr = 26350
-tcProps2.lib_tool_nr = 26200
+tcProps2.lib_tool_nr = 26350
 tcProps2.hfeed = '213 mm/min'
 tcProps2.vfeed = '123 mm/min'
 
@@ -188,9 +187,14 @@ if print_mat_cfg_summary:
   CamScriptingLib.users_material_cfg_summary()
 
 print()
-selected_material_alfz = materialManager.getMaterial('72814d63-f200-469b-9d99-5b6d9c526daa')
+# Example material needs to be installed in your User ro Custom Materials dir
+# and the extension of machinability materials mdoel also needs installing.
+# selected_material_alfz = materialManager.getMaterial('72814d63-f200-469b-9d99-5b6d9c526daa')
+
+
+#
 selected_material_al = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
-CamScriptingLib.detailed_calcs(selected_material_alfz, print_machinability)
+CamScriptingLib.detailed_calcs(selected_material_al, print_machinability)
 
 print()
 selected_material_hw = materialManager.getMaterial('ba2474ee-f62c-45f5-b388-823ea105847f')

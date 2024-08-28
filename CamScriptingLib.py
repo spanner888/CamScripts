@@ -495,10 +495,15 @@ def detailed_calcs(mat, print_machinability=False):
 
     # TODO - supply/offer sensible default vaules if NOT set in tool
     #           ...else change so Cutting Force & Torque are not calculated.
-    ToolHelixAngle = op.ToolController.Tool.HelixAngle
-    ToolRakeAngle = op.ToolController.Tool.RakeAngle
-    # ToolHelixAngle = FreeCAD.Units.Quantity('15°')
-    # ToolRakeAngle = FreeCAD.Units.Quantity('30°')
+    if "HelixAngle" in op.ToolController.PropertiesList:
+        ToolHelixAngle = op.ToolController.Tool.HelixAngle
+    else:
+        ToolHelixAngle = FreeCAD.Units.Quantity('15°')
+
+    if "RakeAngle" in op.ToolController.PropertiesList:
+        ToolRakeAngle = op.ToolController.Tool.RakeAngle
+    else:
+        ToolRakeAngle = FreeCAD.Units.Quantity('30°')
     # ---------------------------------------------------------
 
 
