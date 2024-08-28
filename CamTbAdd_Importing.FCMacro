@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
+# V0.1  2024-08-31
 
 import CamTbAddLib
 from importlib import reload
@@ -13,7 +14,9 @@ reload(ex_rules)
 boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 
-# TODO script AND lib & rules versioning!!!!
+# TODO check ALL files for external depends ---not from FC
+
+# TODO script AND lib & rules versioning!!!! KISS jsut KISS ++update readme release!!!!
 
 # FIXME stop duplicating Tool#s - change dia's or # rule or the base#....
 #   ...or just change the csv data!!!!!
