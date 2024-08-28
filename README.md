@@ -53,44 +53,58 @@ Easy install via single install....
 
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
-LINK 3x readme
-README 1 Import CSV Tool data.md
-README 2 Tool Bits Add Example.md
-README 3 Cam Full Process Example.md
+Note: the 3x readme below are still WIP
+![README 1 Import CSV Tool data](README 1 Import CSV Tool data.md)
+![README 2 Tool Bits Add Example](README 2 Tool Bits Add Example.md)
+![README 3 Cam Full Process Example](README 3 Cam Full Process Example.md)
 
 ## Background informatiion
 
 ### FreeCAD CAM Terminology:
+
 ToolBitLibrary: provides way to manage many libraries each with many Tools
-  all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
-  Each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
-Tool-Bit = a cutting tool, with defined Shape properties,
-      including a property for the underlying Tool-Shape file
-      & other Tool-bit Properties such as number of flutes.
-      The Tool-Bit shape is used in Operations and Simulators to
-      "cut" the stock material to desired shape & size.
-Tool-Shape file contains a sketch profile of cutting tool,
-  with default Paramatised shape dimensions,
-  that are updated from Tool-Bit properties.
-Job-ToolController has properties for Rapids, Feeds, Speed
-  and contains copy of the Tool-Bit used with all the specific sizes/properties.
+
+  - all organised/grouped as desired. eg Same TooBit can be in many Library-Tool-Tables.
+  - each Library contains Tool Tables with ROWS of: Tn/Tool/Shape.
+
+Tool-Bit = a cutting tool, with defined Shape properties:
+
+  - including a property for the underlying Tool-Shape file
+  - other Tool-bit Properties such as number of flutes.
+  - The Tool-Bit shape is used in Operations and Simulators to "cut" the stock material to desired shape & size.
+  - Tool-Shape file contains a sketch profile of cutting tool, with default Paramatised shape dimensions that are updated from Tool-Bit properties.
+
+Job-ToolController has properties for Rapids, Feeds, Speed and contains copy of the Tool-Bit and shape used with all the specific sizes/properties.
 
 ### Machinability & CAM Speeds and Feeds
 
 The early work using the new Materials Workbench to add a default group of "Machining" materials, includes 8 common metal and 5 wood(ish) materials, that have "Machinability" properties is demonstrated in the second script 'CamFullProcessExample.FcMacro' in "Example 5 CamScriptingLib: Job-Operation & TC props + Machinability data to calculate".
 
-Cutting settings such as ToolController Diameter and ap or StepDown are retreived from the CAM-Job and other cutting data sucn as Vc or SurfaceSpeed etc is retreived from the selected material.
+Cutting settings such as ToolController Diameter and ap or StepDown are retreived from the CAM-Job and other cutting data such as Vc or SurfaceSpeed etc is retrieved from the selected material.
 
-One property not yet retreived is ae or StepOver, as that is only available directly in some Operations, such as Pocket. In other Operations such as Profile this will require thought as to how this property should be managed.
+One property not yet retrieved is ae or StepOver, as that is only available directly in some Operations, such as Pocket. In other Operations such as Profile this will require thought as to how this property should be managed.
 
-Note this example above has extended both the Machinability model and materials and provided example updates to CAM default shapes to hold the required Tool properties. This part of the work is entirely my own ideas and included purely to aid design thinking and feedback to FreeCAD.
+If the ToolBit has Rake or Helix angle properties, then that data will be used instead of fixed defaults. This requires Tool shape files with those properties and the specific values. Some example files are included.
 
+Another property with only a fixed example value in the default Example 5 is fz, commonly known as chipload.
 
-Spindle RPM <<MORE UPDATE is calculated, by retreiving ToolController material type of HSS or Carbide and then retreiving the corresponding HSS or Carbide surfaceSpeed from the Material data of the Job-Stock, which would be inherited from the design object.
+Example output is shown below.
+```
+  ToolBit has no HelixAngle property, defaulting to 15°
+  ToolBit has no RakeAngle to property, defaulting 30°
+  material : AluminumWroughtAlloy
+  RPM  13534 RPM
+  electrical spindle power  0.942 kW
+  Mc cutting torque 0.56494 Nm
+  vf  1624 mm/min
+  mrr  516 mm^3/s
+```
 
-Note "ToolController material type" is an existing ToolController property and is not a "new Material", but maybe in future, [follow or join the design process]()
+Example 5 can also be extended with a different materials model, MachinabilityFz.yml, to store Vc and fz data. This model is more flexible , allowing users to simply add new Tools with different material and coatings and the detailed data, without require changes to the code.
 
-In future the ToolController material, might be set via a "new Material", depending on how we all decide to progress Speeds and Feeds.
+To use the extension to example 5, requires installing the above model and sample material. Example 5 also needs to be changed to use the AlCastAlloyINHERITED+fz material. Then the new data will be used to retrieve Vc and Fz and the vf, the horizontal feed calculation will be improved with tool-material specific data, instead of a current example fixed value.
+
+Note extended changes above change both the Machinability model and materials and provided example updates to CAM default shapes to hold the required Tool properties. This part of the work is entirely my own ideas and included purely to aid design thinking and feedback to FreeCAD.
 
 Note: The cutting machinability data and calculated RPM are real, usable values, but are not yet matched with background information on the expected machine capability and limitations. For example is the cutting machine:
 * a very rigid milling machine, with 20kW spindle @20,000 RPM (as seen in many tool catalogs)
@@ -112,13 +126,9 @@ These catalogs usually state that the data is "starting values" or some "maximum
 * Material forum in particular [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242)
 * JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecad.org/viewtopic.php?t=33328)
 
-The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by Russ..
-Excelent example code is provided in this library in the Test## functions.
-Those examples have been extended here with many aded features to give the full scripted end to end CAM process.
+The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by FreeCAD forum user russ4262. It demonstrates the work he did to further open the CAM workbench to scripting and provides excelent example code is provided in this library in the Test## functions. Those examples have been extended here with many aded features to give the full scripted end to end CAM process.
 
-??++ He also worked on CAM changes to make scripting have less user intervention to answer dialogs...???
-
-Path and Material developers and forum users including Russ, sliptonic, onekk, imm...
+Path and Material developers and forum users including russ4262, sliptonic, onekk, imm.
 
 
 ## Limitations, Feedback and Contributions
@@ -128,8 +138,13 @@ Version: 0.22.0dev.38553 (Git)
 
 Metal only FreeCAD version:
 
-SEVERAL ALREADY ABOVE ...just remove the section????
+???SEVERAL ALREADY ABOVE ...just remove the section????
+
 See the github repo issues for latest information.
+
+There are no checks while adding a ToolBit to the current Tool table to see if the ToolTable number or the Tool name already exist. Duplicates do occur with current test data and cause warning like:
+
+```Tool number 28120 already exists for Tool 3F_D8.12-L50.0_endmill.```
 
 
 ## Release notes:

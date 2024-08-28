@@ -190,6 +190,7 @@ if print_mat_cfg_summary:
 print()
 # Example material needs to be installed in your User or Custom Materials dir
 # and the extension of machinability materials model also needs installing.
+# AlCastAlloyINHERITED+fz
 # '72814d63-f200-469b-9d99-5b6d9c526daa' <<<FIXME generate PROPER UUID!!!!
 
 # If you see errors or exceptions from below, check FreeCAD preferences - Materials - Directories,
