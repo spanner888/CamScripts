@@ -428,6 +428,11 @@ def processUserToolInput(tb_name_rules,
     tool_props = deepcopy_toolprops(avail_shape_details[s_location]['attr'][shape_name])
     tool_props['parameter']['Diameter'] = dia
 
+    if 'Flutes' in tool_props['attribute']:
+        if int(tool_props['attribute']['Flutes']) < 1:
+            tool_props['attribute']['Flutes'] = 4
+            print("Defaulting ToolBit Flutes to 4, to avoid dangerous value.")
+    
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     library = PathToolBitLibraryGui.ToolBitLibrary()
     #workingdir = None

@@ -493,17 +493,17 @@ def detailed_calcs(mat, print_machinability=False):
     # ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
     ap = op.StepDown
 
-    # TODO - supply/offer sensible default vaules if NOT set in tool
-    #           ...else change so Cutting Force & Torque are not calculated.
     if "HelixAngle" in op.ToolController.PropertiesList:
         ToolHelixAngle = op.ToolController.Tool.HelixAngle
     else:
         ToolHelixAngle = FreeCAD.Units.Quantity('15°')
+        print("ToolBit has no HelixAngle property, defaulting to 15°")
 
     if "RakeAngle" in op.ToolController.PropertiesList:
         ToolRakeAngle = op.ToolController.Tool.RakeAngle
     else:
         ToolRakeAngle = FreeCAD.Units.Quantity('30°')
+        print("ToolBit has no RakeAngle to property, defaulting 30°")
     # ---------------------------------------------------------
 
 
@@ -615,6 +615,9 @@ def detailed_calcs(mat, print_machinability=False):
     Fcz = ap * hm * kc # cutting force per flute
 
     z = ToolNumberOfFlutes
+    if z == 0:
+        print("Warning Tool Bit Flutes = 0, this occurs if property not set in tool, or for Probes, which have not flutes.")
+        print("This means Power, force & Torque outputs will be zero.")
 
     ze = phie * z / (2*pi) # engaged flutes
 
@@ -650,9 +653,12 @@ def detailed_calcs(mat, print_machinability=False):
 
     vf = n * z * fz # feed rate
     print("vf ", vf.getValueAs("mm/min").toStr(0), "mm/min")
-    vf.getValueAs("mm/min")
+    # vf.getValueAs("mm/min")
 
-    #TODO  add mrr=hFeed*ap*ae some users require
+    mrr=vf*ap*ae
+    print("mrr ", mrr.toStr(0), "???mm/min")
+
+
     #TODO return vals...
 
 
