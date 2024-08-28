@@ -675,7 +675,7 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # vf.getValueAs("mm/min")
 
     mrr=vf*ap*ae
-    print("mrr ", mrr.toStr(0), "???mm/min")
+    print("mrr ", mrr.toStr(0))
 
 
     #TODO return vals...

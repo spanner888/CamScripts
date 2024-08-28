@@ -91,7 +91,7 @@ sanity_report = '/home/spanner888/Documents/cam_sanity/sanity_auto.html'
 #   Example 1, 2 in CamTbAddExample.FCMacro                   <<<<<<<?????
 tcProps1 = CamScriptingLib.tc_props()
 
-tcProps1.bitName = "28120.0_8.12D_0F_endmill"
+tcProps1.bitName = "28120.0_8.12D_3F_endmill"
 # tcProps1.bitName = "3F_D4.1-L50.0_roughing_HRangles"
 # tcProps1.lib_tool_nr =        # Adding this TC by name, not number
 tcProps1.hfeed = '200 mm/min'

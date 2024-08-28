@@ -395,6 +395,7 @@ def processUserToolInput(tb_name_rules,
                          dia=8.12,           # Odd size so less likely to clash with existing TB
                          dia_max=0,
                          dia_inc=0,
+                         flutes=3,
                          dbg_print=False
                         ):
     # if dbg_print:
@@ -426,12 +427,9 @@ def processUserToolInput(tb_name_rules,
 
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     tool_props = deepcopy_toolprops(avail_shape_details[s_location]['attr'][shape_name])
+    
     tool_props['parameter']['Diameter'] = dia
-
-    if 'Flutes' in tool_props['attribute']:
-        if int(tool_props['attribute']['Flutes']) < 1:
-            tool_props['attribute']['Flutes'] = 4
-            print("Defaulting ToolBit Flutes to 4, to avoid dangerous value.")
+    tool_props['attribute']['Flutes'] = flutes
     
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     library = PathToolBitLibraryGui.ToolBitLibrary()

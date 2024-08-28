@@ -84,7 +84,8 @@ CamTbAddLib.processUserToolInput(tb_class_naming_rules,
                                 tb_nr_inc = 100,
                                 dia = 6.35,
                                 dia_max = 0,
-                                dia_inc = 0)
+                                dia_inc = 0,
+                                flutes=4)
 print("\t...Example 2 finished.\n")
 # -----------------------------------------------------------------------
 
@@ -100,7 +101,8 @@ CamTbAddLib.processUserToolInput(boboxx_rulesShape,
                                 tb_nr_inc = 100,
                                 dia = 8.2,
                                 dia_max = 9.0,
-                                dia_inc = 0.2)
+                                dia_inc = 0.2,
+                                flutes=4)
 print("\t...Example 3 finished.\n")
 # -----------------------------------------------------------------------
 
@@ -122,7 +124,8 @@ for s in shape_names:
                                     tb_nr_inc = 100,
                                     dia = 3.125,
                                     dia_max = 3.5,
-                                    dia_inc = 0.125)
+                                    dia_inc = 0.125,
+                                    flutes=2)
 print("\t...Example 4 finished.\n")
 # -----------------------------------------------------------------------
 
