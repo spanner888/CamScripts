@@ -34,19 +34,29 @@ PostProcessed gcode and Sanity check report are also created and saved, but not 
 
 The cutting data is impressive due to it's coherence (for example data for different sections can be matched to related sections, which is a common failing in many data sets) and also because of the notes on adapting the parameters for many different cutting conditions.
 
-I hope this example inspires many to contribute to the design work, further data collection, curation, documentation .
+I hope this example inspires many to contribute to the design work, further data collection, curation and documentation.
+
+A proof of concept Machinability model that could allow users to add new Tool material and coating data, without requiring code changes to access and calculate Speeds and Feeds is also included.
 
 So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
 Example macro code is simplified by two supplied python libraries and one excellent JobUtils library from russ4262 and also includes sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
 
-## Documentation
+## Installing and using
 
 To get all features, requires very recent FC v.....some warnings or errors may occur if older version of FreeCAD is use.
 
+In addition features of the extended Machinability example for Vc and in particular Fz require a new material model and sample material with appropriate properites. ***TODO** where get/install
+
 Easy install via single install....
 
-?? Materials with late FC, BUT IF MY example MODS Tell user where/how/???
+
+Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
+
+LINK 3x readme
+README 1 Import CSV Tool data.md
+README 2 Tool Bits Add Example.md
+README 3 Cam Full Process Example.md
 
 ## Background informatiion
 
@@ -108,24 +118,30 @@ Those examples have been extended here with many aded features to give the full 
 
 ??++ He also worked on CAM changes to make scripting have less user intervention to answer dialogs...???
 
-Path and Material developers and forum users including Russ, onekk, imm...
+Path and Material developers and forum users including Russ, sliptonic, onekk, imm...
 
 
 ## Limitations, Feedback and Contributions
+
+Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is:
+Version: 0.22.0dev.38553 (Git)
+
+Metal only FreeCAD version:
 
 SEVERAL ALREADY ABOVE ...just remove the section????
 See the github repo issues for latest information.
 
 
-# Release notes:
+## Release notes:
 
 * V0.1  2024-08-31:
-            - Initial release
+            - Initial release, fully functional, but not yet fully polished.
             - creates start to finish FreeCAD CAM process
             - demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
             - Extended machinability with Fz in equation form
             - csv Tool import
             - scripted tool bit creation
+
 
 ## License
 

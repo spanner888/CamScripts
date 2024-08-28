@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.1  2024-08-31
+# V0.1  2024/08/31
 
 import os
 import sys

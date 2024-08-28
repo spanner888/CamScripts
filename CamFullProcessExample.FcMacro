@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
+# V0.1  2024/08/31
 
 # TODO macro info
 
-# TEST code on current stable & doc in macro supported ver info
+# TEST code on curr# V0.1  2024/08/31ent stable & doc in macro supported ver info
 
 # TODO TODO make sure create TBs required by: CamFullProcessExample.FcMacro!!!!!!!!
 #   make that a create ONCE only - so CHECK if exist first IN CURRENT LIB
