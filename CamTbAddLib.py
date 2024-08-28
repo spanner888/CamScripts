@@ -289,7 +289,6 @@ def deepcopy_toolprops(tp):
         if k == "parameter":
             tool_props_str += "'parameter': {"
             for k1, v1 in v.items():
-                #print(k1, v1 )
                 tool_props_str += "'" + k1 + "': '" + str(v1) + "', "
             tool_props_str += "}, "
         elif k == "attribute":
@@ -463,7 +462,6 @@ def processUserToolInput(tb_name_rules,
 
     # print("processUserToolInput...finished.\n")
 
-    # FIXME review @least location of this "rule" & other TB name rules
 
 
 # --- Rules using Classes -----------------------------
