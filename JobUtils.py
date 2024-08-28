@@ -145,20 +145,12 @@ def _get_tool_by_filename(name):
     """
 
     libraries = _get_available_tool_library_paths()
-    print(libraries)
-    print()
-    print()
+
     for libLoc, libFN, libFile in libraries:
-        print(f"#152 {libLoc}, {libFN}, {libFile}")
         for toolNum, toolDict, bitPath in _read_library(libFile):
             loc, fnlong = os.path.split(bitPath)
             fn, ext = os.path.splitext(fnlong)
-
-
-            print(f"#158 {fn}, {ext}, {name}<<name is 3rd val")
             if fn == name:
-                print()
-                print(toolDict)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict)
                 if hasattr(toolBit, "ViewObject") and hasattr(
                     toolBit.ViewObject, "Visibility"
