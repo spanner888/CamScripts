@@ -51,8 +51,8 @@ clear_console_pane = False
 
 # Optional information to print, set True if you get can't find material issues
 # Note you need very recent Weekly FreeCAD to include the Machinability materials
-print_mat_cfg_summary = True
-print_machinability = True
+print_mat_cfg_summary = False
+print_machinability = False
 
 # ---------------------------------------------------------
 # Create some JOB properties & default values to set
@@ -179,7 +179,7 @@ exampleNr = printExPrefix(exampleNr, prefix, ExampleDesc, topRow=True, bottomRow
 
 # Get the stock object of desired CAM-Job
 stk = doc.getObject("Stock")
-materialManager = Materials.MaterialManager()
+#materialManager = Materials.MaterialManager()
 
 # FIXME NEED GIVE ADVICE **AND** CHECK USER SETUP
 #     - PREFS
@@ -189,21 +189,19 @@ if print_mat_cfg_summary:
 
 print()
 # Example material needs to be installed in your User or Custom Materials dir
-# and the extension of machinability materials mdoel also needs installing.
-# selected_material_alfz = materialManager.getMaterial('72814d63-f200-469b-9d99-5b6d9c526daa')
+# and the extension of machinability materials model also needs installing.
+# '72814d63-f200-469b-9d99-5b6d9c526daa' <<<FIXME generate PROPER UUID!!!!
 
 # If you see errors or exceptions from below, check FreeCAD preferences - Materials - Directories,
 # as you may need to disable "Use Materials from external workbenches" & "user defined directory"
 # save prefs adn then restart FreeCAD.
 
 # AluminumWroughtAlloy
-selected_material_al = materialManager.getMaterial('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3')
-CamScriptingLib.detailed_calcs(selected_material_al, print_machinability)
+CamScriptingLib.detailed_calcs('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3', print_machinability)
 
 print()
 # HardWood
-selected_material_hw = materialManager.getMaterial('ba2474ee-f62c-45f5-b388-823ea105847f')
-CamScriptingLib.detailed_calcs(selected_material_hw)
+CamScriptingLib.detailed_calcs('ba2474ee-f62c-45f5-b388-823ea105847f')
 print()
 # ---------------------------------------------------------
 

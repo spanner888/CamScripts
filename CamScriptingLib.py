@@ -471,11 +471,30 @@ def users_material_cfg_summary():
     print("save_dir :", save_dir)
 
 
-def detailed_calcs(mat, print_machinability=False):
+def detailed_calcs(mat_uuid, print_machinability=False):
     # Both of github user: baehr pr's below are VERY informative & worth the read!
     # https://github.com/FreeCAD/FreeCAD/pull/15910
     # https://github.com/FreeCAD/FreeCAD/pull/16021
     # code below is based examples from above PRs.
+
+    modelManager = Materials.ModelManager()
+    materialManager = Materials.MaterialManager()
+    uuids = Materials.UUIDs()
+
+    if mat_uuid not in materialManager.materialsWithModelComplete(uuids.Machinability):
+        if mat_uuid in materialManager.materialsWithModel(uuids.Machinability):
+            print(f"Material, {uuids(mat_uuid)} does not have SOME properties for Machinability model")
+            print("\t will attempt to calculate Speeds and Feeds!")
+        else:
+            print(f"Material, {uuids(mat_uuid)} does not use Machinability model, skipping....")
+            return
+    try:
+        mat = materialManager.getMaterial(mat_uuid)
+    except LookupError:
+        print("Material mat_uuid not found, ignoring")
+        return
+        
+
 
     # ---------------------------------------------------------
     # PROPERTIES RETREIVED FROM specified Operation or TC-TB
