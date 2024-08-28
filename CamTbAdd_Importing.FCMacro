@@ -11,7 +11,7 @@ from importlib import reload
 import naming_rules.ex_naming_rules as ex_rules
 reload(ex_rules)
 
-# Teo different naming rules schemes
+# Two different naming rules schemes
 boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 
@@ -24,17 +24,8 @@ file1 = "cutting_tool_data/cuttingtools1.csv"
 print()
 print("Importing : ", file1)
 
-# Imports csv as LIST of dicts of each row, ie header row cells are dict Keys
-data_list = CamTbAddLib.load_data(file1)
-
-count_success = 0
-count_fail = 0
-for row_dict in data_list:
-    if CamTbAddLib.createToolFromProps(boboxx_rulesShape, row_dict, dbg_print=False):
-        count_success += 1
-    else:
-        count_fail += 1
+loaded, ignored = CamTbAddLib.importToolCsv(file1, boboxx_rulesShape, dbg_print=False)
 
 print()
-print("Imported {} Tool details & added to current library.".format(count_success))
-print("Skipped or failed to import {} rows in csv file.".format(count_fail))
+print("Imported {} Tool details & added to current library.".format(loaded))
+print("Skipped or failed to import {} rows in csv file.".format(ignored))

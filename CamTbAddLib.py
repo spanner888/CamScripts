@@ -22,6 +22,7 @@ import collections
 import ast
 import csv
 
+
 if False:
     Path.Log.setLevel(Path.Log.Level.DEBUG, Path.Log.thisModule())
     Path.Log.trackModule(Path.Log.thisModule())
@@ -53,7 +54,6 @@ def getAllShapeNamesFromDir(user=False):
         dir_msg = "System shapeDir: "
 
     s_names = getShapeNamesFromDir(shapeDir)
-    # print(dir_msg, shapeDir, s_names)
 
     return shapeDir, s_names
 
@@ -181,8 +181,6 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
-    # FIXME INTERIM usign BOTH old/new-class tb_name_rules
-    # print("tool_props:", tool_props)
     tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
     tool_props["name"] = tb_name
 
@@ -263,12 +261,23 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
         addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print)
 
 
-#TODO IMPORT at least csv
-def importToolCsv():
+def importToolCsv(csvfile, rules, dbg_print=False):
     # import expect need set EVERY tool data via
-    # NOPE see eampole file: addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False))
+    # NOPE see exampole file: addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False))
     # THEN set individ props, like #Flutes, shank dia, material........
-    pass
+
+    # Imports csv as LIST of dicts of each row, ie header row cells are dict Keys
+    data_list = load_data(csvfile)
+
+    count_success = 0
+    count_fail = 0
+    for row_dict in data_list:
+        if createToolFromProps(rules, row_dict, dbg_print=False):
+            count_success += 1
+        else:
+            count_fail += 1
+
+    return count_success, count_fail
 
 
 def deepcopy_toolprops(tp):
