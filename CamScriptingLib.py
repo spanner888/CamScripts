@@ -483,10 +483,10 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     if mat_uuid not in materialManager.materialsWithModelComplete(uuids.Machinability):
         if mat_uuid in materialManager.materialsWithModel(uuids.Machinability):
-            print(f"Material, {uuids(mat_uuid)} does not have SOME properties for Machinability model")
+            print(f"Material does not have SOME properties for Machinability model")
             print("\t will attempt to calculate Speeds and Feeds!")
         else:
-            print(f"Material, {uuids(mat_uuid)} does not use Machinability model, skipping....")
+            print(f"Material does not use Machinability model, skipping....")
             return
     try:
         mat = materialManager.getMaterial(mat_uuid)
