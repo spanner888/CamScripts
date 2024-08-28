@@ -22,40 +22,11 @@ reload(CamTbAddLib)
 # Rules "debug mode" pass in dbg_print=True and prnted to console are:
 #   toolprops and ordered list of rules WITH order >0.
 
-# TEST all empty combos of tb_XXXX, missing Dia...=default??
-# FIXME test for odd props like in vbits, ballend etc
-
-# FIXME stop duplicating Tool#s - change dia's or # rule or the base#....
-
-# TODO DOC:++ dup shapes AND all those (past) warnigns about need recompuite shapes...
-# 11:09:35  	Adding ToolBit Shape: probe, Dia: 3.375 mm Name: _23375.0_3.375D_337_probe_example
-# 11:09:35  Sketch: Solving the sketch failed
-
-#    so add default tb_naming_rules FOR EVERY FC DEFAULT SHAPE in the lib, ALL WITH ORDER#=0 <<< sep rules file!!!
-# TODO TODO really showcase TB sev Shape types & sev NAME RULES
-            ## maybe auto create with Range of Flutes....
-            ## ++bulk import
-
-# TODO: add ???My numbering & if NOT used @ beginnning, then NO leading seperator.
-
-
-#FIXME  so...make sure the full cam example can use created Tb AND CALC RPM!!!!
-#...need have TB name/# = expected!!!
-#CHANGE here or THERE
-#tcProps1.bitName = "880_em"
-#tcProps2.lib_tool_nr = 20840
-
-# TODO doc: dbg_print=True
-
-# TODO  import tools & bulk create tb & add to current library >>STARTED IN:CamTbAdd_TESTING.FCMacro
-# TODO  option to add TC-tb to JobX
-
 from importlib import reload
 import naming_rules.ex_naming_rules as ex_rules
 reload(ex_rules)
 
 # create a naming rules object with DESIRED rules
-# FIXME FIXME 1 - why "restrict" rules to ONE shape type, thus forcing user to duplciate rule clsses/sets???
 tb_class_naming_rules = ex_rules.Ex1Rules(shape_name='any')
 boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
