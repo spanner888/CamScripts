@@ -148,10 +148,6 @@ Path and Material developers and forum users including russ4262, sliptonic, onek
 Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is:
 Version: 0.22.0dev.38553 (Git)
 
-Metal only FreeCAD version:
-
-???SEVERAL ALREADY ABOVE ...just remove the section????
-
 See the github repo issues for latest information.
 
 There are no checks while adding a ToolBit to the current Tool table to see if the ToolTable number or the Tool name already exist. Duplicates do occur with current test data and cause warning like:
@@ -162,7 +158,7 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 ## Release notes:
 
 * V0.1  2024-08-31:
-            - Initial release, fully functional, but not yet fully polished.
+            - Initial release, fully functional, but not yet fully polished, no install process.
             - creates start to finish FreeCAD CAM process
             - demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
             - Extended machinability with Fz in equation form
