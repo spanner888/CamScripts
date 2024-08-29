@@ -1,3 +1,27 @@
+## CamScripts for FreeCAD CAM
+
+CamScripts offer a suite of tools to streamline and automate various tasks within FreeCAD's Computer-Aided Manufacturing (CAM) environment. Key features and benefits include:
+
+- Efficient Tool Management:
+
+    - Import tool data from CSV files to create FreeCAD Tool libraries.
+    - Use flexible naming rules and autonumbering for easy organization.
+    - Generate tool families based on specific criteria.
+
+- Process Automation:
+
+    - Create and recreate every step of the CAM process, from tool creation to G-code generation.
+    - Ensure consistent settings for feeds, postprocessors, and sanity checks.
+
+- Machinability Materials Integration:
+
+    - Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
+    - Showcase a valuable dataset for common materials and highlight areas for further development.
+
+Overall, CamScripts provide a valuable toolkit for FreeCAD users seeking to improve efficiency and consistency in their CAM workflows.
+
+
+
 ## About CamScripts
 
 CamScripts provide powerful ways to automate many FreeCAD CAM tasks:
