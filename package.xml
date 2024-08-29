@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
 
-  <name>CamScripts</name>
-
   <description>CamScripts macros create and configure *every* step of FreeCAD CAM process.</description>
 
   <version>2024.8.29</version>
@@ -13,8 +11,8 @@
 
   <license file="LICENSE">LGPL-2.1-or-later</license>
 
-  <url branch="main" type="repository">https://github.com/spanner888/CamScripts</url>
+  <url branch="main" type="repository">https://github.com/spanner888/CamScripts.git</url>
 
-  <url type="readme">https://github.com/spanner888/CamScripts/blob/main/README.md</url>
+  <url type="readme">https://github.com/spanner888/CamScripts.git/raw/main/README.md</url>
 
 </package>
