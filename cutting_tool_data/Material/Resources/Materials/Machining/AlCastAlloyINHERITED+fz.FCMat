@@ -1,15 +1,15 @@
 ﻿---
 # File created by FreeCAD 0.22.0 Revision: 38459 (Git)
 General:
-  UUID: "72814d63-f200-469b-9d99-5b6d9c526daa"
+  UUID: "5043f450-2158-4aa7-ba22-59f0db62e391"
   Name: "AlCastAlloyINHERITED+fz"
   License: "All rights reserved"
 Inherits:
   AluminumCastAlloy:
     UUID: "048ba0ec-1fc4-4e3c-9710-bde305a1503f"
 Models:
-  MachinabilityFz:
-    UUID: '9d81fcb2-bf81-48e3-bb57-d45ecf380096'
+  MachinabilityVcFzExtensions:
+    UUID: 'b3aab784-ee76-4072-94b9-e028e27264be'
     Vc:
       - [["0", "80.00 m/min"],
         ["1", "120.00 m/min"],

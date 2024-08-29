@@ -161,11 +161,11 @@ print()
 # Example material needs to be installed in your User or Custom Materials dir
 # and the extension of machinability materials model also needs installing.
 # AlCastAlloyINHERITED+fz
-# '72814d63-f200-469b-9d99-5b6d9c526daa'
+# '5043f450-2158-4aa7-ba22-59f0db62e391'
 
 # If you see errors or exceptions from below, check FreeCAD preferences - Materials - Directories,
 # as you may need to disable "Use Materials from external workbenches" & "user defined directory"
-# save prefs adn then restart FreeCAD.
+# save prefs and then restart FreeCAD.
 
 # AluminumWroughtAlloy
 CamScriptingLib.detailed_calcs('5528dd01-e009-4e88-8c71-d5e9bbe8f7f3', print_machinability)
