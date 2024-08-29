@@ -21,7 +21,7 @@
   <content>
     <library>
       <name>CamLibTbAdd</name>
-      <description>Library to create & add one or many ToolBits to current Library.</description>
+      <description>Library to create and add one or many ToolBits to current Library.</description>
       <file>CamLibTbAdd.py</file>
       <tag>CAM, Library, ToolBits, Bulk, Create</tag>
       <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
@@ -41,7 +41,7 @@
     </library>
     <macro>
       <name>CamLibTbAddExample</name>
-      <description>Example code to use CamLibTbAdd library to create & add one or many ToolBits to current Library.</description>
+      <description>Example code to use CamLibTbAdd library to create and add one or many ToolBits to current Library.</description>
       <tag>CAM, Library, ToolBits, Bulk, Create</tag>
       <file>CamLibTbAddExample.FcMacro</file>
       <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
