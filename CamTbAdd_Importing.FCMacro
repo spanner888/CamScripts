@@ -11,56 +11,21 @@ from importlib import reload
 import naming_rules.ex_naming_rules as ex_rules
 reload(ex_rules)
 
+# Two different naming rules schemes
 boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
 exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
-
-# TODO check ALL files for external depends ---not from FC
-
-# TODO script AND lib & rules versioning!!!! KISS jsut KISS ++update readme release!!!!
-
-# FIXME stop duplicating Tool#s - change dia's or # rule or the base#....
-#   ...or just change the csv data!!!!!
-
-# If want to test missing mandatory columns: 'shape', 'Diameter' <<must match case!
-# <class 'KeyError'>: ('shape',)
-#  Mandatory property 'Diameter' not found, ignoring this tool bit
-#no_shape_col ,no_dia_col
-# file1 = "cutting_tool_data/no_dia_col.csv"
 
 # large test import file:
 #    Imports 70 Tools & adds to current CAM Tool Library,  Skips or failed to import 21
 #       Will only import 57 & skip 34 if example user shapes not copied to Users Tools/Shapes
+# Other test files are in cutting_tool_data directory
 file1 = "cutting_tool_data/cuttingtools1.csv"
-
-# To test Rake_Helix_Angles for Speeds & Feeds from new materials machinabilty.
-# Note: Requires TB shapes with the required properties.
-#       Copy example shapes in cutting_tool_data/ to your USER Tools/Shape dir.
-# It is *NOT* recommended to edit FreeCAD default shapes.
-# file1 = "cutting_tool_data/Rake_Helix_Angles_TESTS.csv"
 
 print()
 print("Importing : ", file1)
-# TODO migrate below so ONE calls to importToolCsv(file1)
-data_dict = dict()
-# Imports csv as LIST of dicts of each row, ie header row cells are dict Keys
-data_list = CamTbAddLib.load_data(file1)
 
-# alternate naming rules:
-    # exagerated_rules_example
-    # boboxx_rulesShape
-
-count_success = 0
-count_fail = 0
-for row_dict in data_list:
-    # need id ALL desired FC props AND cater if missing!!!
-    # print(row_dict['shape'], row_dict['Diameter'], row_dict['ShankDiameter'], row_dict['name'])
-    # then use to create ONE TB....
-
-    if CamTbAddLib.createToolFromProps(boboxx_rulesShape, row_dict, dbg_print=False):
-        count_success += 1
-    else:
-        count_fail += 1
+loaded, ignored = CamTbAddLib.importToolCsv(file1, boboxx_rulesShape, dbg_print=False)
 
 print()
-print("Imported {} Tool details & added to current library.".format(count_success))
-print("Skipped or failed to import {} rows in csv file.".format(count_fail))
+print("Imported {} Tool details & added to current library.".format(loaded))
+print("Skipped or failed to import {} rows in csv file.".format(ignored))

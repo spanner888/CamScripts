@@ -14,9 +14,9 @@
 
   <license file="LICENSE">LGPL-2.1-or-later</license>
 
-  <url type="repository">(unknown remote)</url>
+  <url type="repository">https://github.com/spanner888/CamScripts</url>
 
-  <url type="readme">(unknown remote)/-/raw/master/README.md</url>
+  <url type="readme">https://github.com/spanner888/CamScripts/-/raw/master/README.md</url>
 
   <content>
     <library>
