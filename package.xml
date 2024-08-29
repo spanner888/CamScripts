@@ -9,55 +9,57 @@
 
   <date>2024-08-29</date>
 
+  <author email="spanner888@usabledevices.com">spanner888</author>
+
   <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
 
   <license file="LICENSE">LGPL-2.1-or-later</license>
 
   <url branch="main" type="repository">https://github.com/spanner888/CamScripts.git</url>
 
+  <url type="bugtracker">https://github.com/spanner888/CamScripts/issues</url>
+
   <url type="readme">https://github.com/spanner888/CamScripts.git/raw/main/README.md</url>
 
   <content>
-    <macro>
-      <name>CamTbAdd_Importing</name>
-      <description>Import CSV Tool data, create ToolBit files and add as Tools into current CAM Tool Library</description>
-      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
-      <file>CamTbAdd_Importing.FcMacro</file>
-      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
-    </macro>
-    <macro>
-      <name>CamLibTbAddExample</name>
-      <description>Example to create and add one or many ToolBits to current Library.</description>
-      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
-      <file>CamLibTbAddExample.FcMacro</file>
-      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
-    </macro>
-    <macro>
-      <name>CamFullProcessExample</name>
-      <description>All CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode and calculate Spindle RPM from Tool and Stock material properties.</description>
-      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
-      <tag>CAM, All, Job, Operations, Library, ToolControllers, ToolBits, Materials, Calculate, Speeds, Feeds, Sanity, Report, Gcode</tag>
-      <file>CamFullProcessExample.FcMacro</file>
-    </macro>
-    <library>
-      <name>CamLibTbAdd</name>
-      <description>Library to import Tool data, create ToolBits and add to current Library Tool Table.</description>
-      <file>CamLibTbAdd.py</file>
-      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
-      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
-    </library>
-    <library>
-      <name>CamScripting</name>
-      <description>Library to automate all CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode and calculate Spindle RPM from Tool and Stock material properties.  Many key properties are set to provide realistic FreeCAD Job and gcode.</description>
-      <maintainer email="spanner888@usabledevices.com">spanner888</maintainer>
-      <tag>CAM, Library, ToolBits, Bulk, Create</tag>
-      <file>CamScripting.py</file>
-    </library>
+    <workbench>
+      <name>TEST</name>
+      <description>Library to import Tool data, create ToolBits and add to current Library Tool Table.
+      Library to automate all CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode
+      and calculate Spindle RPM from Tool and Stock material properties.  
+      Many key properties are set to provide realistic FreeCAD Job and gcode.
+      All CAM steps to create a Job, Operations, ToolControllers, Sanity check report,
+      postprocessed gcode and calculate Speeds and Feeds from Tool and Stock material properties.
+      Additonal demonstration of Materials Machinability model to provide data for Speeds and Feeds,
+      including exploring of fz (chipload) tables.</description>
+      <tag>CAM</tag>
+      <tag>Import</tag>
+      <tag>CSV</tag>
+      <tag>Library</tag>
+      <tag>ToolBits</tag>
+      <tag>Job</tag>
+      <tag>Operations</tag>
+      <tag>Library</tag>
+      <tag>ToolControllers</tag>
+      <tag>Materials</tag>
+      <tag>Calculate</tag>
+      <tag>Speeds</tag>
+      <tag>Feeds</tag>
+      <tag>Sanity</tag>
+      <tag>Report</tag>
+      <tag>Gcode</tag>
+      
+      <classname>todo</classname>
+      <subdirectory>./</subdirectory>
+      <freecadmin>0.22.0</freecadmin>
+
+    </workbench>
+    
     <library>
       <name>JobUtils</name>
       <description>Path workbench utility functions to aid in job and tool controller scripting.</description>
-      <file>JobUtils.py</file>
       <maintainer email="russ4262@gmail.com">russ4262</maintainer>
+      <file>JobUtils.py</file>
     </library>
   </content>
 
