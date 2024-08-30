@@ -356,9 +356,10 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
             # if mat_obj.hasPhysicalProperty('Vc2Column'):
             if "Vc" in props:
                 Vc = mat_obj.getPhysicalValue("Vc")
-                vc_t_mat = q(Vc.Array[tool_mat_nr][1]).getValueAs("mm/min")
+                #vc_t_mat = q(Vc.Array[tool_mat_nr][1]).getValueAs("mm/min")
+                vc_t_mat = q(Vc.Array[tool_mat_nr][1])
                 print("Vc array data", Vc.Array)
-                print("Vc for Tool Mat:", tool_mat, " is: ", vc_t_mat, " mm/min")
+                print("Vc for Tool Mat:", tool_mat, " is: ", vc_t_mat, Vc.Array[tool_mat_nr][1])
                 # Vc2Column.Columns
                 # Vc2Column.Rows
                 # Vc2Column.getRow(1)
@@ -530,7 +531,6 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     mc = float(mat.PhysicalProperties['ChipThicknessExponent'])
 
     if vc_set is None:
-        # vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
         #vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
         vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedHSS'])
         # vc_set.getValueAs("m/min")
@@ -554,12 +554,8 @@ def detailed_calcs(mat_uuid, print_machinability=False):
         fz = ToolMaxChipLoad # feed per tooth
         print("Using default fz:", fz)
     
-    print()
-    print()
-    print()
     Sb = D * pi * (phie / (2*pi)) # chip arc length
     hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
-    print("fz :", fz, Sb, hm)
 
         # Book is Kver
     Kw = 1.2 # correction factor for tool wear:
@@ -597,10 +593,6 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # 2 corrections ignored (ie NOT used/applied) ATM
     # +++ User will want adjust - eg tool wear...
     # ++ INSERT style calculations and adv machining????
-
-    # why does below now need .Value - was OK before I started using the extended props!!!
-    print("kc11, hm, h0, mc", kc11, hm, h0, mc)
-    #kc = kc11.Value * (hm/h0)**-mc * Kg * Kw # specific cutting force machine efficiency:e
     kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting force machine efficiency:e
 
     Fcz = ap * hm * kc # cutting force per flute
@@ -613,9 +605,6 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     ze = phie * z / (2*pi) # engaged flutes
 
     Fc = Fcz * ze # cutting force
-    print()
-    print()
-    print("Fc, Fcz, ze, phie, z", Fc, Fcz, ze, phie, z)
 
     n_set = vc_set / (pi * D) # spindle speed
     n_set.getValueAs("1/min")
@@ -627,7 +616,6 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     n = min(n_set, n_max)
     n.getValueAs("1/min")
-    print("RPM ", n.getValueAs("1/min").toStr(0), 'RPM')
 
     vc = n * (pi * D)
     vc.getValueAs("m/min")
@@ -635,10 +623,6 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     Pc = Fc * vc # mechanical cutting power
 
     P = Pc / eff # electrical spindle power
-    
-    print("P, Pc, eff, Fc, n, vc", P, Pc, eff, Fc, n, vc)
-    print()
-    print()
     P.getValueAs("kW")
     print("electrical spindle power ", P.getValueAs("kW").toStr(3), "kW")
 
