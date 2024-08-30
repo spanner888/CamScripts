@@ -311,10 +311,7 @@ def addTc(job, tcProps, byNr=False):
 
 # Retreive "Machinability" cutting data from
 # early WIP in the new Materials WorkBench.
-def get_extended_machinability(doc, mat_obj, tool_dia, printing=False):
-    # Worked out below from Materials test code AND CAM-Sanity:
-    machinining_props = ["SurfaceSpeedCarbide", "SurfaceSpeedHSS"]
-
+def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False):
     # Only using MaterialManager ATM, others left for later...
     ModelManager = Materials.ModelManager()
     MaterialManager = Materials.MaterialManager()
@@ -322,19 +319,9 @@ def get_extended_machinability(doc, mat_obj, tool_dia, printing=False):
 
     q = FreeCAD.Units.Quantity
 
-    SurfaceSpeedCarbide = None
-    SurfaceSpeedHSS = None
-    # if hasattr(mat_obj, "ShapeMaterial"):
-        # if mat_obj.ShapeMaterial is not None:
-    # m_name = mat_obj.ShapeMaterial.Name
-    # if printing:
-    #     print("Material machining summary for object: {}, material: {}.".format(mat_obj.Name, m_name))
-
-    found_machinining_prop = False
     # props = mat_obj.ShapeMaterial.PhysicalProperties
     props = mat_obj.PhysicalProperties
-
-    print(props)
+    # print(props)
 
     print("mat inf: ", mat_obj.Directory,
                 mat_obj.LibraryName,
@@ -360,9 +347,9 @@ def get_extended_machinability(doc, mat_obj, tool_dia, printing=False):
 
         if "ToolMat" in props:
             toolMats = mat_obj.getPhysicalValue("ToolMat")
-            tool_mat_nr = toolMats.index("HSS")
+            tool_mat_nr = toolMats.index(tool_mat)
             # print(toolMats, tool_mat_nr)
-            print(toolMats, toolMats[tool_mat_nr])
+            # print(toolMats, toolMats[tool_mat_nr])
 
             # TODO can prob also address array cols by name!!!!
 
@@ -371,18 +358,18 @@ def get_extended_machinability(doc, mat_obj, tool_dia, printing=False):
                 Vc = mat_obj.getPhysicalValue("Vc")
                 vc_t_mat = q(Vc.Array[tool_mat_nr][1]).getValueAs("mm/min")
                 print("Vc array data", Vc.Array)
-                print("Vc for above Tool Mat", vc_t_mat)
+                print("Vc for Tool Mat:", tool_mat, " is: ", vc_t_mat, " mm/min")
                 # Vc2Column.Columns
                 # Vc2Column.Rows
                 # Vc2Column.getRow(1)
+                print()
 
             # if mat_obj.hasPhysicalProperty('Fz3Column'):
             if "Fz" in props:
                 Fz = mat_obj.getPhysicalValue("Fz")
-                print("Fz.Array", Fz.Array,
-                                  Fz.Array[tool_mat_nr][1],
-                                  Fz.Array[tool_mat_nr][2],
-                                  Fz.Array[tool_mat_nr][3])
+                print("Fz.Array data:")
+                for row in Fz.Array:
+                    print("\t", row)
 
                 d = tool_dia.Value
                 # FC Quantity rightly complains at tool_dia^2 + tool_dia
@@ -392,7 +379,8 @@ def get_extended_machinability(doc, mat_obj, tool_dia, printing=False):
                            Fz.Array[tool_mat_nr][2] * d +\
                            Fz.Array[tool_mat_nr][3]
 
-                print("Calculated Fz for above Tool Mat", fz_t_mat)
+                print("Calculated Fz for Tool Mat:", tool_mat, " is: ", fz_t_mat)
+                print()
 
             # Test to allow comparing with source data used
             # dias = [6,8,10,12,16,20]
@@ -474,6 +462,7 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     ToolDiameter = op.ToolController.Tool.Diameter
     # ToolNumberOfFlutes = 2
     ToolNumberOfFlutes = op.ToolController.Tool.Flutes
+    ToolMaterial = op.ToolController.Tool.Material
 
     # ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
     ap = op.StepDown
@@ -527,16 +516,21 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     print("material :", mat.Name)
     print()
-    ss, fz = get_extended_machinability(doc, mat, ToolDiameter, printing=print_machinability)
-    print("*TO DO*: use extended_machinability values", ss, fz)
+    vc_set, fz = get_extended_machinability(doc, mat,
+                                        ToolMaterial,
+                                        ToolDiameter,
+                                        printing=print_machinability)
+    print("*TO DO*: use extended_machinability values", vc_set, fz)
 
     kc11 = FreeCAD.Units.Quantity(mat.PhysicalProperties['UnitCuttingForce'])
     h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
     mc = float(mat.PhysicalProperties['ChipThicknessExponent'])
 
-    # vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
-    vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
-    # vc_set.getValueAs("m/min")
+    if vc_set is None:
+        # vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
+        vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
+        # vc_set.getValueAs("m/min")
+        print("Using SurfaceSpeedCarbide:", vc_set)
     # ------------------------------------------------------------------
 
     # project angle: https://math.stackexchange.com/questions/2207665/projecting-an-angle-from-one-plane-to-another-plane
@@ -552,7 +546,9 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     phie = acos(1 - (2 * ae / D)) # engagement angle
 
     # TODO: honor chip-thinning: calculate fz from h_max (not h_mean!) when phi_e < 90°
-    fz = ToolMaxChipLoad # feed per tooth
+    if fz is None:
+        fz = ToolMaxChipLoad # feed per tooth
+        print("Using default fz:", fz)
 
     Sb = D * pi * (phie / (2*pi)) # chip arc length
     hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
@@ -593,7 +589,10 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # 2 corrections ignored (ie NOT used/applied) ATM
     # +++ User will want adjust - eg tool wear...
     # ++ INSERT style calculations and adv machining????
-    kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting forcmachine efficiency:e
+
+    # why does below now need .Value - was OK before I started using the extended props!!!
+    print(kc11, hm, h0, mc)
+    kc = kc11.Value * (hm/h0)**-mc * Kg * Kw # specific cutting force machine efficiency:e
 
     Fcz = ap * hm * kc # cutting force per flute
 
