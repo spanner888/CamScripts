@@ -55,21 +55,21 @@ Model:
         Units: '1'
         URL: ''
         Description: "Index to tool Material list"
-      fzIntercept:
+      fzSquared:
         Type: 'Quantity'
-        Units: '1'
+        Units: '1/mm'
         URL: ''
-        Description: "Y axis intercept"
+        Description: "x^2 curve var, can be zero for linear equation"
       fzSlope:
         Type: 'Quantity'
         Units: '1'
         URL: ''
         Description: "x^1 curve var"
-      fzSquared:
+      fzIntercept:
         Type: 'Quantity'
-        Units: '1'
+        Units: 'mm'
         URL: ''
-        Description: "x^2 curve var, can be zero for linear equation"
+        Description: "Y axis intercept"
     URL: ''
     Description: >
       Fz parameters for each Tool material
