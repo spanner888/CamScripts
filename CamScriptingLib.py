@@ -378,7 +378,8 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
                 fz_t_mat = Fz.Array[tool_mat_nr][1] * d * d +\
                            Fz.Array[tool_mat_nr][2] * d +\
                            Fz.Array[tool_mat_nr][3]
-
+                
+                fz_t_mat = fz_t_mat * q("1 mm")
                 print("Calculated Fz for Tool Mat:", tool_mat, " is: ", fz_t_mat)
                 print()
 
@@ -508,7 +509,7 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # OTHER user settings:
     # +++ User will want adjust - eg tool wear...
     #   Might be a global default, but really should be a PER TOOL, or for convience, per op/TC??
-    # machine efficiency
+    eff = 0.85 # machine efficiency:
     # ------------------------------------------------------------------
 
     # ------------------------------------------------------------------
@@ -516,11 +517,13 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     print("material :", mat.Name)
     print()
+    
+    vc_set = None
+    fz = None
     vc_set, fz = get_extended_machinability(doc, mat,
                                         ToolMaterial,
                                         ToolDiameter,
                                         printing=print_machinability)
-    print("*TO DO*: use extended_machinability values", vc_set, fz)
 
     kc11 = FreeCAD.Units.Quantity(mat.PhysicalProperties['UnitCuttingForce'])
     h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
@@ -528,9 +531,10 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     if vc_set is None:
         # vc = FreeCAD.Units.Quantity(alu.PhysicalProperties['SurfaceSpeedCarbide'])
-        vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
+        #vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedCarbide'])
+        vc_set = FreeCAD.Units.Quantity(mat.PhysicalProperties['SurfaceSpeedHSS'])
         # vc_set.getValueAs("m/min")
-        print("Using SurfaceSpeedCarbide:", vc_set)
+        print("Using SurfaceSpeedHSS:", vc_set)
     # ------------------------------------------------------------------
 
     # project angle: https://math.stackexchange.com/questions/2207665/projecting-an-angle-from-one-plane-to-another-plane
@@ -549,9 +553,13 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     if fz is None:
         fz = ToolMaxChipLoad # feed per tooth
         print("Using default fz:", fz)
-
+    
+    print()
+    print()
+    print()
     Sb = D * pi * (phie / (2*pi)) # chip arc length
     hm = fz * (ae/Sb) * sin(kapr) # mean undeformed chip thickness using Cavalieri's principle
+    print("fz :", fz, Sb, hm)
 
         # Book is Kver
     Kw = 1.2 # correction factor for tool wear:
@@ -591,8 +599,9 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # ++ INSERT style calculations and adv machining????
 
     # why does below now need .Value - was OK before I started using the extended props!!!
-    print(kc11, hm, h0, mc)
-    kc = kc11.Value * (hm/h0)**-mc * Kg * Kw # specific cutting force machine efficiency:e
+    print("kc11, hm, h0, mc", kc11, hm, h0, mc)
+    #kc = kc11.Value * (hm/h0)**-mc * Kg * Kw # specific cutting force machine efficiency:e
+    kc = kc11 * (hm/h0)**-mc * Kg * Kw # specific cutting force machine efficiency:e
 
     Fcz = ap * hm * kc # cutting force per flute
 
@@ -604,7 +613,9 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     ze = phie * z / (2*pi) # engaged flutes
 
     Fc = Fcz * ze # cutting force
-
+    print()
+    print()
+    print("Fc, Fcz, ze, phie, z", Fc, Fcz, ze, phie, z)
 
     n_set = vc_set / (pi * D) # spindle speed
     n_set.getValueAs("1/min")
@@ -623,8 +634,11 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     Pc = Fc * vc # mechanical cutting power
 
-    eff = 0.85 # machine efficiency:
     P = Pc / eff # electrical spindle power
+    
+    print("P, Pc, eff, Fc, n, vc", P, Pc, eff, Fc, n, vc)
+    print()
+    print()
     P.getValueAs("kW")
     print("electrical spindle power ", P.getValueAs("kW").toStr(3), "kW")
 

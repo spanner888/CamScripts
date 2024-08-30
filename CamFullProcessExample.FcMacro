@@ -172,7 +172,7 @@ print()
 # Example material needs to be installed in your User or Custom Materials dir
 # and the extension of machinability materials model also needs installing.
 # AlCastAlloyINHERITED+fz
-# CamScriptingLib.detailed_calcs('5043f450-2158-4aa7-ba22-59f0db62e391')
+CamScriptingLib.detailed_calcs('5043f450-2158-4aa7-ba22-59f0db62e391')
 # ---------------------------------------------------------
 
 
