@@ -311,7 +311,7 @@ def addTc(job, tcProps, byNr=False):
 
 # Retreive "Machinability" cutting data from
 # early WIP in the new Materials WorkBench.
-def get_mat_machinability(doc, mat_obj, printing=False):
+def get_extended_machinability(doc, mat_obj, tool_dia, printing=False):
     # Worked out below from Materials test code AND CAM-Sanity:
     machinining_props = ["SurfaceSpeedCarbide", "SurfaceSpeedHSS"]
 
@@ -349,25 +349,19 @@ def get_mat_machinability(doc, mat_obj, printing=False):
 
     # Test if this material supports Machinability model.
     tool_mat_nr = None
+    vc_t_mat = None
+    fz_t_mat = None
     if mat_obj.hasPhysicalModel(uuids.Machinability):
-        # FIXME FIXME ++ BIG NOTE: I have bodgied current MY INSTALLED COPY
-        # of Machinability model just appended my tests - need work out Model Inheritance
-        #     ***BUT same UUID and ONLY one material has new model props!!!!
-        # fz.hasPhysicalProperty('ToolMat')
-        # True
-        # fz.hasPhysicalProperty('ToolMats')
-        # False
-        # BELOW has *two* dif wasy check if prop actually exists in the material
-        # if mat_obj.hasPhysicalProperty('ToolMat'):
-
-        # so if returned LISTS cointains uuid of curent material...not need for all the ifs & buts
-        # MaterialManager.materialsWithModelComplete("9d81fcb2-bf81-48e3-bb57-d45ecf380096")
-        # {'72814d63-f200-469b-9d99-5b6d9c526daa': <Material at 0x55def0347930>}
+        # FIXME FIXME ++ BIG NOTE:
+        # At present the extended Machinability model used here:
+        # does inherit FC Machinability model, but
+        # only if placed in sytem...Models dir.
+        # Have not yet wroked out Model inheritance from a user directory.
 
         if "ToolMat" in props:
             toolMats = mat_obj.getPhysicalValue("ToolMat")
             tool_mat_nr = toolMats.index("HSS")
-            print(toolMats, tool_mat_nr)
+            # print(toolMats, tool_mat_nr)
             print(toolMats, toolMats[tool_mat_nr])
 
             # TODO can prob also address array cols by name!!!!
@@ -375,7 +369,9 @@ def get_mat_machinability(doc, mat_obj, printing=False):
             # if mat_obj.hasPhysicalProperty('Vc2Column'):
             if "Vc" in props:
                 Vc = mat_obj.getPhysicalValue("Vc")
-                print(Vc.Array, q(Vc.Array[tool_mat_nr][1]).getValueAs("mm/min"))
+                vc_t_mat = q(Vc.Array[tool_mat_nr][1]).getValueAs("mm/min")
+                print("Vc array data", Vc.Array)
+                print("Vc for above Tool Mat", vc_t_mat)
                 # Vc2Column.Columns
                 # Vc2Column.Rows
                 # Vc2Column.getRow(1)
@@ -383,45 +379,31 @@ def get_mat_machinability(doc, mat_obj, printing=False):
             # if mat_obj.hasPhysicalProperty('Fz3Column'):
             if "Fz" in props:
                 Fz = mat_obj.getPhysicalValue("Fz")
-                print(Fz.Array, Fz.Array[tool_mat_nr][1],
-                                Fz.Array[tool_mat_nr][2],
-                                Fz.Array[tool_mat_nr][3])
-            dias = [6,8,10,12,16,20]
-            for dia in dias:
-                fz = dia*dia*Fz.Array[tool_mat_nr][1] + dia*Fz.Array[tool_mat_nr][2] + Fz.Array[tool_mat_nr][3]
-                print(f"Pretend fz for {dia} dia tool :", fz)
+                print("Fz.Array", Fz.Array,
+                                  Fz.Array[tool_mat_nr][1],
+                                  Fz.Array[tool_mat_nr][2],
+                                  Fz.Array[tool_mat_nr][3])
 
-        if "SurfaceSpeedHSS" in props:
-            m_ss_hss = q(props["SurfaceSpeedHSS"]).UserString
-            found_machinining_prop = True
-            SurfaceSpeedHSS = q(props["SurfaceSpeedHSS"])
-            if printing:
-                print("\tSurfaceSpeedHSS:     ", m_ss_hss)
+                d = tool_dia.Value
+                # FC Quantity rightly complains at tool_dia^2 + tool_dia
+                # as this is trying to add units m^2 to mm.
+                # For now just using value until sort out units below.
+                fz_t_mat = Fz.Array[tool_mat_nr][1] * d * d +\
+                           Fz.Array[tool_mat_nr][2] * d +\
+                           Fz.Array[tool_mat_nr][3]
 
-        if "SurfaceSpeedCarbide" in props:
-            m_ss_cbd = q(props["SurfaceSpeedCarbide"]).UserString
-            found_machinining_prop = True
-            SurfaceSpeedCarbide = q(props["SurfaceSpeedCarbide"])
-            if printing:
-                print("\tSurfaceSpeedCarbide: ", m_ss_cbd)
+                print("Calculated Fz for above Tool Mat", fz_t_mat)
 
-        if not found_machinining_prop:
-            print("Material '{}' has no machining properties in list:\n\t\t\t{}\n".format(mat_obj.ShapeMaterial.Name, machinining_props))
+            # Test to allow comparing with source data used
+            # dias = [6,8,10,12,16,20]
+            # for dia in dias:
+            #     fz = dia*dia*Fz.Array[tool_mat_nr][1] + dia*Fz.Array[tool_mat_nr][2] + Fz.Array[tool_mat_nr][3]
+            #     print(f"Pretend fz for {dia} dia tool :", fz)
 
-        # >>>...TODO 2nd GOAL = EXPLORING ATM CASUAL TO GET BETTER IDEA OF APPROACH!!!
-        #           eg mod this funtion to return materila obj to aid getting data for the adv calcs....
-        # ATM 2 more props:  ChipThicknessExponent, UnitCuttingForce
-        # BUT me want extend to 2x Arrays
-        #     1 VcToolMat & SurfaceSpeed
-        #     2 FzToolMat(no dup vars!!), fzIntercept, fzSlope <<<maybe 3x for polynomial(??)
-        #     & ToolMat LIST only
-        #     ++ all the advice/adj/.....
-        # ...so maybe just validate basics of mat here & return the obj for detailed checks, then grab data...
-        #     +++ all the inital plotting & curating & tweaking & ESP COMPARING...cf nsw code support script
-        return SurfaceSpeedCarbide, SurfaceSpeedHSS
+        return vc_t_mat, fz_t_mat
 
     else:
-        print(f"Material {mat_obj.name} does not support Machinability materials model")
+        print(f"Material {mat_obj.name} does not support *extended* Machinability materials model")
 
     return None, None
 
@@ -544,11 +526,9 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # Now get data from Material - Machinability properties:
 
     print("material :", mat.Name)
-    # print("Desc :", mat.Description)
-    if print_machinability:
-        print()
-        get_mat_machinability(doc, mat, printing=True)
-        print()
+    print()
+    ss, fz = get_extended_machinability(doc, mat, ToolDiameter, printing=print_machinability)
+    print("*TO DO*: use extended_machinability values", ss, fz)
 
     kc11 = FreeCAD.Units.Quantity(mat.PhysicalProperties['UnitCuttingForce'])
     h0 = FreeCAD.Units.Quantity('1 mm') # unit chip thickness, per definition 1mm for k_c1.1
