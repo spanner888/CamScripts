@@ -1,9 +1,18 @@
-CamLibTbAdd Library
+
+script = Menu name
+
+???corect file??CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
 
 
-CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
+Script will add ToolBits to the CURRENT CAM Library Tool Table.
+So make sure you have the desired Tool Table active BEFORE you run script.
+It is probably best to create a test Table so to avoid cluttering your existing data!
+
+
 
 CamTbAddExample has seven examples of creating ToolBits in code and using the above naming rules.
+
+DETAILS or explain code location.....
 
 
 Example 1. Add single example default endmill to current Library.
@@ -98,3 +107,4 @@ so sev sections WITH Example NUMBERING????
 19:43:19  --------------------------------------------------------------------------------
 ```
 
+Uses CamLibTbAdd Library....

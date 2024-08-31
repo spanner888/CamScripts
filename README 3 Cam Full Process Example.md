@@ -1,5 +1,14 @@
 CAM Full Process blurb - Script 3.....
-    ...
+
+script = Menu name
+
+Script relies on two existing tool bits being in ??any or current?? of your Tool Library/s??
+To create those....run menu ""
+Script does not add any ToolBits to your Tool Library.
+
+
+
+...
     The csv import is very flexible, thanks to @imm, but if you wish data to match default ToolBit properties,
     An auto numbering system is also an option.
         28120.0_8.12D_0F_endmill

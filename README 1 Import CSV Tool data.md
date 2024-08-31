@@ -1,4 +1,15 @@
 
+
+
+script = Menu name
+
+Script will add ToolBits to the CURRENT CAM Library Tool Table.
+So make sure you have the desired Tool Table active BEFORE you run script.
+It is probably best to create a test Table so to avoid cluttering your existing data!
+
+
+
+
 CamTbAdd_Importing provides bulk import very flexible csv data to create ToolBits and add to current library. Includes powerful naming rules as well as ability to auto-number both ToolBit name and number in the Tool Library. Note that the import macro is not considered an example, but is ready for use.
 
 
