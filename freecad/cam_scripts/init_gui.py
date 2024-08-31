@@ -10,7 +10,10 @@ import freecad.cam_scripts.CamTbAdd_Importing as ctba_import
 ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
 TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources/translations")
 
-# TODO tranlsations
+# TODO think about menu links to open installed DIR so user can read files.... (Dir as 3x scripts & 3xlibs = lotta file links)
+#   hmm DIR open = some file tool - rely on any-OS-default ...or just copy path to clipboard & tell user?
+
+# TODO translations - at least test works ...at THINK if should at extend to script messages...& libs???
 # credit ...BASED on FS addon for code
 __dir__ = os.path.dirname(__file__)
 iconPath = os.path.join( __dir__, 'Icons' )
@@ -19,7 +22,7 @@ iconPath = os.path.join( __dir__, 'Icons' )
 
 def dummyTODO():
     #TO morph info the file copies or 2x sep functions
-    ## below in menu/action creatrion &/or here??? test for file presence and either:
+    ## below in menu/action creation &/or here??? test for file presence and either:
     # & if present CHANGE menu to RE-INSTALL, not install...
     # & here...give msg?
     pass
