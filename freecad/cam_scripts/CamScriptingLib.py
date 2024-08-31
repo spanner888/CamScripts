@@ -5,7 +5,8 @@
 
 import FreeCAD
 import Path
-import JobUtils
+# import JobUtils
+import freecad.cam_scripts.JobUtils as JobUtils
 import Path.Post.Utils as postutils
 from PySide import QtGui
 import webbrowser
@@ -19,7 +20,8 @@ from math import degrees, radians, pi
 # remove this block if get JobUtils updated to find Shape dir
 # ...and five marked functions further down...
 import Path.Tool.Bit as Bit
-import CamTbAddLib
+# import CamTbAddLib
+import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
 
 if FreeCAD.GuiUp:
     import Path.Main.Gui.Job as JobGui
@@ -258,7 +260,6 @@ def add_toolcontroller_by_filename(job, name):
     Returns tool controller object.
     """
     tn, tool = _get_tool_by_filename(name)
-
     return _add_tool_to_job(job, tool)
 
 
@@ -281,8 +282,6 @@ def add_toolcontroller_by_number(job, number):
 # and also set user defined TC properties.
 def addTc(job, tcProps, byNr=False):
     tc = None
-    #print("Add TC....{}, {}, {}".format(tcProps.bitName, tcProps.lib_tool_nr, byNr))
-
     try:
         if byNr:
             print("Add TC using tool#: '{}' and set h/v feeds & spindle speed."
@@ -291,7 +290,8 @@ def addTc(job, tcProps, byNr=False):
         else:
             if len(tcProps.bitName) < 1:
                 print("Please add a bitName to tcProps")
-                return
+                return tc
+            
             print("Add TC using toolname: '{}' and set h/v feeds & spindle speed."
                 .format(tcProps.bitName))
 
@@ -301,10 +301,10 @@ def addTc(job, tcProps, byNr=False):
             tc.VertFeed = tcProps.vfeed
             tc.SpindleSpeed = tcProps.spindleSpeed
     except:
-        print("\t*Could NOT find above tool. Please review above \
-            'Available tool files' list.", tc)
-        print("Exiting macro!")
-        sys.exit(1)
+        print("\t***Could NOT find above tool. Please review above \
+'Available tool files' list.")
+        #print("Exiting macro!")
+        #sys.exit(1)
 
     return tc
 
@@ -655,7 +655,8 @@ def saveSanityreport(job, sanity_report_name):
 
     if html is None:
         print("Sanity check failed. No report generated.")
-        exit()
+        return
+        #exit()
 
     with open(sanity_report, "w") as fp:
             fp.write(html)

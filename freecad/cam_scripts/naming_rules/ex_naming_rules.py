@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import CamTbAddLib
+import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
 
 # Contains rules used to create ToolBit names, based on TB property values, seperators, Abbreviations
 # and an auto numbering based on:
