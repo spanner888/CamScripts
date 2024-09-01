@@ -3,9 +3,6 @@ import FreeCADGui as Gui
 import FreeCAD as App
 from PySide import QtGui
 from freecad.cam_scripts.translate_utils import translate
-import freecad.cam_scripts.CamFullProcessExample as cfp
-import freecad.cam_scripts.CamTbAddExample as ctba
-import freecad.cam_scripts.CamTbAdd_Importing as ctba_import
 
 ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
 TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources/translations")
@@ -19,6 +16,29 @@ __dir__ = os.path.dirname(__file__)
 iconPath = os.path.join( __dir__, 'Icons' )
 
 #init_complete = False
+
+import importlib
+class LazyLoader () :
+    'thin shell class to wrap modules.  load real module on first access and pass thru'
+
+    def __init__ (me, modname) :
+        me._modname  = modname
+        me._mod      = None
+   
+    def __getattr__ (me, attr) :
+        'import module on first attribute access'
+
+        if me._mod is None :
+            me._mod = importlib.import_module (me._modname)
+        
+        return getattr (me._mod, attr)
+    
+#import freecad.cam_scripts.CamFullProcessExample as cfp
+#import freecad.cam_scripts.CamTbAddExample as ctba
+#import freecad.cam_scripts.CamTbAdd_Importing as ctba_import
+cfp = LazyLoader('freecad.cam_scripts.CamFullProcessExample')
+ctba = LazyLoader('freecad.cam_scripts.CamTbAddExample')
+ctba_import = LazyLoader('freecad.cam_scripts.CamTbAdd_Importing')
 
 def dummyTODO():
     #TO morph info the file copies or 2x sep functions
@@ -47,7 +67,7 @@ def updateMenu(workbench):
         addon_tail = "Scripts"
         dressupMenuName = "Path Dressup"
         action_tool_tip =" automation scripts"
-        loaded_text = ' Addon loaded into :'
+        loaded_text = ' WB-addon GUI menus loaded into :'
         scripts = {1: {"name": "CSV Import", 
                        "tool_tip": "CSV bulk Import with naming rules", 
                        "action": ctba_import.tba_import},
@@ -87,7 +107,7 @@ def updateMenu(workbench):
             # create an action (becomes sub-menu) for this addon
             action = QtGui.QAction(addonMenu)
             action.setText(addon_dict["name"])
-            #action.setIcon(QtGui.QPixmap(getIcon('camscripts')))
+            action.setIcon(QtGui.QPixmap(getIcon('camscripts')))
             action.setStatusTip(addon_dict["tool_tip"])
 
             # TODO change to command

@@ -9,6 +9,7 @@ import sys
 from pathlib import Path as osPath
 
 import FreeCAD
+import FreeCADGui as Gui
 import Path
 import Path.Tool.Gui.BitLibrary as PathToolBitLibraryGui
 import Path.Base.PropertyBag as PathPropertyBag
@@ -22,6 +23,7 @@ import collections
 import ast
 import csv
 
+__version__ = "2024-09-01"
 
 if False:
     Path.Log.setLevel(Path.Log.Level.DEBUG, Path.Log.thisModule())
@@ -48,7 +50,7 @@ def getAllShapeNamesFromDir(user=False):
         shapeDir = workingdir + s_dir_name
         dir_msg = "User shapeDir: "
     else:
-        if "PathWorkbench" in FreeCADGui.listWorkbenches():
+        if "PathWorkbench" in Gui.listWorkbenches():
             homep_to_shapes = "Mod/Path/Tools/Shape/"
         else:
             # assuming must be CAMWorkbench, becuse no other option!!!
@@ -726,3 +728,5 @@ avail_shape_details = getAllShapeDetails()
 # print()
 
 q = FreeCAD.Units.Quantity
+
+print(f"CamTbAddLib (CAM ToolBit Add Library) {__version__} module imported")
