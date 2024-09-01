@@ -55,9 +55,25 @@ Example macro code is simplified by two supplied python libraries and one excell
 
 ## Installing and using
 
-To get all features, requires very recent FC v.....some warnings or errors may occur if older version of FreeCAD is use.
+CamScripts can be installed using the FreeCAD Addon Manager. LINK HOW>
 
-Macros Easy install via single install....
+It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
+
+The menu "CamScripts" is added the CAM Workbench and each feature is available from a sub-menu.
+
+???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
+
+A very recent development version of 22.0dev is currently required. Dates and features added on that date are listed below:
+
+2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981
+2024-08-18  metal cards with machining model  commit 70bb45430d30cb61d08ac0e7291d1b9a0e931a48
+2024-07-9   Machining model and materials     revision 38314
+2024-02     CSV Import may work 2024-02 with  revision 32821, but this is untested.
+
+This limitation is due to the extent lot of changes in FreeCAD migrating Path to CAM and many fixes and enhancements, in the since late 2023.
+
+In addition the new Materials Workbench is undergoing extensive development and has been progressively enhanced during the second quarter 2024.
+
 
 In addition features of the extended Machinability example for Vc and in particular Fz require a new material model and sample material with appropriate properites.
 
