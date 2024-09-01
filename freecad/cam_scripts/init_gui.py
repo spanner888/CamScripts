@@ -35,8 +35,11 @@ def updateMenu(workbench):
     wb_name = ""
     if workbench == 'PathWorkbench':
         wb_name = "Path"
-    if workbench == 'CAMWorkbench':
+    elif workbench == 'CAMWorkbench':
         wb_name = "CAM"
+    else:
+        return
+
     if len(wb_name) > 0:
         # above & below translate ...includes WB name ie 'CAMWorkbench'???
         addonMenu = None
