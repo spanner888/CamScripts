@@ -32,10 +32,14 @@ def getIcon(iconName):
 
 
 def updateMenu(workbench):
+    wb_name = ""
+    if workbench == 'PathWorkbench':
+        wb_name = "Path"
     if workbench == 'CAMWorkbench':
+        wb_name = "CAM"
+    if len(wb_name) > 0:
         # above & below translate ...includes WB name ie 'CAMWorkbench'???
         addonMenu = None
-        wb_name = "CAM"
         wb_tail = "Workbench"
         addon_tail = "Scripts"
         dressupMenuName = "Path Dressup"

@@ -48,11 +48,17 @@ def getAllShapeNamesFromDir(user=False):
         shapeDir = workingdir + s_dir_name
         dir_msg = "User shapeDir: "
     else:
-        homep_to_shapes = "Mod/CAM/Tools/Shape/"
+        if "PathWorkbench" in FreeCADGui.listWorkbenches():
+            homep_to_shapes = "Mod/Path/Tools/Shape/"
+        else:
+            # assuming must be CAMWorkbench, becuse no other option!!!
+            homep_to_shapes = "Mod/CAM/Tools/Shape/"
+
         shapeDir = FreeCAD.getHomePath() + homep_to_shapes
         shapeDir = shapeDir.replace("/", os.path.sep)
         dir_msg = "System shapeDir: "
 
+    print(f"Using {dir_msg}: {shapeDir}")
     s_names = getShapeNamesFromDir(shapeDir)
 
     return shapeDir, s_names
