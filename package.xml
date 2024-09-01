@@ -5,9 +5,7 @@
 
   <description>CamScripts macros create and configure *every* step of FreeCAD CAM process.</description>
 
-  <version>2024.8.29</version>
-
-  <date>2024-08-29</date>
+  <version>v0.0.2 2024.9.01</version>
 
   <author email="spanner888@usabledevices.com">spanner888</author>
 
