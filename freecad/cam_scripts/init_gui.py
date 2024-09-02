@@ -53,6 +53,7 @@ def getIcon(iconName):
 
 def updateMenu(workbench):
     wb_name = ""
+    # WB names not translated: https://forum.freecad.org/viewtopic.php?t=90237&sid=5e5774ab5aa5813fc764fc360061d7c5
     if workbench == 'PathWorkbench':
         wb_name = "Path"
     elif workbench == 'CAMWorkbench':
@@ -61,7 +62,7 @@ def updateMenu(workbench):
         return
 
     if len(wb_name) > 0:
-        # above & below translate ...includes WB name ie 'CAMWorkbench'???
+        # TODO setup to translate below.
         addonMenu = None
         wb_tail = "Workbench"
         addon_tail = "Scripts"

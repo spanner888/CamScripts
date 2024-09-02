@@ -1,6 +1,7 @@
 CAM Full Process blurb - Script 3.....
 
-script = Menu name
+script Menu name
+
 
 Script relies on two existing tool bits being in ??any or current?? of your Tool Library/s??
 To create those....run menu ""
@@ -8,16 +9,12 @@ Script does not add any ToolBits to your Tool Library.
 
 
 
-...
-    The csv import is very flexible, thanks to @imm, but if you wish data to match default ToolBit properties,
-    An auto numbering system is also an option.
-        28120.0_8.12D_0F_endmill
-    then the column names must match exactly.
-    At present, empty cells are forced to number zero, and some data erros are handled, but not all.
-    If Tool shapenames do not match any of those in your User tool Shape directory,
-    a message will inform you of it being ignored.
-    Also at present things like duplicate Library Tool Numbers, or duplicate Tool  names, or empty names (se example 7)
-    are also ignored as they cause no error, and all these scripts were mainly written for my own use.
+Materials Machinability data.
+    FC now includes...
+
+    Fz data from an older version of Tabellen.... is included in [mat file]() for Tool Materials HSS and Carbide, but only for the single Material Al.......
+    This data has been limited due to differences through the data set to those in the above reference  2022 version.
+
 
 Supported by 2 libraries of mine and Russ JobUtils
 Details are provided in linked readmes and within the example scripts.
@@ -26,7 +23,7 @@ WARNING about using a Test lib!!!!
 Scripts are very highly capable and tested, but there are limitations,
 including your need to configure settings, naming rules and especially for #3 NAME, change the examples.
 Limitations and minor bugs are documented ?????
-Discussion can occur in forum thread [LINK] and pull requests, bugs, issues, via this GITHUBREPO
+Discussion can occur in forum thread [LINK]() and pull requests, bugs, issues, via this GITHUBREPO
 
 Execution speed is reasonable, it can create & add several ToolBits per second, on old hardware.
 Once I accidently created and 1600 Toolbits to a Library.
@@ -117,7 +114,7 @@ Manual - wiki link
 
 A very recent development version of FreeCAD to run the Machionability RPM example for example FreeCAD revision 38314 or later.
 
-If not, then Stable Version: 0.21.2.33771 (Git) works for the Creation of Job, Operations and TC, but not the Machionability RPM example.
+If not, then Stable Version: 0.21.2.33771 (Git) works for the Creation of Job, Operations and TC, but not the Machinability RPM example.
 
 2. Set FreeCAD macro directory.
 
@@ -173,7 +170,7 @@ Also if you you remove features, be aware that later code might be dependant upo
 2. add/remove calls to create TB, or add Operation to Job etc.
 3. ...tailor libraries...
 
-related FreeCAD CAM Terminology: ??just brief sentence& link?? [Machinability & RPM]
+related FreeCAD CAM Terminology: ??just brief sentence& link?? [Machinability & RPM]()
 .......
 
 ## Example output
@@ -190,7 +187,7 @@ related FreeCAD CAM Terminology: ??just brief sentence& link?? [Machinability & 
 19:38:25  Adding ToolBit Shape: endmill Name: 20635em, #20635.0, Dia: 6.35 mm
 19:38:25  ...finished.
 19:38:25
-19:38:25  ToolBit diameters to be created:  [8.2 8.4 8.6 8.8 9. ]
+19:38:25  ToolBit diameters to be created:  [8.2 8.4 8.6 8.8 9. ]()
 19:38:25  Adding ToolBit Shape: endmill Name: 820_em, #20820, Dia: 8.2 mm
 19:38:25  Adding ToolBit Shape: endmill Name: 840_em, #20840, Dia: 8.4 mm
 19:38:25  Adding ToolBit Shape: endmill Name: 860_em, #20860, Dia: 8.6 mm
