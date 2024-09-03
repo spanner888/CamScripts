@@ -40,12 +40,100 @@ cfp = LazyLoader('freecad.cam_scripts.CamFullProcessExample')
 ctba = LazyLoader('freecad.cam_scripts.CamTbAddExample')
 ctba_import = LazyLoader('freecad.cam_scripts.CamTbAdd_Importing')
 
-def dummyTODO():
+
+import os, platform, subprocess
+from pathlib import Path as osPath
+
+def running_under_windows() -> bool:
+    return os.name in ['nt', 'ce']
+
+
+def running_under_macos() -> bool:
+    return "darwin" in platform.system().casefold()
+
+# FIXME??? not working or used ditto 3xplatform functions above???
+def display_folder_in_fm(which_directory: osPath) -> None:
+    #assert isinstance(which_directory, osPath), "ERROR: Passed a non-Path to display_folder_in_wm()!"
+    #assert which_directory.is_dir(), "ERROR! Passed a non-directory to display_folder_in_wm()!"
+
+    if running_under_windows():
+        os.startfile(os.path.normpath(which_directory))
+    elif running_under_macos():
+        subprocess.run(['open', str(which_directory)])
+    else:
+        # assume Linux or other POSIX-like
+        res = subprocess.run(['xdg-open', str(which_directory)])
+        #res = subprocess.run(['open', str(which_directory)])
+        print(res)
+
+def display_readme(readme_name=""):
+    if readme_name == "":
+        readme_name = "REAMDME.md"
+
+    git_repo_url = "https://github.com/spanner888/CamScripts/"
+    
+    mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
+    print(mod_dir)
+    
+    #just list file names or txt file, or just display txt ...
+    #open readmes????? <<<use weblink to github ...FF not understand markdown & nobody has MD viewer!!!
+    #**works on z4: subprocess.run(['open', 'https://github.com/spanner888/CamScripts/blob/main/README.md'], check=True)
+    #README 1 Import CSV Tool data.md
+    #README 2 Tool Bits Add Example.md
+    #README 3 Cam Full Process Example.md
+
+    #++link to issues
+    #wiki??? https://github.com/spanner888/CamScripts/wiki
+
+    git_repo_url = "https://github.com/spanner888/CamScripts/tree/main/"
+    subprocess.run(['open', git_repo_url + readme_name])
+    #>>> subprocess.run(['open', git_repo_url + 'README2.md'], check=True)
+    #for git branch: subprocess.run(['open', 'https://github.com/spanner888/CamScripts/tree/morph-into-addon/README.md'], check=True)
+
+    #but G: ie sanity issue!!!
+
+    #so next is FILE COPIES => look at CAM checkworking directory!!! should be crossplatform
+
+        #at least till get confidence dump lotsa ENV info about CURENT CAM Lib & materials prefs & dirs
+
+        #find CURRENT Lib - tool/shape dir
+        #find user mat dir, or crete temp custom...
+        #& still ??? is Model
+    
+    # This entire function + support funcs ...poss in a COMMADN mod instead of leaving in init_gui???
+    # if can easliy get comamdns working
+    
+    # mmmmm works on gpc which won't open sanity & vice versa!!!
+    # display_folder_in_fm(mod_dir)
+    # os.startfile(mod_dir)
     #TO morph info the file copies or 2x sep functions
     ## below in menu/action creation &/or here??? test for file presence and either:
     # & if present CHANGE menu to RE-INSTALL, not install...
     # & here...give msg?
-    pass
+    # pass
+
+
+def display_info():
+    import Path.Preferences as p_pref
+    workingdir = os.path.dirname(p_pref.lastPathToolLibrary())
+    s_dir_name = os.path.sep + "Shape" + os.path.sep
+    print()
+    print("User Tool Shape folder location: ", workingdir + s_dir_name)
+    print()
+
+    from freecad.cam_scripts.CamScriptingLib\
+        import users_material_cfg_summary as users_mat_cfg_summary
+    users_mat_cfg_summary()
+
+    print()
+    script_dir = osPath(App.getUserAppDataDir() + '/Mod/CamScripts/freecad/cam_scripts/')
+    print(script_dir)
+    print("Script support data in folders: '/cutting_tool_data' and '/naming_rules'")
+
+
+def copy_files():
+    print("copy files = TODO")
+
 
 def getIcon(iconName):
      return os.path.join( iconPath , iconName)
@@ -69,6 +157,8 @@ def updateMenu(workbench):
         dressupMenuName = "Path Dressup"
         action_tool_tip =" automation scripts"
         loaded_text = ' WB-addon GUI menus loaded into :'
+
+        # Note for READMEs, name must match file name, less '.md'.
         scripts = {1: {"name": "CSV Import", 
                        "tool_tip": "CSV bulk Import with naming rules", 
                        "action": ctba_import.tba_import},
@@ -78,9 +168,24 @@ def updateMenu(workbench):
                    3: {"name": "Full Process Example", 
                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation", 
                        "action": cfp.cfp_example},
-                   4: {"name": "Once only setup", 
+                   4: {"name": "README",
+                       "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
+                       "action": display_readme},
+                   5: {"name": "README Import CSV Tool data",
+                       "tool_tip": "How to import Tool data from CSV, and add to current Library Tool Table",
+                       "action": display_readme},
+                   6: {"name": "README Tool Bits Add Example",
+                       "tool_tip": "Create ToolBits and add to current Library Tool Table",
+                       "action": display_readme},
+                   7: {"name": "README Cam Full Process Example",
+                       "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
+                       "action": display_readme},
+                   8: {"name": "Show config and script file locations",
+                       "tool_tip": "So you can tailor CSV importing and examples to your requirements",
+                       "action": display_info},
+                   9: {"name": "Once only setup",
                        "tool_tip": "Copy example ToolShapes, Material and Material Model", 
-                       "action": dummyTODO}
+                       "action": copy_files}
                    }
         
         mw = Gui.getMainWindow()
@@ -104,7 +209,7 @@ def updateMenu(workbench):
             #addonMenu.setTitle("Path Addons")
             pathMenu.insertMenu(dressupMenu.menuAction(), addonMenu)
 
-        def create_action_submenu(addonMenu, wb_name, addon_dict):
+        def create_action_submenu(addonMenu, addon_dict):
             # create an action (becomes sub-menu) for this addon
             action = QtGui.QAction(addonMenu)
             action.setText(addon_dict["name"])
@@ -114,14 +219,17 @@ def updateMenu(workbench):
             # TODO change to command
             #action.triggered.connect(cfp.cfp_example)
             #action.triggered.connect(ctba.ctba_example)
-            action.triggered.connect(addon_dict["action"])
-            
+            from functools import partial
+            if addon_dict["action"] == display_readme:
+                action.triggered.connect(partial(addon_dict["action"], addon_dict["name"] + '.md'))
+            else:
+                action.triggered.connect(addon_dict["action"])
 
             # append this addon to addon menu
             addonMenu.addAction(action)
            
         for k, addon_dict in scripts.items():
-            create_action_submenu(addonMenu, wb_name, addon_dict)
+            create_action_submenu(addonMenu, addon_dict)
         
         #global init_complete
         #init_complete = True

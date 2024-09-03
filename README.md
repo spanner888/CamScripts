@@ -188,8 +188,9 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 
 * V0.0.2  2024-08-??
 
-- Install using FreeCAD Addon Manager
-- Draft README's for Import, ToolBit Add and Full Process
+- Install using FreeCAD Addon Manager, but only via FC Prefs - Addon Manager add repo at present.
+- Add menu "CamScripts" to CAM WB, to run each script, show readme's, Tool Shape, Material and script file info.
+- Early draft README's for Import, ToolBit Add and Full Process
 -
 
 * V0..01  2024-08-31:

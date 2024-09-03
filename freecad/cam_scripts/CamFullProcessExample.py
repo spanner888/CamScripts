@@ -17,7 +17,6 @@ import freecad.cam_scripts.JobUtils as JobUtils
 
 from PySide import QtGui
 
-
 def cfp_example():
     # =====================================================
     # USER settings
