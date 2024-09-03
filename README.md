@@ -140,7 +140,7 @@ To use the extension to example 5, requires installing the above model and sampl
 
 The proposed approach uses Materials arrays and a look up table to retieve the Tool Material name.
 
-Also suggested is a way to simple store fz data as parameters from a linear or 2nd level polynomial regression of the data. This has benefit of not requiring interpolation later, and does allow for example using metric tools if you only have imperial sized tool data and vice versa, as well as any intermediate tool size not in the orignial data. Tool sizes outside the original data can also be used, but with more caution, especially for smaller tools approaching "micromilling"...wh8ich is a very loosely defined, but important concept.
+Also suggested is a way to simple store fz data as parameters from a linear or 2nd level polynomial regression of the data. This has benefit of not requiring interpolation later, and does allow for example using metric tools if you only have imperial sized tool data and vice versa, as well as any intermediate tool size not in the orignial data. Tool sizes outside the original data can also be used, but with more caution, especially for smaller tools approaching "micromilling"...which is a very loosely defined, but important concept.
 
 The biggest advantage of plotting the fz data, is that it highlights errors, are more common than expected, even from very high end manufacturers, and also make it easier to compare data from other sources as well as more confidently tailor the data to your needs.
 
