@@ -83,82 +83,12 @@ class GenericCmd(object):
         self.cmdfunction()
 
 
-class Cmd_copy_files(object):
-    def IsActive(self):
-        """
-        availability of the command (eg.: check for existence of a document,...)
-        if this function returns False, the menu/ buttons are ßdisabled (gray)
-        """
-        if App.ActiveDocument is None:
-            return False
-        else:
-            return True
-
-
-
-    def GetResources(self):
-        """
-        resources which are used by buttons and menu-items
-        """
-        return {'Pixmap': os.path.join(ICONPATH, "camscripts"), 'MenuText': 'Copy files', 'ToolTip': 'very short description'}
-
-    def Activated(self):
-        """
-        the function to be handled, when a user starts the command
-        """
-        print("CsCommand copy_files Activated")
-        copy_files()
-
-
-class Cmd_get_user_config(object):
-    def IsActive(self):
-        """
-        availability of the command (eg.: check for existence of a document,...)
-        if this function returns False, the menu/ buttons are ßdisabled (gray)
-        """
-        if App.ActiveDocument is None:
-            return False
-        else:
-            return True
-
-
-
-    def GetResources(self):
-        """
-        resources which are used by buttons and menu-items
-        """
-        return {'Pixmap': os.path.join(ICONPATH, "camscripts"), 'MenuText': 'Get Config Info', 'ToolTip': 'very short description'}
-
-    def Activated(self):
-        """
-        the function to be handled, when a user starts the command
-        """
-        print("Cmd_get_user_config Activated")
-        get_user_config(printing=True)
-
-
 def running_under_windows() -> bool:
     return os.name in ['nt', 'ce']
 
 
 def running_under_macos() -> bool:
     return "darwin" in platform.system().casefold()
-
-
-# FIXME??? not working or used ditto 3xplatform functions above???
-def display_folder_in_fm(which_directory: osPath) -> None:
-    #assert isinstance(which_directory, osPath), "ERROR: Passed a non-Path to display_folder_in_wm()!"
-    #assert which_directory.is_dir(), "ERROR! Passed a non-directory to display_folder_in_wm()!"
-
-    if running_under_windows():
-        os.startfile(os.path.normpath(which_directory))
-    elif running_under_macos():
-        subprocess.run(['open', str(which_directory)])
-    else:
-        # assume Linux or other POSIX-like
-        res = subprocess.run(['xdg-open', str(which_directory)])
-        #res = subprocess.run(['open', str(which_directory)])
-        print(res)
 
 
 def display_readme(readme_name=""):
@@ -389,34 +319,6 @@ def updateMenu(workbench):
         
         addon_menu_title = wb_name + " " + addon_tail
         # ================================================================
-        # had lotsa probs both below ADD the orig FS addon dissapear if swtich WB
-        # Add menu into CAM menu, with Actions appearing as sub-menus
-        mw = Gui.getMainWindow()
-        # Find this WB main menu
-        pathMenu = mw.findChild(QtGui.QMenu, "&" + wb_name)
-        
-        for menu in pathMenu.actions():
-            if menu.text() == addon_menu_title:
-                print("Found EXISTING CAM Scripts menu :", menu.text())
-                # create a new addon menu
-                addonMenu = menu.menu()
-                break
-
-        if addonMenu is None:
-            addonMenu = QtGui.QMenu(addon_menu_title)
-            addonMenu.setObjectName(wb_name + "_" + addon_tail)
-
-            # Find the dressup menu entry
-            dressupMenu = mw.findChild(QtGui.QMenu, dressupMenuName)
-
-            addonMenu.setTitle(addon_menu_title)
-            pathMenu.insertMenu(dressupMenu.menuAction(), addonMenu)
-
-        for k, addon_dict in scripts.items():
-            create_action_submenu(addonMenu, addon_dict)
-        # ================================================================
-    
-        # ================================================================
         # Add Menus to very TOP FreeCAD menu strip/bar.
         menu_actions = []
         for k, v in scripts.items():
@@ -433,55 +335,6 @@ def updateMenu(workbench):
         c.reloadActive()
         # ================================================================
         print(addon_menu_title + loaded_text, workbench)
-
-# NOT used/required when only adding commands/menu items,
-# as a Workbench would REPLACE CAM WB!!
-class Camscripts(Gui.Workbench):
-    """
-    class which gets initiated at startup of the gui
-    """
-    MenuText = translate("cam_scripts", "CamScripts")
-    ToolTip = translate("cam_scripts", "a simple CamScripts")
-    Icon = os.path.join(ICONPATH, "camscripts")
-    toolbox = []
-
-    def GetClassName(self):
-        return "Gui::PythonWorkbench"
-
-    def Initialize(self):
-        """
-        This function is called at the first activation of the workbench.
-        here is the place to import all the commands
-        """
-        # Add translations path
-        Gui.addLanguagePath(TRANSLATIONSPATH)
-        Gui.updateLocale()
-
-        App.Console.PrintMessage(translate(
-            "cam_scripts",
-            "Switching to cam_scripts") + "\n")
-        App.Console.PrintMessage(translate(
-            "cam_scripts",
-            "Run a numpy function:") + "sqrt(100) = {}\n".format(my_numpy_function.my_foo(100)))
-
-        self.appendToolbar(translate("Toolbar", "Tools"), self.toolbox)
-        self.appendMenu(translate("Menu", "Tools"), self.toolbox)
-
-    def Activated(self):
-        '''
-        code which should be computed when a user switch to this workbench
-        '''
-        App.Console.PrintMessage(translate(
-            "cam_scripts",
-            "Workbench cam_scripts activated.") + "\n")
-
-    def Deactivated(self):
-        '''
-        code which should be computed when this workbench is deactivated
-        '''
-        App.Console.PrintMessage(translate(
-            "cam_scripts",
-            "Workbench cam_scripts de-activated.") + "\n")
 
 
 Gui.getMainWindow().workbenchActivated.connect(updateMenu)
