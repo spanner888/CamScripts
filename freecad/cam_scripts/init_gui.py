@@ -389,6 +389,7 @@ def updateMenu(workbench):
         
         addon_menu_title = wb_name + " " + addon_tail
         # ================================================================
+        # had lotsa probs both below ADD the orig FS addon dissapear if swtich WB
         # Add menu into CAM menu, with Actions appearing as sub-menus
         mw = Gui.getMainWindow()
         # Find this WB main menu
