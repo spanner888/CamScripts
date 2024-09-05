@@ -105,24 +105,18 @@ def ctba_example():
     # -----------------------------------------------------------------------
     print("Example 5. User boboxx naming rules Example: 2F-D6.35-L31.076, FC issue:12823")
     boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
-    CamTbAddLib.processUserToolInput(boboxx_rulesShape)
-
+    CamTbAddLib.processUserToolInput(boboxx_rulesShape,
+                                    shape_name = "endmill",
+                                    tb_base_name = "em",
+                                    tb_base_nr = 70000,
+                                    tb_nr_inc = 100,
+                                    dia = 10.3,
+                                    dia_max = 10.4,
+                                    dia_inc = 0.2,
+                                    flutes=4)
     print("\t...Example 5 finished.\n")
     # -----------------------------------------------------------------------
 
 
-    # -----------------------------------------------------------------------
-    print("Example 6. Demonstrate that empty naming rules produce an empty '' name.")
-    print("    Although in Tool Library name literally becomes '.fctb'.")
-    all_empty_rules = ex_rules.AllRulesTemplate(shape_name='not used ATM')
-    CamTbAddLib.processUserToolInput(all_empty_rules)
-
-    print("\t...Example 6 finished.\n")
-    # -----------------------------------------------------------------------
-
-
-
     print("")
     print("CamTbAddExample finished.\n")
-
-
