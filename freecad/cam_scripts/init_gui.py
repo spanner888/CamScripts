@@ -3,6 +3,7 @@ import FreeCADGui as Gui
 import FreeCAD as App
 from PySide import QtGui
 from freecad.cam_scripts.translate_utils import translate
+from functools import partial
 
 ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
 TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources/translations")
@@ -44,12 +45,105 @@ ctba_import = LazyLoader('freecad.cam_scripts.CamTbAdd_Importing')
 import os, platform, subprocess
 from pathlib import Path as osPath
 
+
+
+
+# cmds in sep file??
+class GenericCmd(object):
+    # def __init__(self, cmdfunction, MenuTxt, ToolTip, icon=''):
+    def __init__(self, cmd):
+        self.cmdfunction = cmd['action']
+        self.MenuTxt = cmd["name"]
+        self.ToolTip = cmd["tool_tip"]
+        # self.icon = cmd["icon"]   there is no ico k/val ATM!!
+
+
+    def IsActive(self):
+        """
+        availability of the command (eg.: check for existence of a document,...)
+        if this function returns False, the menu/ buttons are ßdisabled (gray)
+        """
+        if App.ActiveDocument is None:
+            return False
+        else:
+            return True
+
+    def GetResources(self):
+        """
+        resources which are used by buttons and menu-items
+        """
+        # NO ICONS ATM!!
+        return {'Pixmap': getIcon(os.path.join(ICONPATH, "camscripts")), 'MenuText': self.MenuTxt, 'ToolTip': self.ToolTip}
+
+    def Activated(self):
+        """
+        the function to be handled, when a user starts the command
+        """
+        print(self.MenuTxt + " Activated")
+        self.cmdfunction()
+
+
+class Cmd_copy_files(object):
+    def IsActive(self):
+        """
+        availability of the command (eg.: check for existence of a document,...)
+        if this function returns False, the menu/ buttons are ßdisabled (gray)
+        """
+        if App.ActiveDocument is None:
+            return False
+        else:
+            return True
+
+
+
+    def GetResources(self):
+        """
+        resources which are used by buttons and menu-items
+        """
+        return {'Pixmap': os.path.join(ICONPATH, "camscripts"), 'MenuText': 'Copy files', 'ToolTip': 'very short description'}
+
+    def Activated(self):
+        """
+        the function to be handled, when a user starts the command
+        """
+        print("CsCommand copy_files Activated")
+        copy_files()
+
+
+class Cmd_get_user_config(object):
+    def IsActive(self):
+        """
+        availability of the command (eg.: check for existence of a document,...)
+        if this function returns False, the menu/ buttons are ßdisabled (gray)
+        """
+        if App.ActiveDocument is None:
+            return False
+        else:
+            return True
+
+
+
+    def GetResources(self):
+        """
+        resources which are used by buttons and menu-items
+        """
+        return {'Pixmap': os.path.join(ICONPATH, "camscripts"), 'MenuText': 'Get Config Info', 'ToolTip': 'very short description'}
+
+    def Activated(self):
+        """
+        the function to be handled, when a user starts the command
+        """
+        print("Cmd_get_user_config Activated")
+        get_user_config(printing=True)
+
+
 def running_under_windows() -> bool:
     return os.name in ['nt', 'ce']
 
 
 def running_under_macos() -> bool:
     return "darwin" in platform.system().casefold()
+
 
 # FIXME??? not working or used ditto 3xplatform functions above???
 def display_folder_in_fm(which_directory: osPath) -> None:
@@ -65,6 +159,7 @@ def display_folder_in_fm(which_directory: osPath) -> None:
         res = subprocess.run(['xdg-open', str(which_directory)])
         #res = subprocess.run(['open', str(which_directory)])
         print(res)
+
 
 def display_readme(readme_name=""):
     if readme_name == "":
@@ -113,30 +208,134 @@ def display_readme(readme_name=""):
     # pass
 
 
-def display_info():
+def get_user_config(printing=True):
     import Path.Preferences as p_pref
     workingdir = os.path.dirname(p_pref.lastPathToolLibrary())
     s_dir_name = os.path.sep + "Shape" + os.path.sep
-    print()
-    print("User Tool Shape folder location: ", workingdir + s_dir_name)
-    print()
 
     from freecad.cam_scripts.CamScriptingLib\
         import users_material_cfg_summary as users_mat_cfg_summary
-    users_mat_cfg_summary()
+    mat_cfg_summary = users_mat_cfg_summary(printing)
 
-    print()
-    script_dir = osPath(App.getUserAppDataDir() + '/Mod/CamScripts/freecad/cam_scripts/')
-    print(script_dir)
-    print("Script support data in folders: '/cutting_tool_data' and '/naming_rules'")
+
+    cfg_info = {"Tools_wd": workingdir, "Tools_sd": s_dir_name,
+            "script_dir": workingdir}
+    cfg_info.update(mat_cfg_summary)
+
+    if printing:
+        print()
+        print("User Tool Shape folder location: ", workingdir + s_dir_name)
+        print()
+
+        print(mat_cfg_summary)
+
+        print()
+        script_dir = osPath(App.getUserAppDataDir() + '/Mod/CamScripts/freecad/cam_scripts/')
+        print(script_dir)
+        print("Script support data in folders: '/cutting_tool_data' and '/naming_rules'")
+
+    return cfg_info
 
 
 def copy_files():
     print("copy files = TODO")
 
+    cfg_info = get_user_config(printing=False)
+    print(cfg_info)
+    return
+    # ex CAM-Path-Tool-Gui-BitLibrary
+
+    # NEED TRIMING DOWN, remove dialogs, refactor.....
+
+    import shutil
+    # Copy only files of default Path/Tool folder to working directory (targeting the README.md help file)
+    src_toolfiles = os.listdir(defaultdir)
+    for file_name in src_toolfiles:
+        if file_name in ["README.md"]:
+            full_file_name = os.path.join(defaultdir, file_name)
+            if os.path.isfile(full_file_name):
+                shutil.copy(full_file_name, workingdir)
+
+    # Determine which subdirectories are missing
+    subdirlist = ["Bit", "Library", "Shape"]
+    mode = 0o777
+    for dir in subdirlist.copy():
+        subdir = "{}{}{}".format(workingdir, os.path.sep, dir)
+        if os.path.exists(subdir):
+            subdirlist.remove(dir)
+
+    # Query user for creation permission of any missing subdirectories
+    if len(subdirlist) >= 1:
+        needed = ", ".join([str(d) for d in subdirlist])
+        qm = PySide.QtGui.QMessageBox
+        ret = qm.question(
+            None,
+            "",
+            translate(
+                "CAM_ToolBit",
+                "Toolbit Working directory {} needs these sudirectories:\n {} \n Create them?",
+            ).format(workingdir, needed),
+            qm.Yes | qm.No,
+        )
+
+        if ret == qm.No:
+            return False
+        else:
+            # Create missing subdirectories if user agrees to creation
+            for dir in subdirlist:
+                subdir = "{}{}{}".format(workingdir, os.path.sep, dir)
+                os.mkdir(subdir, mode)
+                # Query user to copy example files into subdirectories created
+                if dir != "Shape":
+                    qm = PySide.QtGui.QMessageBox
+                    ret = qm.question(
+                        None,
+                        "",
+                        translate(
+                            "CAM_ToolBit", "Copy example files to new {} directory?"
+                        ).format(dir),
+                        qm.Yes | qm.No,
+                    )
+                    if ret == qm.Yes:
+                        src = "{}{}{}".format(defaultdir, os.path.sep, dir)
+                        src_files = os.listdir(src)
+                        for file_name in src_files:
+                            full_file_name = os.path.join(src, file_name)
+                            if os.path.isfile(full_file_name):
+                                shutil.copy(full_file_name, subdir)
+
+    # if no library is set, choose the first one in the Library directory
+    if Path.Preferences.lastFileToolLibrary() is None:
+        libFiles = [
+            f
+            for f in glob.glob(
+                Path.Preferences.lastPathToolLibrary() + os.path.sep + "*.fctl"
+            )
+        ]
+        Path.Preferences.setLastFileToolLibrary(libFiles[0])
+
 
 def getIcon(iconName):
      return os.path.join( iconPath , iconName)
+
+
+def create_action_submenu(addonMenu, addon_dict):
+    # create an action (becomes sub-menu) for this addon
+    action = QtGui.QAction(addonMenu)
+    action.setText(addon_dict["name"])
+    # action.setIcon(QtGui.QPixmap(getIcon('camscripts')))
+    action.setStatusTip(addon_dict["tool_tip"])
+
+    if addon_dict["action"] == display_readme:
+        # partial allows passing parameter in this situation
+        action.triggered.connect(partial(addon_dict["action"], addon_dict["name"] + '.md'))
+    elif addon_dict["action"] == get_user_config:
+        action.triggered.connect(partial(addon_dict["action"], printing=True))
+    else:
+        action.triggered.connect(addon_dict["action"])
+
+    # append this action/submenu item to wb-addon menu
+    addonMenu.addAction(action)
 
 
 def updateMenu(workbench):
@@ -165,7 +364,7 @@ def updateMenu(workbench):
                    2: {"name": "ToolBit Examples", 
                        "tool_tip": "Create ranges of ToolBits", 
                        "action": ctba.ctba_example},
-                   3: {"name": "Full Process Example", 
+                   3: {"name": "Full Process Example",
                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation", 
                        "action": cfp.cfp_example},
                    4: {"name": "README",
@@ -182,7 +381,7 @@ def updateMenu(workbench):
                        "action": display_readme},
                    8: {"name": "Show config and script file locations",
                        "tool_tip": "So you can tailor CSV importing and examples to your requirements",
-                       "action": display_info},
+                       "action": get_user_config},
                    9: {"name": "Once only setup",
                        "tool_tip": "Copy example ToolShapes, Material and Material Model", 
                        "action": copy_files}
@@ -190,52 +389,55 @@ def updateMenu(workbench):
         
         mw = Gui.getMainWindow()
         
-        # Find the main path menu
+        addon_menu_title = wb_name + " " + addon_tail
+
+        # Find this WB main menu
         pathMenu = mw.findChild(QtGui.QMenu, "&" + wb_name)
         
         for menu in pathMenu.actions():
-            if menu.text() == wb_name + wb_tail:
+            if menu.text() == addon_menu_title:
+                print("Found EXISTING CAM Scripts menu :", menu.text())
                 # create a new addon menu
                 addonMenu = menu.menu()
                 break
 
         if addonMenu is None:
-            addonMenu = QtGui.QMenu(wb_name + " " + addon_tail)
+            addonMenu = QtGui.QMenu(addon_menu_title)
             addonMenu.setObjectName(wb_name + "_" + addon_tail)
 
             # Find the dressup menu entry
             dressupMenu = mw.findChild(QtGui.QMenu, dressupMenuName)
 
-            #addonMenu.setTitle("Path Addons")
+            addonMenu.setTitle(addon_menu_title)
             pathMenu.insertMenu(dressupMenu.menuAction(), addonMenu)
 
-        def create_action_submenu(addonMenu, addon_dict):
-            # create an action (becomes sub-menu) for this addon
-            action = QtGui.QAction(addonMenu)
-            action.setText(addon_dict["name"])
-            action.setIcon(QtGui.QPixmap(getIcon('camscripts')))
-            action.setStatusTip(addon_dict["tool_tip"])
-
-            # TODO change to command
-            #action.triggered.connect(cfp.cfp_example)
-            #action.triggered.connect(ctba.ctba_example)
-            from functools import partial
-            if addon_dict["action"] == display_readme:
-                action.triggered.connect(partial(addon_dict["action"], addon_dict["name"] + '.md'))
-            else:
-                action.triggered.connect(addon_dict["action"])
-
-            # append this addon to addon menu
-            addonMenu.addAction(action)
-           
         for k, addon_dict in scripts.items():
             create_action_submenu(addonMenu, addon_dict)
-        
+
         #global init_complete
         #init_complete = True
-        print(wb_name + " " + addon_tail + loaded_text, workbench)
+        print(addon_menu_title + loaded_text, workbench)
     
-    
+        # To register the command in FreeCAD:
+        # Gui.addCommand('Cmd_copy_files', Cmd_copy_files())
+        # Gui.addCommand('Cmd_get_user_config', Cmd_get_user_config())
+
+        # cmd1 = GenericCmd(object, cmd['action'], cmd["name"], cmd["tool_tip"], icon='theicon')
+        # cmd1 = GenericCmd(scripts[1])
+        menu_actions = []
+        for k, v in scripts.items():
+            cmd_name = 'Cmd_' + v["name"].replace(" ", "")
+            Gui.addCommand(cmd_name, GenericCmd(v))
+            menu_actions.append(cmd_name)
+
+        c=Gui.getWorkbench('CAMWorkbench')
+        # menu_actions = ["Cmd_get_user_config",
+        #                         "Cmd_copy_files",
+        #                         cmd1_name]
+        print(menu_actions)
+        c.appendMenu("&Scripts", menu_actions)
+
+
 class Camscripts(Gui.Workbench):
     """
     class which gets initiated at startup of the gui

@@ -124,6 +124,7 @@ def printAvailableLibraryTools():
         print("No tool files found.")
     return toolNames
 
+
 # helper classes to make it easier to pass related properties
 class job_props:
     def __init__(self):
@@ -418,34 +419,45 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
     return None, None
 
 
-def users_material_cfg_summary():
+def users_material_cfg_summary(printing=True):
     # Examine Users Material settings & Directories.
     from materialtools.cardutils import get_material_preferred_directory, get_material_preferred_save_directory
     from materialtools.cardutils import get_material_libraries
 
     mat_prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
-    use_built_in_materials = mat_prefs.GetBool("UseBuiltInMaterials", True)
-    use_mat_from_config_dir = mat_prefs.GetBool("UseMaterialsFromConfigDir", True)
-    use_mat_from_custom_dir = mat_prefs.GetBool("UseMaterialsFromCustomDir", True)
-    use_mat_from_ext_wb_dir = mat_prefs.GetBool("UseMaterialsFromWorkbenches", True)
+    pref_use_built_in_materials = mat_prefs.GetBool("UseBuiltInMaterials", True)
+    pref_use_mat_from_config_dir = mat_prefs.GetBool("UseMaterialsFromConfigDir", True)
+    pref_use_mat_from_custom_dir = mat_prefs.GetBool("UseMaterialsFromCustomDir", True)
+    pref_use_mat_from_ext_wb_dir = mat_prefs.GetBool("UseMaterialsFromWorkbenches", True)
 
     mat_dir = get_material_preferred_directory()
     save_dir = get_material_preferred_save_directory()
     if mat_dir is None:
         mat_dir = FreeCAD.getResourceDir() + "Mod/Material"
 
-    print("Material Library summary:")
+    if printing:
+        print("Material Library summary:")
     for k, v in get_material_libraries().items():
-        print(k, v)
+        if printing:
+            print(k, v)
     print()
 
-    print("use_built_in_materials {}".format(use_built_in_materials))
-    print("use_mat_from_config_dir {}".format(use_mat_from_config_dir))
-    print("use_mat_from_custom_dir) {}".format(use_mat_from_custom_dir))
-    print("use_mat_from_ext_wb_dir) {}".format(use_mat_from_ext_wb_dir))
-    print("mat_dir :", mat_dir)
-    print("save_dir :", save_dir)
+    if printing:
+        print("pref_use_built_in_materials {}".format(pref_use_built_in_materials))
+        print("pref_use_mat_from_config_dir {}".format(pref_use_mat_from_config_dir))
+        print("pref_use_mat_from_custom_dir) {}".format(pref_use_mat_from_custom_dir))
+        print("pref_use_mat_from_ext_wb_dir) {}".format(pref_use_mat_from_ext_wb_dir))
+        print("material_preferred_directory :", mat_dir)
+        print("material_preferred_save_directory :", save_dir)
 
+    mat_cfg_summary = {"mat_cfg_summary": {"pref_use_built_in_materials": pref_use_built_in_materials,
+                       "pref_use_mat_from_config_dir": pref_use_mat_from_config_dir,
+                       "pref_use_mat_from_custom_dir": pref_use_mat_from_custom_dir,
+                       "pref_use_mat_from_ext_wb_dir": pref_use_mat_from_ext_wb_dir,
+                       "material_preferred_directory": mat_dir,
+                       "material_preferred_save_directory": save_dir}
+                      }
+    return mat_cfg_summary
 
 def detailed_calcs(mat_uuid, print_machinability=False):
     # Both of github user: baehr pr's below are VERY informative & worth the read!
