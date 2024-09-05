@@ -63,10 +63,13 @@ class GenericCmd(object):
         availability of the command (eg.: check for existence of a document,...)
         if this function returns False, the menu/ buttons are ßdisabled (gray)
         """
-        if App.ActiveDocument is None:
-            return False
-        else:
-            return True
+        # if App.ActiveDocument is None:
+        #     return False
+        # else:
+        #     return True
+
+        # no conditions for Camscripts - if any doc required script creates it!
+        return True
 
     def GetResources(self):
         """
