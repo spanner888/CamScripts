@@ -387,10 +387,10 @@ def updateMenu(workbench):
                        "action": copy_files}
                    }
         
-        mw = Gui.getMainWindow()
-        
         addon_menu_title = wb_name + " " + addon_tail
-
+        # ================================================================
+        # Add menu into CAM menu, with Actions appearing as sub-menus
+        mw = Gui.getMainWindow()
         # Find this WB main menu
         pathMenu = mw.findChild(QtGui.QMenu, "&" + wb_name)
         
@@ -413,31 +413,28 @@ def updateMenu(workbench):
 
         for k, addon_dict in scripts.items():
             create_action_submenu(addonMenu, addon_dict)
-
-        #global init_complete
-        #init_complete = True
-        print(addon_menu_title + loaded_text, workbench)
+        # ================================================================
     
-        # To register the command in FreeCAD:
-        # Gui.addCommand('Cmd_copy_files', Cmd_copy_files())
-        # Gui.addCommand('Cmd_get_user_config', Cmd_get_user_config())
-
-        # cmd1 = GenericCmd(object, cmd['action'], cmd["name"], cmd["tool_tip"], icon='theicon')
-        # cmd1 = GenericCmd(scripts[1])
+        # ================================================================
+        # Add Menus to very TOP FreeCAD menu strip/bar.
         menu_actions = []
         for k, v in scripts.items():
             cmd_name = 'Cmd_' + v["name"].replace(" ", "")
+            # To register the command in FreeCAD:
             Gui.addCommand(cmd_name, GenericCmd(v))
             menu_actions.append(cmd_name)
 
-        c=Gui.getWorkbench('CAMWorkbench')
-        # menu_actions = ["Cmd_get_user_config",
-        #                         "Cmd_copy_files",
-        #                         cmd1_name]
-        print(menu_actions)
+        # c=Gui.getWorkbench('CAMWorkbench')
+        # c.appendMenu("&Scripts", menu_actions)
+        c=Gui.activeWorkbench()
         c.appendMenu("&Scripts", menu_actions)
+        # WORKED, but Toolsbars "gone"
+        c.reloadActive()
+        # ================================================================
+        print(addon_menu_title + loaded_text, workbench)
 
-
+# NOT used/required when only adding commands/menu items,
+# as a Workbench would REPLACE CAM WB!!
 class Camscripts(Gui.Workbench):
     """
     class which gets initiated at startup of the gui
