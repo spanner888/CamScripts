@@ -189,7 +189,7 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 * V0.0.2  2024-08-??
 
 - Install using FreeCAD Addon Manager, but only via FC Prefs - Addon Manager add repo at present.
-- Add menu "CamScripts" to CAM WB, to run each script, show readme's, Tool Shape, Material and script file info.
+- Add menu "Scripts" to FreeCAD menu bar, to run scripts, show readme's, Tool Shape, Material and script file info.
 - Early draft README's for Import, ToolBit Add and Full Process
 -
 
@@ -207,4 +207,4 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 
 JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](./freecad/cam_scripts/JobUtils)
 
-All other files in CamScripts are Copyright 2024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
+All other files in CamScripts are Copyright 2024 Spanner888 and licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).

@@ -98,8 +98,9 @@ def display_readme(readme_name=""):
     if readme_name == "":
         readme_name = "REAMDME.md"
 
-    git_repo_url = "https://github.com/spanner888/CamScripts/"
-    
+    # git_repo_url = "https://github.com/spanner888/CamScripts/"
+    # git_repo_url = "https://github.com/spanner888/CamScripts/tree/main/"
+    git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
     mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
     print(mod_dir)
     
@@ -113,7 +114,6 @@ def display_readme(readme_name=""):
     #++link to issues
     #wiki??? https://github.com/spanner888/CamScripts/wiki
 
-    git_repo_url = "https://github.com/spanner888/CamScripts/tree/main/"
     subprocess.run(['open', git_repo_url + readme_name])
     #>>> subprocess.run(['open', git_repo_url + 'README2.md'], check=True)
     #for git branch: subprocess.run(['open', 'https://github.com/spanner888/CamScripts/tree/morph-into-addon/README.md'], check=True)
