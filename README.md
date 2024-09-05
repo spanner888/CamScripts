@@ -59,7 +59,10 @@ CamScripts can be installed using the FreeCAD Addon Manager. LINK HOW>
 
 It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
 
-The menu "CamScripts" is added the CAM Workbench and each feature is available from a sub-menu.
+The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
+
+[!CAUTION]
+Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
 
 ???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
 
@@ -74,17 +77,15 @@ This limitation is due to the extent lot of changes in FreeCAD migrating Path to
 
 In addition the new Materials Workbench is undergoing extensive development and has been progressively enhanced during the second quarter 2024.
 
-
-In addition features of the extended Machinability example for Vc and in particular Fz require a new material model and sample material with appropriate properites.
+Also more during creation of these macro scripts, the extended Machinability example for Vc and in particular Fz was created to test more advanced features. These require a new material model and sample material with appropriate properties and they need to be COPIED OR TEMP POINT MAT WB TO USE IN PLACE INSIDE CAMSCRIPTS???
 
 The extended model and material are included in [CamScripts/cutting_tool_data/Material]()
 
 materials stuff ***TODO** where get/install
 
-
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
-Note: the 3x readme below are still WIP
+Note: the 3x readme below are still WIP. They are also available from the Scripts menu and are included with the files that are installed.
 
 ![README 1 Import CSV Tool data](README 1 Import CSV Tool data.md)
 
