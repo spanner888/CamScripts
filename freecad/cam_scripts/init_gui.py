@@ -19,6 +19,8 @@ iconPath = os.path.join( __dir__, 'Icons' )
 #init_complete = False
 
 import importlib
+
+# FC has lazy_loader /FC_wkly-38622/squashfs-root/usr/lazy_loader.py
 class LazyLoader () :
     'thin shell class to wrap modules.  load real module on first access and pass thru'
 
@@ -100,6 +102,7 @@ def display_readme(readme_name=""):
 
     # git_repo_url = "https://github.com/spanner888/CamScripts/"
     # git_repo_url = "https://github.com/spanner888/CamScripts/tree/main/"
+    # git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
     git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
     mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
     print(mod_dir)
@@ -341,5 +344,3 @@ def updateMenu(workbench):
 
 
 Gui.getMainWindow().workbenchActivated.connect(updateMenu)
-# Class not used if WB = Menu added to EXISTING WB
-# Gui.addWorkbench(Camscripts())
