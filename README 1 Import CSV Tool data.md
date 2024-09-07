@@ -16,13 +16,16 @@ The CSV format used is very flexible. It does not enforce column order and ignor
 
 Naming rules are used to create the ToolBit file name, Name of Tool in Library and the Tool Table Tool number.
 
-At present, duplicate Tool Numbers and names are allowed and will be added.
+At present, duplicate Tool Numbers and names are allowed and will be added. Messages may appear in FreeCAD Report or Notification areas related to duplicates. Note these can be for both a duplicate Tool in a Tool Table and also for a duplicate ToolBit file saved into the current library Bit directory.
 
 ## Before importing any data
 
-1. Ensure you have valid, writable location for your FreeCAD tool Library.....
+1. Ensure your FreeCAD tool Library is stored in writable location. See ![CAM Tools Organization](https://wiki.freecad.org/CAM_Tools#Organization)
 
-2. Open FreeCAD CAM Workbench and use CAM menu, ToolBit Library Editor, to open the Tool Table that imported tools should be added to. It is recommended to test with an empty Tool Table, until you have fully tested your import data.
+2. Open FreeCAD CAM Workbench and use CAM menu, ToolBit Library Editor, to open the Tool Table that imported tools should be added to.
+
+[!CAUTION]
+3. It is recommended to test with an empty Tool Table, until you have fully tested your import data.
 
 ## Import example data
 
