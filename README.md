@@ -1,15 +1,26 @@
-## About CamScripts
+## CamScripts for FreeCAD CAM
 
-CamScripts macros create and configure *every* step of [FreeCAD CAM process](https://wiki.freecad.org/CAM_Workbench).
+CamScripts provides a suite of tools to streamline and automate most tasks within FreeCAD's Computer-Aided Manufacturing (CAM) environment. Key features and benefits include:
 
-The image below shows output created by CamScripts macros including:
+- Efficient Tool Management:
 
-  - Importing CSV tool data to create Library ToolBits using different automatic naming and numbering rules
-  - Operations, ToolControllers, with key properties values set
-  - Assigning ToolControllers to Operations
-  - Speed and Feed example calculations from the new Materials Machinabilty work is shown in report view.
+    - Import tool data from CSV files to create FreeCAD Tool libraries.
+    - Use flexible naming rules and autonumbering for easy organization.
+    - Generate tool families based on specific criteria.
 
-PostProcessed gcode and Sanity check report are also created and saved, but not shown.
+- Process Automation:
+
+    - Create and recreate every step of the CAM process, from tool creation to G-code generation.
+    - Ensure consistent settings for tools, feeds, operations and postprocessors
+    - Run sanity check report to review.
+
+- Machinability Materials Integration:
+
+    - Showcase a valuable dataset for common materials and highlight areas for further development.
+    - Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
+    - Explore an extended Machinability model for improved data flexibilty and calculations.
+
+CamScripts provides a valuable toolkit for FreeCAD users seeking to improve efficiency and consistency in their CAM workflows.
 
 ![Import, Rules, Full process condensed example](./images/Import_RulesFull_process.png)
 
@@ -44,22 +55,42 @@ Example macro code is simplified by two supplied python libraries and one excell
 
 ## Installing and using
 
-To get all features, requires very recent FC v.....some warnings or errors may occur if older version of FreeCAD is use.
+CamScripts can be installed using the FreeCAD Addon Manager. LINK HOW>
 
-Macros Easy install via single install....
+It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
 
-In addition features of the extended Machinability example for Vc and in particular Fz require a new material model and sample material with appropriate properites.
+The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
 
-The extended model and material are included in [CamScripts/cutting_tool_data/Material]
+[!CAUTION]
+Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
+
+???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
+
+A very recent development version of 22.0dev is currently required. Dates and features added on that date are listed below:
+
+2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981
+2024-08-18  metal cards with machining model  commit 70bb45430d30cb61d08ac0e7291d1b9a0e931a48
+2024-07-9   Machining model and materials     revision 38314
+2024-02     CSV Import may work 2024-02 with  revision 32821, but this is untested.
+
+This limitation is due to the extent lot of changes in FreeCAD migrating Path to CAM and many fixes and enhancements, in the since late 2023.
+
+In addition the new Materials Workbench is undergoing extensive development and has been progressively enhanced during the second quarter 2024.
+
+Also more during creation of these macro scripts, the extended Machinability example for Vc and in particular Fz was created to test more advanced features. These require a new material model and sample material with appropriate properties and they need to be COPIED OR TEMP POINT MAT WB TO USE IN PLACE INSIDE CAMSCRIPTS???
+
+The extended model and material are included in [CamScripts/cutting_tool_data/Material]()
 
 materials stuff ***TODO** where get/install
 
-
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
-Note: the 3x readme below are still WIP
+Note: the 3x readme below are still WIP. They are also available from the Scripts menu and are included with the files that are installed.
+
 ![README 1 Import CSV Tool data](README 1 Import CSV Tool data.md)
+
 ![README 2 Tool Bits Add Example](README 2 Tool Bits Add Example.md)
+
 ![README 3 Cam Full Process Example](README 3 Cam Full Process Example.md)
 
 ## Background informatiion
@@ -110,7 +141,7 @@ To use the extension to example 5, requires installing the above model and sampl
 
 The proposed approach uses Materials arrays and a look up table to retieve the Tool Material name.
 
-Also suggested is a way to simple store fz data as parameters from a linear or 2nd level polynomial regression of the data. This has benefit of not requiring interpolation later, and does allow for example using metric tools if you only have imperial sized tool data and vice versa, as well as any intermediate tool size not in the orignial data. Tool sizes outside the original data can also be used, but with more caution, especially for smaller tools approaching "micromilling"...wh8ich is a very loosely defined, but important concept.
+Also suggested is a way to simple store fz data as parameters from a linear or 2nd level polynomial regression of the data. This has benefit of not requiring interpolation later, and does allow for example using metric tools if you only have imperial sized tool data and vice versa, as well as any intermediate tool size not in the orignial data. Tool sizes outside the original data can also be used, but with more caution, especially for smaller tools approaching "micromilling"...which is a very loosely defined, but important concept.
 
 The biggest advantage of plotting the fz data, is that it highlights errors, are more common than expected, even from very high end manufacturers, and also make it easier to compare data from other sources as well as more confidently tailor the data to your needs.
 
@@ -145,10 +176,9 @@ Path and Material developers and forum users including russ4262, sliptonic, onek
 
 ## Limitations, Feedback and Contributions
 
-Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is:
-Version: 0.22.0dev.38553 (Git)
+Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is: Version: 0.22.0dev.38553 (Git)
 
-See the github repo issues for latest information.
+See the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
 
 There are no checks while adding a ToolBit to the current Tool table to see if the ToolTable number or the Tool name already exist. Duplicates do occur with current test data and cause warning like:
 
@@ -157,17 +187,25 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 
 ## Release notes:
 
-* V0.1  2024-08-31:
-            - Initial release, fully functional, but not yet fully polished, no install process.
-            - creates start to finish FreeCAD CAM process
-            - demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
-            - Extended machinability with Fz in equation form
-            - csv Tool import
-            - scripted tool bit creation
+* V0.0.2  2024-08-??
+
+- Install using FreeCAD Addon Manager, but only via FC Prefs - Addon Manager add repo at present.
+- Add menu "Scripts" to FreeCAD menu bar, to run scripts, show readme's, Tool Shape, Material and script file info.
+- Early draft README's for Import, ToolBit Add and Full Process
+-
+
+* V0..01  2024-08-31:
+
+- Initial release, fully functional, but not yet fully polished
+- CSV Tool import
+- Scripted tool bit creation
+- Creates start to finish FreeCAD CAM process
+- Demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
+- Extended machinability with Fz in equation form
 
 
 ## License
 
-JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](JobUtils.py)
+JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](./freecad/cam_scripts/JobUtils)
 
-All other files in CamScripts are Copyright 2024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
+All other files in CamScripts are Copyright 2024 Spanner888 and licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).

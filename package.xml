@@ -5,9 +5,7 @@
 
   <description>CamScripts macros create and configure *every* step of FreeCAD CAM process.</description>
 
-  <version>2024.8.29</version>
-
-  <date>2024-08-29</date>
+  <version>v0.0.2 2024.9.01</version>
 
   <author email="spanner888@usabledevices.com">spanner888</author>
 
@@ -32,6 +30,7 @@
       postprocessed gcode and calculate Speeds and Feeds from Tool and Stock material properties.
       Additonal demonstration of Materials Machinability model to provide data for Speeds and Feeds,
       including exploring of fz (chipload) tables.</description>
+      <freecadmin>0.22.0</freecadmin>
       <tag>CAM</tag>
       <tag>Import</tag>
       <tag>CSV</tag>
@@ -48,19 +47,7 @@
       <tag>Sanity</tag>
       <tag>Report</tag>
       <tag>Gcode</tag>
-      
-      <classname>todo</classname>
-      <subdirectory>./</subdirectory>
-      <freecadmin>0.22.0</freecadmin>
-
     </workbench>
-    
-    <library>
-      <name>JobUtils</name>
-      <description>Path workbench utility functions to aid in job and tool controller scripting.</description>
-      <maintainer email="russ4262@gmail.com">russ4262</maintainer>
-      <file>JobUtils.py</file>
-    </library>
   </content>
 
 </package>
