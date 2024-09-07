@@ -1,6 +1,8 @@
 ## CSV Import Overview
 
-The example CSV import is simply run from a menu item added to the FreeCAD CAM Menus. But first to prevent clutter in your Tool Table data and ensure FreeCAD CAM is fully configured follow the two simple steps in [Before importing any data](). To run the import process see [Import example data]().
+The example CSV import is simply run from the ```CSV Import``` menu item added to the FreeCAD CAM Scripts menu.
+
+But first to prevent clutter in your Tool Table data and ensure FreeCAD CAM is fully configured follow the two simple steps in 1. Follow steps in above [Before importing any data](##before-importing-any-data). To run the import process see [Import example data](##import-example-data).
 
 The import process reads a CSV file to create FreeCAD CAM ToolBit file for each valid row and sets matching shape properties. Each ToolBit is added to FreeCAD current Tool Table in the Tool Library.
 
@@ -10,7 +12,7 @@ Shape names in the csv file AND in the FreeCAD Tools - Shape system and user dir
 
 Mandatory columns "shape" column, Dia & Flutes mandaotry???
 
-The CSV format used is very flexible. It does not enforce column order and ignores additional columns. There are a few rules and the flexibility also means you must provide valid data. Details are in [CSV file format and rules]()
+The CSV format used is very flexible. It does not enforce column order and ignores additional columns. There are a few rules and the flexibility also means you must provide valid data. Details are in [CSV file format and rules](##csv-file-format-and-rules)
 
 Naming rules are used to create the ToolBit file name, Name of Tool in Library and the Tool Table Tool number.
 
@@ -24,14 +26,14 @@ At present, duplicate Tool Numbers and names are allowed and will be added.
 
 ## Import example data
 
-1. Follow steps in [Before importing any data]()
+1. Follow steps in above [Before importing any data](##before-importing-any-data)
 
 2. Ensure you have valid, writable location for your FreeCAD tool Library.....
 
 3. Open FreeCAD CAM Workbench and use CAM menu, ToolBit Library Editor, to open the Tool Table that imported tools should be added to. It is recommended to test with an empty Tool Table.
 
 4. Select: CAM Menu - CamScripts - CSV Import to run the import process for the default example. Note OTHER EXAMPLE FILES.....
-If want to test missing mandatory columns: 'shape', 'Diameter' <<must match case!
+If you want to test missing mandatory columns: 'shape', 'Diameter' <<must match case!
 <class 'KeyError'>: ('shape',)
  Mandatory property 'Diameter' not found, ignoring this tool bit
 
@@ -52,23 +54,25 @@ console + warnings - dup names, dup tb files
 ```Tool number 28120 already exists for Tool 3F_D8.12-L50.0_endmill.```
 If input data and naming rules create no duplicates, then these will not appear.
 
-(++add to known issue/report to FC??) Red Warning
 ```Sketch: Solving the sketch failed```
-Cause has not been found. Shape files adn contained scketches are valid and have been in use for about two years. It is suspected that the rapid open close of these shapes files to read the property data, does not allow time for FreeCAD to finish refreshing the internals of the file.
+Shape files and contained sketches are valid and have been in use for about two years. It is suspected that the rapid open close of these shapes files to read the property data, does not allow time for FreeCAD to finish refreshing the internals of the file.
 
 Notes:
 
 - The CAM ToolBit Library Editor can be used to delete Tools from the ToolTable. Bulk selection is allowed.
-- After testing is is also a good idea to clean up ToolBit files. At present this has to be done by manually deleting the files in DESCRIBE HERE ...OR LINK TO COMMON SECTION ON TOOL DIRS & SCRIPT DIRS...?????
-Test ToolTables or Libraries also need to be deleted in the same way. These are found [....]()
+- Deleting after testing is also a good idea to clean up ToolBit files. At present this has to be done by manually deleting the files.
+- Test ToolTables or Libraries also need to be deleted in the same way.
+
+Note: Use the ```Show config and script file locations``` menu item to find the above file locations.
+![Menu items](/images/Menu items.png)
 
 ## Simple steps to import your own tool data
 
-1. Follow steps in [Before importing any data]()
+1. Follow steps in above [Before importing any data](##before-importing-any-data)
 
 2 .Create your CSV file with relevant data in the mandatory columns and any additional columns that you wish matching Tool Properties to be set.
 
-3. Copy file to [ doc HOW TO GET USER FIND THEIR INSTALL DIR - from addon mgr, FC python console, ????]().
+3. Copy file to the ```CamScripts/freecad/cam_scripts/cutting_tool_data/``` directory. You can find this by selecting this addon in the Addon manager and lookign a Install location path near the top of the dialog.
 Confirm and queries to ensure the new file overwrites the exsiting example file.
 Note a copy of the example file named "cuttingtools1.csv" will remain in the cutting_tool_data directory.
 
@@ -78,7 +82,7 @@ Note a copy of the example file named "cuttingtools1.csv" will remain in the cut
 
 - naming rules copy/create/change script
 - change CSV file name
-- sort each CSV file and save seperate files with only one shape type etc.
+- sort each CSV file and save seperate files with only one shape type etc. This is especially useful to save the tools from each imported in a different Tool Table in FreeCAD.
 
 ## How and when to create custom Tool Bit shape files
 
@@ -94,7 +98,7 @@ It would also be possible to change the import code so that the detecting shapen
 
 First row is a header that names every column.
 Column header of cell matches EXACTLY (ie text case and no extra spaces)
-Column headers can be in any order. You are free to add additonal columns with your own data, as shown in the provided   example file [cutting_tool_data/cuttingtools1.csv]()
+Column headers can be in any order. You are free to add additonal columns with your own data, as shown in the provided   example file [cutting_tool_data/cuttingtools1.csv](cutting_tool_data/cuttingtools1.csv)
 Every row will be read during import and every column process according to rules below.
 All data is assumed to be in mm, or degrees.
 With the few exceptions noted here and below, there are no restrictions on data content. This means there is very little or NO data validation. So float data or negative data or unrealistic values, say 100000 (mm) for a tool diameter will be added into your ToolBit with no checks.
