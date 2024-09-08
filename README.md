@@ -55,7 +55,12 @@ Example macro code is simplified by two supplied python libraries and one excell
 
 ## Installing and using
 
-CamScripts can be installed using the FreeCAD Addon Manager. LINK HOW>
+CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager -
+
+[!WARNING]
+At present the morph-into-addon branch has the more complete code and especially menus and more complete README files.
+But there is currently some weird interaction with FreeCAD init adn initGui process that disables the  Addon Manager!
+So for now, to uninstall CamScripts you will need to delete or move the /Mod/CamScripts directory.
 
 It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
 
