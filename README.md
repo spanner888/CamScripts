@@ -42,6 +42,7 @@ CamScripts provides a valuable toolkit for FreeCAD users seeking to improve effi
     - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
     - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
       - Note double underscores included above show missing properties in a ToolBit do not cause errors.
+- Note that rules must create a valid filename for the ToolBit. Also it is best if filename is valid on any of the three supported platforms, avoid using \/:*?"<>| and non-printable characters such as the ASCII control-characters. Also avoid spaces and graphic characters.
 
 2. FreeCAD CAM Speeds and Feeds calculation prototype example using the new Materials workbench and Material Machining Model containing the cutting data.
 
