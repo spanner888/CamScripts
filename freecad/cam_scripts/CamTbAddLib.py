@@ -50,7 +50,7 @@ def getAllShapeNamesFromDir(user=False):
         workingdir = os.path.dirname(Path.Preferences.lastPathToolLibrary())
         s_dir_name = os.path.sep + "Shape" + os.path.sep
         shapeDir = workingdir + s_dir_name
-        dir_msg = "User shapeDir: "
+        dir_msg = "User Tool shapeDir: "
     else:
         if "PathWorkbench" in Gui.listWorkbenches():
             homep_to_shapes = "Mod/Path/Tools/Shape/"
@@ -60,10 +60,10 @@ def getAllShapeNamesFromDir(user=False):
 
         shapeDir = FreeCAD.getHomePath() + homep_to_shapes
         shapeDir = shapeDir.replace("/", os.path.sep)
-        dir_msg = "System shapeDir: "
+        dir_msg = "System Tool shapeDir: "
 
-    print(f"Returning shapes from {dir_msg}: {shapeDir}")
     s_names = getShapeNamesFromDir(shapeDir)
+    print(f"{   dir_msg} has {len(s_names)} shapes in: {shapeDir}")
 
     return shapeDir, s_names
 
@@ -147,19 +147,6 @@ def getAllShapeDetails():
                                             "attr": all_shp_attrSys}})
 
 
-
-
-def test():
-    getAllShapeDetails()
-    print(avail_shape_details)
-    # from freecad.cam_scripts import CamTbAddLib
-    # CamTbAddLib.test()
-    
-    
-    
-    
-    
-    
 def get_list_all_shape_names():
     # Shape names can be in System and User directories
     # In this example, BOTH lists are retreived & joined
@@ -174,7 +161,7 @@ def find_shape_location(shape_name):
     if shape_name.endswith(".fcstd"):
         shape_name = shape_name[:-len(".fcstd")]
 
-    print("find_shape_location ", shape_name)
+    #print("find_shape_location ", shape_name)
     
     s_location = None
     s_dir = None
@@ -188,7 +175,7 @@ def find_shape_location(shape_name):
 
     s_dir = avail_shape_details[s_location]["dir"]
 
-    print("find_shape_location ", s_location, s_dir)
+    #print("find_shape_location ", s_location, s_dir)
     return s_location, s_dir
 
 
@@ -445,7 +432,7 @@ def processUserToolInput(tb_name_rules,
                         ):
     #dbg_print=True
     if dbg_print:
-    #     print("dbg_print processUserToolInput")
+        # print("dbg_print processUserToolInput")
         print("---> processUserToolInput tb_base_nr: ", tb_base_nr)
 
     getAllShapeDetails()

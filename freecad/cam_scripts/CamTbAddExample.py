@@ -63,84 +63,83 @@ def ctba_example():
     # -----------------------------------------------------------------------
 
 
-    if 1 == 2:
-        # -----------------------------------------------------------------------
-        print("Example 3. Create many tools: dia to dia_max, increment dia_inc")
-        #   But only If BOTH dia_max & dia_inc are greater than zero,
-        #            Else: ONLY create ONE TB of this dia in current library.
-        CamTbAddLib.processUserToolInput(boboxx_rulesShape,
-                                        shape_name = "endmill",
-                                        tb_base_name = "em",
-                                        tb_base_nr = 20000,
+    # -----------------------------------------------------------------------
+    print("Example 3. Create many tools: dia to dia_max, increment dia_inc")
+    #   But only If BOTH dia_max & dia_inc are greater than zero,
+    #            Else: ONLY create ONE TB of this dia in current library.
+    CamTbAddLib.processUserToolInput(boboxx_rulesShape,
+                                    shape_name = "endmill",
+                                    tb_base_name = "em",
+                                    tb_base_nr = 20000,
+                                    tb_nr_inc = 100,
+                                    dia = 8.2,
+                                    dia_max = 9.0,
+                                    dia_inc = 0.2,
+                                    flutes=4)
+    print("\t...Example 3 finished.\n")
+    # -----------------------------------------------------------------------
+
+
+    # -----------------------------------------------------------------------
+    print("Example 4. For EVERY AVAILABLE Tool Shape: Create Diameter RANGE of Tools in current library")
+    print("           Care adjusting as #Tools created = #shapes * #Tool-in-dia-range")
+    print("           One test setup create over 1,600 ToolBits & added to Library!")
+
+    # Shape names can be in System and User directories
+    # In this example, BOTH lists are retreived & joined
+    # so that ToolBits for EVERY AVILABLE shape will be created.
+    shape_names = CamTbAddLib.get_list_all_shape_names()
+    fallback_nr = 1000
+    tb_base_number = 0
+    dia_range_start = 3.125
+    dia_increment = 0.125
+    nr_inc = 3
+    dia_maximum = dia_range_start + nr_inc * dia_increment
+    for s in shape_names:
+        if s in ex_rules.shape_base_numbers.keys():
+            tb_base_number = ex_rules.shape_base_numbers[s]
+        else:
+            fallback_nr += 1
+            tb_base_number = fallback_nr
+
+
+
+        print("    ===> ", s, tb_base_number, end=" :>> ")
+
+
+
+        CamTbAddLib.processUserToolInput(exagerated_rules_example,
+                                        shape_name = s,
+                                        tb_base_name = s + "_example",
+                                        tb_base_nr = tb_base_number,
                                         tb_nr_inc = 100,
-                                        dia = 8.2,
-                                        dia_max = 9.0,
-                                        dia_inc = 0.2,
-                                        flutes=4)
-        print("\t...Example 3 finished.\n")
-        # -----------------------------------------------------------------------
-
-
-        # -----------------------------------------------------------------------
-        print("Example 4. For EVERY AVAILABLE Tool Shape: Create Diameter RANGE of Tools in current library")
-        print("           Care adjusting as #Tools created = #shapes * #Tool-in-dia-range")
-        print("           One test setup create over 1,600 ToolBits & added to Library!")
-
-        # Shape names can be in System and User directories
-        # In this example, BOTH lists are retreived & joined
-        # so that ToolBits for EVERY AVILABLE shape will be created.
-        shape_names = CamTbAddLib.get_list_all_shape_names()
-        fallback_nr = 1000
-        tb_base_number = 0
-        dia_range_start = 3.125
-        dia_increment = 0.125
-        nr_inc = 3
+                                        dia = dia_range_start,
+                                        dia_max = dia_maximum,
+                                        dia_inc = dia_increment,
+                                        flutes=2)
+        # Example does not need warnings about duplicate Tool numbers in Library,
+        # so keep changing dia range.
+        dia_range_start += nr_inc * dia_increment
         dia_maximum = dia_range_start + nr_inc * dia_increment
-        for s in shape_names:
-            if s in ex_rules.shape_base_numbers.keys():
-                tb_base_number = ex_rules.shape_base_numbers[s]
-            else:
-                fallback_nr += 1
-                tb_base_number = fallback_nr
+
+    print("\t...Example 4 finished.\n")
+    # -----------------------------------------------------------------------
 
 
-
-            print("    ===> ", s, tb_base_number, end=" :>> ")
-
-
-
-            CamTbAddLib.processUserToolInput(exagerated_rules_example,
-                                            shape_name = s,
-                                            tb_base_name = s + "_example",
-                                            tb_base_nr = tb_base_number,
-                                            tb_nr_inc = 100,
-                                            dia = dia_range_start,
-                                            dia_max = dia_maximum,
-                                            dia_inc = dia_increment,
-                                            flutes=2)
-            # Example does not need warnings about duplicate Tool numbers in Library,
-            # so keep changing dia range.
-            dia_range_start += nr_inc * dia_increment
-            dia_maximum = dia_range_start + nr_inc * dia_increment
-
-        print("\t...Example 4 finished.\n")
-        # -----------------------------------------------------------------------
-
-
-        # -----------------------------------------------------------------------
-        print("Example 5. User boboxx naming rules Example: 2F-D6.35-L31.076, FC issue:12823")
-        boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
-        CamTbAddLib.processUserToolInput(boboxx_rulesShape,
-                                        shape_name = "endmill",
-                                        tb_base_name = "em",
-                                        tb_base_nr = 70000,
-                                        tb_nr_inc = 100,
-                                        dia = 10.3,
-                                        dia_max = 10.4,
-                                        dia_inc = 0.2,
-                                        flutes=4)
-        print("\t...Example 5 finished.\n")
-        # -----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
+    print("Example 5. User boboxx naming rules Example: 2F-D6.35-L31.076, FC issue:12823")
+    boboxx_rules = ex_rules.BoboxxRules(shape_name='endmill')
+    CamTbAddLib.processUserToolInput(boboxx_rulesShape,
+                                    shape_name = "endmill",
+                                    tb_base_name = "em",
+                                    tb_base_nr = 70000,
+                                    tb_nr_inc = 100,
+                                    dia = 10.3,
+                                    dia_max = 10.4,
+                                    dia_inc = 0.2,
+                                    flutes=4)
+    print("\t...Example 5 finished.\n")
+    # -----------------------------------------------------------------------
 
 
     print("")

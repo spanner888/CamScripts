@@ -134,7 +134,7 @@ def cfp_example():
     tc1 = csl.addTc(job, tcProps1, byNr=False)
     if tc1 is None:
         return
-    print("\tSet profile_op.ToolController to above TC+user scripted settings")
+    print("Set profile_op.ToolController to above TC+user scripted settings")
     profile_op.ToolController = tc1
 
     tc2 = csl.addTc(job, tcProps2, byNr=True)
