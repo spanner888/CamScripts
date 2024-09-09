@@ -84,8 +84,12 @@ class GenericCmd(object):
         """
         the function to be handled, when a user starts the command
         """
-        print(self.MenuTxt + " Activated")
-        self.cmdfunction()
+        # print(self.MenuTxt + " Activated")
+        # FIXME: update for last 2 menu items????
+        if self.MenuTxt.startswith("README"):
+            self.cmdfunction(self.MenuTxt)
+        else:
+            self.cmdfunction()
 
 
 def running_under_windows() -> bool:
@@ -97,51 +101,20 @@ def running_under_macos() -> bool:
 
 
 def display_readme(readme_name=""):
-    if readme_name == "":
-        readme_name = "REAMDME.md"
-
     # git_repo_url = "https://github.com/spanner888/CamScripts/"
     # git_repo_url = "https://github.com/spanner888/CamScripts/tree/main/"
     # git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
     git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
     mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
-    print(mod_dir)
+    print(mod_dir, readme_name)
     
-    #just list file names or txt file, or just display txt ...
-    #open readmes????? <<<use weblink to github ...FF not understand markdown & nobody has MD viewer!!!
-    #**works on z4: subprocess.run(['open', 'https://github.com/spanner888/CamScripts/blob/main/README.md'], check=True)
-    #README 1 Import CSV Tool data.md
-    #README 2 Tool Bits Add Example.md
-    #README 3 Cam Full Process Example.md
+    if readme_name == "":
+        readme_name = "README.md"
 
-    #++link to issues
-    #wiki??? https://github.com/spanner888/CamScripts/wiki
+    if not readme_name.endswith(".md"):
+        readme_name += ".md"
 
     subprocess.run(['open', git_repo_url + readme_name])
-    #>>> subprocess.run(['open', git_repo_url + 'README2.md'], check=True)
-    #for git branch: subprocess.run(['open', 'https://github.com/spanner888/CamScripts/tree/morph-into-addon/README.md'], check=True)
-
-    #but G: ie sanity issue!!!
-
-    #so next is FILE COPIES => look at CAM checkworking directory!!! should be crossplatform
-
-        #at least till get confidence dump lotsa ENV info about CURENT CAM Lib & materials prefs & dirs
-
-        #find CURRENT Lib - tool/shape dir
-        #find user mat dir, or crete temp custom...
-        #& still ??? is Model
-    
-    # This entire function + support funcs ...poss in a COMMADN mod instead of leaving in init_gui???
-    # if can easliy get comamdns working
-    
-    # mmmmm works on gpc which won't open sanity & vice versa!!!
-    # display_folder_in_fm(mod_dir)
-    # os.startfile(mod_dir)
-    #TO morph info the file copies or 2x sep functions
-    ## below in menu/action creation &/or here??? test for file presence and either:
-    # & if present CHANGE menu to RE-INSTALL, not install...
-    # & here...give msg?
-    # pass
 
 
 def get_user_config(printing=True):
@@ -315,10 +288,13 @@ def updateMenu(workbench):
                    7: {"name": "README Cam Full Process Example",
                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
                        "action": display_readme},
-                   8: {"name": "Show config and script file locations",
+                   8: {"name": "README Naming Rules",
+                       "tool_tip": "How to use the naming rules to create names for your ToolBits & Libraries",
+                       "action": display_readme},
+                   9: {"name": "Show config and script file locations",
                        "tool_tip": "So you can tailor CSV importing and examples to your requirements",
                        "action": get_user_config},
-                   9: {"name": "Once only setup",
+                  10: {"name": "Once only setup",
                        "tool_tip": "Copy example ToolShapes, Material and Material Model", 
                        "action": copy_files}
                    }
@@ -328,16 +304,14 @@ def updateMenu(workbench):
         # Add Menus to very TOP FreeCAD menu strip/bar.
         menu_actions = []
         for k, v in scripts.items():
-            cmd_name = 'Cmd_' + v["name"].replace(" ", "")
+            cmd_name = wb_name + '_Scripts_' + v["name"].replace(" ", "")
             # To register the command in FreeCAD:
+            cmd = GenericCmd(v)
             Gui.addCommand(cmd_name, GenericCmd(v))
             menu_actions.append(cmd_name)
 
-        # c=Gui.getWorkbench('CAMWorkbench')
-        # c.appendMenu("&Scripts", menu_actions)
         c=Gui.activeWorkbench()
         c.appendMenu("&Scripts", menu_actions)
-        # WORKED, but Toolsbars "gone"
         c.reloadActive()
         # ================================================================
         print(addon_menu_title + loaded_text, workbench)

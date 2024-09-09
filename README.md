@@ -58,28 +58,16 @@ Example macro code is simplified by use of supplied python libraries and one exc
 
 ## Installing and using
 
-CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager -
-
-[!WARNING]
-At present the morph-into-addon branch has the more complete code and especially menus and more complete README files.
-But there is currently some weird interaction with FreeCAD init adn initGui process that disables the  Addon Manager!
-So for now, to uninstall CamScripts you will need to delete or move the /Mod/CamScripts directory.
-
-It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
-
-The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
+CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager
 
 [!CAUTION]
 Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
 
-???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
-
-A very recent development version of 22.0dev is currently required. Dates and features added on that date are listed below:
-
-???AddononManager loading error which is really a core FreeCAD issue <<<IF NOT fixed doc for user ++RETHINK install menu.....
-  + if noit fixed = issue in github
-  https://forum.freecad.org/viewtopic.php?t=90418
-  https://github.com/FreeCAD/FreeCAD/pull/16385
+- .......
+- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
+- It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
+- ???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
+- A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
 2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981
 2024-08-18  metal cards with machining model  commit 70bb45430d30cb61d08ac0e7291d1b9a0e931a48
 2024-07-9   Machining model and materials     revision 38314

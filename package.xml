@@ -22,14 +22,11 @@
   <content>
     <workbench>
       <name>TEST</name>
-      <description>Library to import Tool data, create ToolBits and add to current Library Tool Table.
-      Library to automate all CAM steps to create a Job, Operations, ToolControllers, Sanity report postprocessed gcode
-      and calculate Spindle RPM from Tool and Stock material properties.  
-      Many key properties are set to provide realistic FreeCAD Job and gcode.
-      All CAM steps to create a Job, Operations, ToolControllers, Sanity check report,
-      postprocessed gcode and calculate Speeds and Feeds from Tool and Stock material properties.
-      Additonal demonstration of Materials Machinability model to provide data for Speeds and Feeds,
-      including exploring of fz (chipload) tables.</description>
+      <description>FreeCad CAM automation of ToolBit import and creation, with very flexible naming rules.
+        Automation of every step of the CAM process, from tool creation to G-code generation.
+        Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
+        Additional demonstration of Materials Machinability model to provide data for Speeds and Feeds,
+        including exploring of fz (chipload) tables.</description>
       <freecadmin>0.22.0</freecadmin>
       <tag>CAM</tag>
       <tag>Import</tag>
