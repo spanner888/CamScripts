@@ -18,6 +18,9 @@ import freecad.cam_scripts.JobUtils as JobUtils
 from PySide import QtGui
 
 def cfp_example():
+    print("ToolBits created using tcProps1 & tcProps2 rely on the Toolbits from")
+    print("    CamTbAddExample, Examples 1 and 2.")
+
     # =====================================================
     # USER settings
     # =====================================================
@@ -61,7 +64,7 @@ def cfp_example():
     # The above Toolbits can be created by running:
     #   Example 1, 2 in CamTbAddExample.FCMacro
     tcProps1 = csl.tc_props()
-
+                        
     tcProps1.bitName = "28120.0_8.12D_3F_endmill"
     # tcProps1.lib_tool_nr =        # Not used as adding this TC by name, not number
     tcProps1.hfeed = '200 mm/min'

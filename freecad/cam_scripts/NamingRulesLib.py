@@ -156,7 +156,15 @@ or 'TbAttributes' or 'added_macro_prop', but is: ", v1.ptype)
 #so create enum in rules & user can update
 #thaen use OPTIONALLY BACK HERE???
 #???FOR SHAPE MAYBE/OPTION EXACT MATCH OR CONTAINS
-
+# >>>PROB ONLY WAY to stop dups (both TB file & Lib-ToolTable NUMBER) is check first then 
+#       ...then have to CHANGE numbering scheme!!! ...say base_nr*100....
+# totally change scheme so dia part is FIRST...then leave say 2/3 trailing digits to avoid dupes
+# or even SKIP ToolTable #s...let FC handle....so if need #, get from TB NAME...if is 1st item in name...can sort...
+# or for TB...ONLY use the bsae #, eg 2# = endmill, & ignore the 99.99 dia...ALREADY HAVE DIA as option!!!
+# NB Tool table can sort by #, name or shape!!!...as well as many tables/libs
+# MAYBE one part of all this is use from csv or create & write back to csv some unitque TolID
+#    ...then if reimport ....can at at skip SAME tool in CURRENT lib....or maybe dif function to find from LIST of Libs/tables....and DO SOMEHTING
+# STILL *also* POSS DUP NAME ISSUE ....which is suspect of casuing some Tool Not found errors?????
 
 # OOOOOOPS nto part of class hsould it be????
     def create_tb_nr(self, tool_props, dbg_print):

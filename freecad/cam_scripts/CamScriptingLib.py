@@ -215,15 +215,22 @@ def _get_tool_by_filename(name):
 
     s_dir = None
     libraries = JobUtils._get_available_tool_library_paths()
+    print(f"LOOKING FOR TOOL: {name} in lib below")
+    print(libraries)
     for libLoc, libFN, libFile in libraries:
+        print(libLoc, libFN, libFile )
         for toolNum, toolDict, bitPath in JobUtils._read_library(libFile):
+            print("toolNum, toolDict, bitPath: ", toolNum, toolDict, bitPath)
             loc, fnlong = os.path.split(bitPath)
             fn, ext = os.path.splitext(fnlong)
             if fn == name:
                 print()
                 s_name = toolDict['shape']
+                print("MATCHED-FOUND name, s_name" ,name, s_name)
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
+                print("s_location, s_dir", s_location, s_dir)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict, name, s_dir)
+                print("toolBit", toolBit)
                 if hasattr(toolBit, "ViewObject") and hasattr(
                     toolBit.ViewObject, "Visibility"
                 ):
@@ -280,8 +287,12 @@ def add_toolcontroller_by_filename(job, name):
     Adds a new tool controller based on the name argument to the target job object provided.
     Returns tool controller object.
     """
+    print("_get_tool_by_filename(name)", name)
     tn, tool = _get_tool_by_filename(name)
-    return _add_tool_to_job(job, tool)
+    print("_get_tool_by_filename(name)", tn, tool)
+    tc = _add_tool_to_job(job, tool)
+    print("tc ", tc)
+    return tc
 
 
 #modding from JobUtils
@@ -317,7 +328,7 @@ def addTc(job, tcProps, byNr=False):
                 .format(tcProps.bitName))
 
             tc = add_toolcontroller_by_filename(job, tcProps.bitName)
-
+            print("tc :", tc)
             tc.HorizFeed = tcProps.hfeed
             tc.VertFeed = tcProps.vfeed
             tc.SpindleSpeed = tcProps.spindleSpeed
