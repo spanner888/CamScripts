@@ -121,13 +121,14 @@ def getShapePropsFromDir(shape_name_dir, s_names):
     return all_shp_at
 
 
-# Get all users available shape_names & all properties of each shape.
 def getAllShapeDetails():
-    
+    # Only do this ONCE as slow-ish open/close ALL shape files IN FreeCAD!
+    # Get all users available shape_names & all properties of each shape.
     is_global = "avail_shape_details" in globals()
-
     # Only every edit this global here, so other uses do not need global
-    if not is_global:
+    if is_global:
+        return
+    else:
         global avail_shape_details
     
         # *Opens* every FC shape DOCUMENT to retreive properties!
@@ -144,18 +145,13 @@ def getAllShapeDetails():
         avail_shape_details.update({"system": {"dir": shapeDirSys,
                                             "shape_names": s_namesSys,
                                             "attr": all_shp_attrSys}})
-        
-    # now is global var!!
-    # return s_namesUser, all_shp_attrUser, s_namesSys, all_shp_attrSys
-    # return avail_shape_details
+
+
+
 
 def test():
-    is_global = "avail_shape_details" in globals()
-    if not is_global:
-        getAllShapeDetails()
-
+    getAllShapeDetails()
     print(avail_shape_details)
-    
     # from freecad.cam_scripts import CamTbAddLib
     # CamTbAddLib.test()
     
@@ -168,8 +164,7 @@ def get_list_all_shape_names():
     # Shape names can be in System and User directories
     # In this example, BOTH lists are retreived & joined
     # so that ToolBits for EVERY AVAILABLE shape will be created.
-    if avail_shape_details is None:
-        getAllShapeDetails()
+    getAllShapeDetails()
     shape_names = avail_shape_details["user"]['shape_names'] +\
                     avail_shape_details["system"]['shape_names']
     return shape_names
@@ -180,14 +175,12 @@ def find_shape_location(shape_name):
         shape_name = shape_name[:-len(".fcstd")]
 
     print("find_shape_location ", shape_name)
+    
     s_location = None
     s_dir = None
     
-    # global avail_shape_details
-    if avail_shape_details is None:
-        getAllShapeDetails()
+    getAllShapeDetails()
         
-    # an oops paste?? shapeDirUser, s_namesUser = getAllShapeNamesFromDir(user=False)
     if shape_name in avail_shape_details["system"]['shape_names']:
         s_location = "system"
     elif shape_name in avail_shape_details["user"]['shape_names']:
@@ -305,13 +298,11 @@ def addToolListToCurrentLibrary(library, shape_name, dia_list,
 
 def importToolCsv(csvfile, rules, dbg_print=False):
     # import expect need set EVERY tool data via
-    # NOPE see exampole file: addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False))
+
+    # NOPE see example file: addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False))
     # THEN set individ props, like #Flutes, shank dia, material........
 
-
-    # init details of All avail shapes, reuires OPENING every single file!
     getAllShapeDetails()
-
     # Imports csv as LIST of dicts of each row, ie header row cells are dict Keys
     data_list = load_data(csvfile)
 
@@ -452,12 +443,11 @@ def processUserToolInput(tb_name_rules,
                          flutes=3,
                          dbg_print=False
                         ):
-    dbg_print=True
-    # if dbg_print:
+    #dbg_print=True
+    if dbg_print:
     #     print("dbg_print processUserToolInput")
-    print("---> processUserToolInput tb_base_nr: ", tb_base_nr)
+        print("---> processUserToolInput tb_base_nr: ", tb_base_nr)
 
-    # init details of All avail shapes, requires OPENING every single file!
     getAllShapeDetails()
 
     s_location, s_dir = find_shape_location(shape_name)
@@ -486,8 +476,7 @@ def processUserToolInput(tb_name_rules,
 
     # FYI: below is sort of code that code be moved/run ONCE for performance!
     # global avail_shape_details
-    if avail_shape_details is None:
-        getAllShapeDetails()
+    getAllShapeDetails()
         
     # an oops paste?? shapeDirUser, s_namesUser = getAllShapeNamesFromDir(user=True)
     
@@ -593,18 +582,7 @@ def load_data(dataFile, print_csv_file_names=False):
 
 
 
-# Init these when this Library imported,
-#   so only need to do slow-ish open/close shape files IN FreeCAD once!
-
-# avail_shape_details = getAllShapeDetails()
-#global avail_shape_details
-#avail_shape_details = None
-# print("imported 'CamTbAddLib' and loaded all user & systems Tool shape_names & properties")
-# print("at import found User shapes: ", avail_shape_details["user"])
-# print("at import found System shapes: ", avail_shape_details["system"])
-# print()
 
 q = FreeCAD.Units.Quantity
-
 
 print(f"CamTbAddLib (CAM ToolBit Add Library) {__version__} module imported")
