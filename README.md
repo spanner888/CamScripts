@@ -1,15 +1,13 @@
 ## CamScripts for FreeCAD CAM
 
-CamScripts automate and streamline a very wide range of tasks in FreeCAD's CAM (Computer-Aided Manufacturing) environment.
-
-Key features and benefits include:
+CamScripts automates many tasks in FreeCAD's CAM (Computer-Aided Manufacturing) environment including:
 
 - Bulk create ToolBits from:
 
     - Imported CSV tool data
     - Defined ranges of Diameter and Flute count, or list of Shape types
-    - Created with very flexible naming rules and autonumbering for easy organization
-    - Created ToolBits are added to current FreeCAD Library Tool table
+    - Using very flexible naming rules and autonumbering for easy organization
+    - ToolBits are added to current FreeCAD Library Tool table
 
 - Process Automation:
 
@@ -32,26 +30,26 @@ CamScripts provides a valuable toolkit for FreeCAD users seeking to improve effi
 
 1. An Extensive ToolBit rule based naming system which allows use of ANY ToolBit property and allows setting order of each component as well as leading/trailing seperators and abbreviations.
 
-  - For example:
-    - 2F-D6.35-L31
-    - 1F_D3.0-L50.0_endmill
-    - 3F_D4.0-L50.0_roughing
-    - 28600.0_8.6D_0F_860_em
-    - Last item above also shows one example of an auto-numbered name.
+- For example:
+  - 2F-D6.35-L31
+  - 1F_D3.0-L50.0_endmill
+  - 3F_D4.0-L50.0_roughing
+  - 28600.0_8.6D_0F_860_em
+  - Last item above also shows one example of an auto-numbered name.
 
-  - A ridulous example used for testing imported Tools with uncommon properties:
-      - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__
-      - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
-      - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
-        - Note double underscores included above show missing properties in a ToolBit do not cause errors.
+- A ridulous example used for testing imported Tools with uncommon properties:
+    - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__
+    - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
+    - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
+      - Note double underscores included above show missing properties in a ToolBit do not cause errors.
 
 2. FreeCAD CAM Speeds and Feeds calculation prototype example using the new Materials workbench and Material Machining Model containing the cutting data.
 
-The cutting data is impressive due to it's coherence (for example data for different sections can be matched to related sections, which is a common failing in many data sets) and also because of the notes on adapting the parameters for many different cutting conditions.
+The cutting data is impressive due to it's coherence (for example: data for different sections can be matched to related sections, which is a common failing in many data sets) and also because of the notes on adapting the parameters for many different cutting conditions.
 
 This is intended to inspire you to contribute to the design work, further data collection, curation and documentation.
 
-A proof of concept Machinability model that could allow users to add new Tool material and coating data, without requiring code changes to access and calculate Speeds and Feeds is also included.
+A proof of concept Machinability model that could allow users to add new Tool material and coating data and data, without requiring code changes is also included.
 
 So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
@@ -77,6 +75,10 @@ Please remember to create a test Library Tool Table before you run any of the sc
 
 A very recent development version of 22.0dev is currently required. Dates and features added on that date are listed below:
 
+???AddononManager loading error which is really a core FreeCAD issue <<<IF NOT fixed doc for user ++RETHINK install menu.....
+  + if noit fixed = issue in github
+  https://forum.freecad.org/viewtopic.php?t=90418
+  https://github.com/FreeCAD/FreeCAD/pull/16385
 2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981
 2024-08-18  metal cards with machining model  commit 70bb45430d30cb61d08ac0e7291d1b9a0e931a48
 2024-07-9   Machining model and materials     revision 38314
