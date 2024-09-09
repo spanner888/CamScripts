@@ -1,24 +1,28 @@
 ## CamScripts for FreeCAD CAM
 
-CamScripts provides a suite of tools to streamline and automate most tasks within FreeCAD's Computer-Aided Manufacturing (CAM) environment. Key features and benefits include:
+CamScripts automate and streamline a very wide range of tasks in FreeCAD's CAM (Computer-Aided Manufacturing) environment.
 
-- Efficient Tool Management:
+Key features and benefits include:
 
-    - Import tool data from CSV files to create FreeCAD Tool libraries.
-    - Use flexible naming rules and autonumbering for easy organization.
-    - Generate tool families based on specific criteria.
+- Bulk create ToolBits from:
+
+    - Imported CSV tool data
+    - Defined ranges of Diameter and Flute count, or list of Shape types
+    - Created with very flexible naming rules and autonumbering for easy organization
+    - Created ToolBits are added to current FreeCAD Library Tool table
 
 - Process Automation:
 
-    - Create and recreate every step of the CAM process, from tool creation to G-code generation.
+    - Create and recreate every step of the CAM process, from tool creation to G-code generation
     - Ensure consistent settings for tools, feeds, operations and postprocessors
-    - Run sanity check report to review.
+    - Run sanity check report to review
 
-- Machinability Materials Integration:
+- Showcase FreeCAD's new Machinability Materials and Model:
 
-    - Showcase a valuable dataset for common materials and highlight areas for further development.
+    - Provides underlying data and structure for machining calculations, ie Speeds and Feeds
+    - Includes dataset for common metal and wood and wood-like materials
     - Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
-    - Explore an extended Machinability model for improved data flexibilty and calculations.
+    - Explore an extended Machinability model for improved data flexibilty through less code dependancies/changes and highlight areas for further development.
 
 CamScripts provides a valuable toolkit for FreeCAD users seeking to improve efficiency and consistency in their CAM workflows.
 
@@ -45,13 +49,13 @@ CamScripts provides a valuable toolkit for FreeCAD users seeking to improve effi
 
 The cutting data is impressive due to it's coherence (for example data for different sections can be matched to related sections, which is a common failing in many data sets) and also because of the notes on adapting the parameters for many different cutting conditions.
 
-I hope this example inspires many to contribute to the design work, further data collection, curation and documentation.
+This is intended to inspire you to contribute to the design work, further data collection, curation and documentation.
 
 A proof of concept Machinability model that could allow users to add new Tool material and coating data, without requiring code changes to access and calculate Speeds and Feeds is also included.
 
 So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
-Example macro code is simplified by two supplied python libraries and one excellent JobUtils library from russ4262 and also includes sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
+Example macro code is simplified by use of supplied python libraries and one excellent JobUtils library from russ4262. The macros also include sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
 
 ## Installing and using
 
