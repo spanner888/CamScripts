@@ -79,6 +79,7 @@ class GenericCmd(object):
         """
         the function to be handled, when a user starts the command
         """
+        # FIXME - os distinction not required or just not here???
         if self.MenuTxt.startswith("README"):
             if running_under_windows:
                 self.cmdfunction(self.MenuTxt)
@@ -110,9 +111,23 @@ def display_readme(readme_name=""):
     git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
     # mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
     file_url = git_repo_url + readme_name
+    file_url.replace(" ", "%20")
     print(file_url, readme_name)
     
-    subprocess.run(['open', file_url])
+    # CARE THIS METHOD oLD - DOES NOT HAE THE PLATFORM CHECKS!!!!
+    # works on win, but only README.md on linux...give up & just open URL ...let user select readme ...& shorter menu!!!
+    so can skip this functrion ...justs move to Activated above
+    try:
+        import webbrowser
+        webbrowser.open(git_repo_url, new=0, autoraise=True)
+        
+        
+        
+        #subprocess.check_output(['open', "'" + file_url + "'"])
+        #subprocess.check_output(['open', file_url])
+        #subprocess.run(['open', file_url])
+    except Exception as e:
+        print(e)
 
 
 def get_user_config(printing=True):
