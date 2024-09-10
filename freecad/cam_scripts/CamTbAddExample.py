@@ -103,12 +103,6 @@ def ctba_example():
             fallback_nr += 1
             tb_base_number = fallback_nr
 
-
-
-        print("    ===> ", s, tb_base_number, end=" :>> ")
-
-
-
         CamTbAddLib.processUserToolInput(exagerated_rules_example,
                                         shape_name = s,
                                         tb_base_name = s + "_example",
