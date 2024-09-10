@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.1  2024/08/31
-
-__version__ = "2024-09-01"
+# V0.3  2024/09/10
+__version__ = "V0.3  2024/09/10"
 
 import importlib
 class LazyLoader () :

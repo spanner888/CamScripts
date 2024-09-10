@@ -1,8 +1,8 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.1  2024/08/31
+# V0.3  2024/09/10
+__version__ = "V0.3  2024/09/10"
 
 import FreeCAD
 import Materials
@@ -18,6 +18,9 @@ import freecad.cam_scripts.JobUtils as JobUtils
 from PySide import QtGui
 
 def cfp_example():
+    print("ToolBits created using tcProps1 & tcProps2 rely on the Toolbits from")
+    print("    CamTbAddExample, Examples 1 and 2.")
+
     # =====================================================
     # USER settings
     # =====================================================
@@ -61,7 +64,7 @@ def cfp_example():
     # The above Toolbits can be created by running:
     #   Example 1, 2 in CamTbAddExample.FCMacro
     tcProps1 = csl.tc_props()
-
+                        
     tcProps1.bitName = "28120.0_8.12D_3F_endmill"
     # tcProps1.lib_tool_nr =        # Not used as adding this TC by name, not number
     tcProps1.hfeed = '200 mm/min'
@@ -131,7 +134,7 @@ def cfp_example():
     tc1 = csl.addTc(job, tcProps1, byNr=False)
     if tc1 is None:
         return
-    print("\tSet profile_op.ToolController to above TC+user scripted settings")
+    print("Set profile_op.ToolController to above TC+user scripted settings")
     profile_op.ToolController = tc1
 
     tc2 = csl.addTc(job, tcProps2, byNr=True)

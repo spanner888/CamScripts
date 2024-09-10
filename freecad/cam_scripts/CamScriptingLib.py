@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.1  2024/08/31
+# V0.3  2024/09/10
+__version__ = "V0.3  2024/09/10"
 
 import FreeCAD
 import Path
@@ -220,7 +221,6 @@ def _get_tool_by_filename(name):
             loc, fnlong = os.path.split(bitPath)
             fn, ext = os.path.splitext(fnlong)
             if fn == name:
-                print()
                 s_name = toolDict['shape']
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict, name, s_dir)
@@ -281,7 +281,8 @@ def add_toolcontroller_by_filename(job, name):
     Returns tool controller object.
     """
     tn, tool = _get_tool_by_filename(name)
-    return _add_tool_to_job(job, tool)
+    tc = _add_tool_to_job(job, tool)
+    return tc
 
 
 #modding from JobUtils
@@ -317,7 +318,6 @@ def addTc(job, tcProps, byNr=False):
                 .format(tcProps.bitName))
 
             tc = add_toolcontroller_by_filename(job, tcProps.bitName)
-
             tc.HorizFeed = tcProps.hfeed
             tc.VertFeed = tcProps.vfeed
             tc.SpindleSpeed = tcProps.spindleSpeed

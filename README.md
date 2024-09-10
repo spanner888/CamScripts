@@ -1,24 +1,26 @@
 ## CamScripts for FreeCAD CAM
 
-CamScripts provides a suite of tools to streamline and automate most tasks within FreeCAD's Computer-Aided Manufacturing (CAM) environment. Key features and benefits include:
+CamScripts automates many tasks in FreeCAD's CAM (Computer-Aided Manufacturing) environment including:
 
-- Efficient Tool Management:
+- Bulk create ToolBits from:
 
-    - Import tool data from CSV files to create FreeCAD Tool libraries.
-    - Use flexible naming rules and autonumbering for easy organization.
-    - Generate tool families based on specific criteria.
+    - Imported CSV tool data
+    - Defined ranges of Diameter and Flute count, or list of Shape types
+    - Using very flexible naming rules and autonumbering for easy organization
+    - ToolBits are added to current FreeCAD Library Tool table
 
 - Process Automation:
 
-    - Create and recreate every step of the CAM process, from tool creation to G-code generation.
+    - Create and recreate every step of the CAM process, from tool creation to G-code generation
     - Ensure consistent settings for tools, feeds, operations and postprocessors
-    - Run sanity check report to review.
+    - Run sanity check report to review
 
-- Machinability Materials Integration:
+- Showcase FreeCAD's new Machinability Materials and Model:
 
-    - Showcase a valuable dataset for common materials and highlight areas for further development.
+    - Provides underlying data and structure for machining calculations, ie Speeds and Feeds
+    - Includes dataset for common metal and wood and wood-like materials
     - Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
-    - Explore an extended Machinability model for improved data flexibilty and calculations.
+    - Explore an extended Machinability model for improved data flexibilty through less code dependancies/changes and highlight areas for further development.
 
 CamScripts provides a valuable toolkit for FreeCAD users seeking to improve efficiency and consistency in their CAM workflows.
 
@@ -28,46 +30,44 @@ CamScripts provides a valuable toolkit for FreeCAD users seeking to improve effi
 
 1. An Extensive ToolBit rule based naming system which allows use of ANY ToolBit property and allows setting order of each component as well as leading/trailing seperators and abbreviations.
 
-  - For example:
-    - 2F-D6.35-L31
-    - 1F_D3.0-L50.0_endmill
-    - 3F_D4.0-L50.0_roughing
-    - 28600.0_8.6D_0F_860_em
-    - Last item above also shows one example of an auto-numbered name.
+- For example:
+  - 2F-D6.35-L31
+  - 1F_D3.0-L50.0_endmill
+  - 3F_D4.0-L50.0_roughing
+  - 28600.0_8.6D_0F_860_em
+  - Last item above also shows one example of an auto-numbered name.
 
-  - A ridulous example used for testing imported Tools with uncommon properties:
-      - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__
-      - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
-      - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
-        - Note double underscores included above show missing properties in a ToolBit do not cause errors.
+- A ridulous example used for testing imported Tools with uncommon properties:
+    - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__
+    - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
+    - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
+      - Note double underscores included above show missing properties in a ToolBit do not cause errors.
+- Note that rules must create a valid filename for the ToolBit. Also it is best if filename is valid on any of the three supported platforms, avoid using \/:*?"<>| and non-printable characters such as the ASCII control-characters. Also avoid spaces and graphic characters.
 
 2. FreeCAD CAM Speeds and Feeds calculation prototype example using the new Materials workbench and Material Machining Model containing the cutting data.
 
-The cutting data is impressive due to it's coherence (for example data for different sections can be matched to related sections, which is a common failing in many data sets) and also because of the notes on adapting the parameters for many different cutting conditions.
+The cutting data is impressive due to it's coherence (for example: data for different sections can be matched to related sections, which is a common failing in many data sets) and also because of the notes on adapting the parameters for many different cutting conditions.
 
-I hope this example inspires many to contribute to the design work, further data collection, curation and documentation.
+This is intended to inspire you to contribute to the design work, further data collection, curation and documentation.
 
-A proof of concept Machinability model that could allow users to add new Tool material and coating data, without requiring code changes to access and calculate Speeds and Feeds is also included.
+A proof of concept Machinability model that could allow users to add new Tool material and coating data and data, without requiring code changes is also included.
 
 So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
-Example macro code is simplified by two supplied python libraries and one excellent JobUtils library from russ4262 and also includes sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
+Example macro code is simplified by use of supplied python libraries and one excellent JobUtils library from russ4262. The macros also include sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
 
 ## Installing and using
 
-CamScripts can be installed using the FreeCAD Addon Manager. LINK HOW>
-
-It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
-
-The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
+CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager
 
 [!CAUTION]
 Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
 
-???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
-
-A very recent development version of 22.0dev is currently required. Dates and features added on that date are listed below:
-
+- .......
+- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
+- It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
+- ???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
+- A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
 2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981
 2024-08-18  metal cards with machining model  commit 70bb45430d30cb61d08ac0e7291d1b9a0e931a48
 2024-07-9   Machining model and materials     revision 38314
@@ -82,6 +82,7 @@ Also more during creation of these macro scripts, the extended Machinability exa
 The extended model and material are included in [CamScripts/cutting_tool_data/Material]()
 
 materials stuff ***TODO** where get/install
+
 
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
@@ -187,12 +188,19 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 
 ## Release notes:
 
-* V0.0.2  2024-08-??
+* V0.0.3  2024-09-10
 
-- Install using FreeCAD Addon Manager, but only via FC Prefs - Addon Manager add repo at present.
-- Add menu "Scripts" to FreeCAD menu bar, to run scripts, show readme's, Tool Shape, Material and script file info.
+- Bug fix related to FreeCAD AddonManager not loading
+- Improving Example 4 to reduce duplicate tool messages (still WIP)
+- Documented and tested how to get new Materials-Model inheritance working for user folder
+- README's menu fixes, which need github release for test confirmation
+- Still possible blocking issue related to FC toolbars being closed and more duplicate tool etc msgs to fix.
+
+* V0.0.2  2024-09-02
+
+- Install using FreeCAD Addon Manager, but only via FC Prefs - Addon Manager add repo at present
+- Add menu "Scripts" to FreeCAD menu bar, to run scripts, show readme's, Tool Shape, Material and script file info
 - Early draft README's for Import, ToolBit Add and Full Process
--
 
 * V0..01  2024-08-31:
 
@@ -200,12 +208,12 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 - CSV Tool import
 - Scripted tool bit creation
 - Creates start to finish FreeCAD CAM process
-- Demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
+- Demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations
 - Extended machinability with Fz in equation form
 
 
 ## License
 
-JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](./freecad/cam_scripts/JobUtils)
+JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](JobUtils.py)
 
-All other files in CamScripts are Copyright 2024 Spanner888 and licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
+All other files in CamScripts are Copyright 2024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).

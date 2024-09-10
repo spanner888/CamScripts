@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.1  2024/08/31
+# V0.3  2024/09/10
+__version__ = "V0.3  2024/09/10"
 
 # allow edited library updates, without close/reopen FC.
 from importlib import reload
@@ -35,10 +36,11 @@ def ctba_example():
     # Six examples on adding a Default, One or a list of Tools to current Library,
     # with differing naming rule examples.
     print("Examples 1 and 2 use a sample set of ToolBit naming rules.")
+    print("     ToolBits created are ALSO used in CamFullProcessExample as properties of tcProps1 & tcProps2,")
+    print("     and so these should not be changed, else CamFullProcessExample will fail.")
     print("Example 3 matches naming rules suggested by github user boboxx")
     print("Example 4 uses exagerated_rules_example, to show how dif properties only appear when present.")
     print("Example 5 add Shape name to RHS of boboxx rules.")
-    print("Example 6 Shows what happens with an empty naming rule set.")
     print()
     # -----------------------------------------------------------------------
     print("Example 1. Add single example default endmill to current Library.")
@@ -80,24 +82,41 @@ def ctba_example():
 
 
     # -----------------------------------------------------------------------
-    print("Example 4. For EVERY Tool Shape SINGLE Tool 3.125 mm dia to current library")
+    print("Example 4. For EVERY AVAILABLE Tool Shape: Create Diameter RANGE of Tools in current library")
+    print("           Care adjusting as #Tools created = #shapes * #Tool-in-dia-range")
+    print("           One test setup create over 1,600 ToolBits & added to Library!")
+
     # Shape names can be in System and User directories
     # In this example, BOTH lists are retreived & joined
     # so that ToolBits for EVERY AVILABLE shape will be created.
-    # avail_shape_details = CamTbAddLib.getAllShapeDetails()
-    # shape_names = avail_shape_details["user"]['shape_names'] +\
-    #                 avail_shape_details["system"]['shape_names']
     shape_names = CamTbAddLib.get_list_all_shape_names()
+    fallback_nr = 1000
+    tb_base_number = 0
+    dia_range_start = 3.125
+    dia_increment = 0.125
+    nr_inc = 3
+    dia_maximum = dia_range_start + nr_inc * dia_increment
     for s in shape_names:
+        if s in ex_rules.shape_base_numbers.keys():
+            tb_base_number = ex_rules.shape_base_numbers[s]
+        else:
+            fallback_nr += 1
+            tb_base_number = fallback_nr
+
         CamTbAddLib.processUserToolInput(exagerated_rules_example,
                                         shape_name = s,
                                         tb_base_name = s + "_example",
-                                        tb_base_nr = 20000,
+                                        tb_base_nr = tb_base_number,
                                         tb_nr_inc = 100,
-                                        dia = 3.125,
-                                        dia_max = 3.5,
-                                        dia_inc = 0.125,
+                                        dia = dia_range_start,
+                                        dia_max = dia_maximum,
+                                        dia_inc = dia_increment,
                                         flutes=2)
+        # Example does not need warnings about duplicate Tool numbers in Library,
+        # so keep changing dia range.
+        dia_range_start += nr_inc * dia_increment
+        dia_maximum = dia_range_start + nr_inc * dia_increment
+
     print("\t...Example 4 finished.\n")
     # -----------------------------------------------------------------------
 

@@ -14,5 +14,4 @@ setup(name='freecad.cam_scripts',
       maintainer_email="spanner888@usabledevices.com",
       url="https://github.com/spanner888/CamScripts",
       description="Powerful automation of CAM tasks",
-      install_requires=['numpy',],
       include_package_data=True)
