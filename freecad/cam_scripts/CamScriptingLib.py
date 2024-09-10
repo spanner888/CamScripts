@@ -474,6 +474,7 @@ def detailed_calcs(mat_uuid, print_machinability=False):
             print(f"Material does not have SOME properties for Machinability model")
             print("\t will attempt to calculate Speeds and Feeds!")
         else:
+            # TODO show material name & maybe path/location
             print(f"Material does not use Machinability model, skipping....")
             return
     try:
@@ -694,8 +695,8 @@ def saveSanityreport(job, sanity_report_name):
             fp.write(html)
     print("Sanity check report written to: {}\n".format(sanity_report))
 
-    webbrowser.open_new_tab(sanity_report)
-
+    # webbrowser.open_new_tab(sanity_report)
+    webbrowser.open(sanity_report, new=0, autoraise=True)
 
 def postProcSaveGcode(postProcessorOutputFile):
     users_current_policy = Path.Preferences.defaultOutputPolicy()

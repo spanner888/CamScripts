@@ -85,7 +85,7 @@ materials stuff ***TODO** where get/install
 
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
-Note: the 3x readme below are still WIP. They are also available from the Scripts menu and are included with the files that are installed.
+Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpfull detail in the exampe and import scripts and help will be available from the FreeCAD forum link.
 
 ![README 1 Import CSV Tool data](README 1 Import CSV Tool data.md)
 
@@ -178,9 +178,11 @@ Path and Material developers and forum users including russ4262, sliptonic, onek
 
 Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is: Version: 0.22.0dev.38553 (Git)
 
-See the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
+These scripts started out as an import and scripted Toolbit creation for personal use. Then I got excited about the new Materials Machinability capability and also remembered the existing JobUtils library by russ4262, hence so many features.
 
-There are no checks while adding a ToolBit to the current Tool table to see if the ToolTable number or the Tool name already exist. Duplicates do occur with current test data and cause warning like:
+However, while a lot of testing and polsihing has occured and the import work very well, there are still rough edges that you might find. One example is below and more up to date list is in the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
+
+There are no checks when saving ToolBit files or while adding a ToolBit to the current Tool table to see item of same name already exists. Duplicates do occur with current test data and can cause warning like:
 
 ```Tool number 28120 already exists for Tool 3F_D8.12-L50.0_endmill.```
 

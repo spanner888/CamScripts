@@ -10,6 +10,7 @@ import FreeCAD as App
 from PySide import QtGui
 from freecad.cam_scripts.translate_utils import translate
 from functools import partial
+import webbrowser
 
 
 ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
@@ -108,24 +109,11 @@ def display_readme(readme_name=""):
     if not readme_name.endswith(".md"):
         readme_name += ".md"
 
-    git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
-    # mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
-    file_url = git_repo_url + readme_name
-    file_url.replace(" ", "%20")
-    print(file_url, readme_name)
+    #git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
+    file_url = "https://github.com/spanner888/CamScripts/"
     
-    # CARE THIS METHOD oLD - DOES NOT HAE THE PLATFORM CHECKS!!!!
-    # works on win, but only README.md on linux...give up & just open URL ...let user select readme ...& shorter menu!!!
-    so can skip this functrion ...justs move to Activated above
     try:
-        import webbrowser
-        webbrowser.open(git_repo_url, new=0, autoraise=True)
-        
-        
-        
-        #subprocess.check_output(['open', "'" + file_url + "'"])
-        #subprocess.check_output(['open', file_url])
-        #subprocess.run(['open', file_url])
+        webbrowser.open(file_url, new=0, autoraise=True)
     except Exception as e:
         print(e)
 
@@ -141,7 +129,7 @@ def get_user_config(printing=True):
 
 
     cfg_info = {"Tools_wd": workingdir, "Tools_sd": s_dir_name,
-            "script_dir": workingdir}
+            "cam_script_dir": os.path.dirname(os.path.realpath(__file__))}
     cfg_info.update(mat_cfg_summary)
 
     if printing:
@@ -164,77 +152,48 @@ def copy_files():
 
     cfg_info = get_user_config(printing=False)
     print(cfg_info)
-    return
+    print()
+    print(cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"])
+    print()
+
+    # NB Change of Materials pref requires restart FreeCAD,
+    #   as does changing Macro directory.
+    if not cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"]:
+        mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
+        mat_prefs.SetString("CustomMaterialsDir",
+                            cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data")
+        mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
+        print("CamScripts configured Materials Custom Directory")
+    else:
+        print("CamScripts attempted to set Materials Custom Directory, but")
+        print("found this directory flagged as already in use!")
+        print("You should change preference to use Material custom directory to be False,")
+        print("then rerun the CamScripts 'Once only setup', or manualy copy the example files.")
+        print("Settings have NOT been changed.")
+
+    # import shutil
+    # # Copy only files of default Path/Tool folder to working directory (targeting the README.md help file)
+    # example_user_tool_shape_dir = os.listdir(defaultdir)
+    #
+    # for file_name in src_toolfiles:
+    #     if file_name in ["README.md"]:
+    #         full_file_name = os.path.join(defaultdir, file_name)
+    #         if os.path.isfile(full_file_name):
+    #             shutil.copy(full_file_name, workingdir)
+
+
     # ex CAM-Path-Tool-Gui-BitLibrary
 
-    # NEED TRIMING DOWN, remove dialogs, refactor.....
+    # tb_files = ["roughing_HRangles.fcstd", "pcb corncutters.fcstd", "Pcb drill.fcstd",
+    #             "roughing.fcstd", "slotdrill.fcstd"]
+    print(cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape")
 
-    import shutil
-    # Copy only files of default Path/Tool folder to working directory (targeting the README.md help file)
-    src_toolfiles = os.listdir(defaultdir)
-    for file_name in src_toolfiles:
-        if file_name in ["README.md"]:
-            full_file_name = os.path.join(defaultdir, file_name)
-            if os.path.isfile(full_file_name):
-                shutil.copy(full_file_name, workingdir)
-
-    # Determine which subdirectories are missing
-    subdirlist = ["Bit", "Library", "Shape"]
-    mode = 0o777
-    for dir in subdirlist.copy():
-        subdir = "{}{}{}".format(workingdir, os.path.sep, dir)
-        if os.path.exists(subdir):
-            subdirlist.remove(dir)
-
-    # Query user for creation permission of any missing subdirectories
-    if len(subdirlist) >= 1:
-        needed = ", ".join([str(d) for d in subdirlist])
-        qm = PySide.QtGui.QMessageBox
-        ret = qm.question(
-            None,
-            "",
-            translate(
-                "CAM_ToolBit",
-                "Toolbit Working directory {} needs these sudirectories:\n {} \n Create them?",
-            ).format(workingdir, needed),
-            qm.Yes | qm.No,
-        )
-
-        if ret == qm.No:
-            return False
-        else:
-            # Create missing subdirectories if user agrees to creation
-            for dir in subdirlist:
-                subdir = "{}{}{}".format(workingdir, os.path.sep, dir)
-                os.mkdir(subdir, mode)
-                # Query user to copy example files into subdirectories created
-                if dir != "Shape":
-                    qm = PySide.QtGui.QMessageBox
-                    ret = qm.question(
-                        None,
-                        "",
-                        translate(
-                            "CAM_ToolBit", "Copy example files to new {} directory?"
-                        ).format(dir),
-                        qm.Yes | qm.No,
-                    )
-                    if ret == qm.Yes:
-                        src = "{}{}{}".format(defaultdir, os.path.sep, dir)
-                        src_files = os.listdir(src)
-                        for file_name in src_files:
-                            full_file_name = os.path.join(src, file_name)
-                            if os.path.isfile(full_file_name):
-                                shutil.copy(full_file_name, subdir)
-
-    # if no library is set, choose the first one in the Library directory
-    if Path.Preferences.lastFileToolLibrary() is None:
-        libFiles = [
-            f
-            for f in glob.glob(
-                Path.Preferences.lastPathToolLibrary() + os.path.sep + "*.fctl"
-            )
-        ]
-        Path.Preferences.setLastFileToolLibrary(libFiles[0])
+    # src = "{}{}{}".format(defaultdir, os.path.sep, dir)
+    # src_files = os.listdir(src)
+    # for file_name in src_files:
+    #     full_file_name = os.path.join(src, file_name)
+    #     if os.path.isfile(full_file_name):
+    #         shutil.copy(full_file_name, subdir)
 
 
 def getIcon(iconName):
@@ -270,21 +229,21 @@ def updateMenu(workbench):
                    3: {"name": "Full Process Example",
                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation", 
                        "action": cfp.cfp_example},
-                   4: {"name": "README",
+                   4: {"name": "README files in github repo",
                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
                        "action": display_readme},
-                   5: {"name": "README Import CSV Tool data",
-                       "tool_tip": "How to import Tool data from CSV, and add to current Library Tool Table",
-                       "action": display_readme},
-                   6: {"name": "README Tool Bits Add Example",
-                       "tool_tip": "Create ToolBits and add to current Library Tool Table",
-                       "action": display_readme},
-                   7: {"name": "README Cam Full Process Example",
-                       "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
-                       "action": display_readme},
-                   8: {"name": "README Naming Rules",
-                       "tool_tip": "How to use the naming rules to create names for your ToolBits & Libraries",
-                       "action": display_readme},
+                   #5: {"name": "README Import CSV Tool data",
+                       #"tool_tip": "How to import Tool data from CSV, and add to current Library Tool Table",
+                       #"action": display_readme},
+                   #6: {"name": "README Tool Bits Add Example",
+                       #"tool_tip": "Create ToolBits and add to current Library Tool Table",
+                       #"action": display_readme},
+                   #7: {"name": "README Cam Full Process Example",
+                       #"tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
+                       #"action": display_readme},
+                   #8: {"name": "README Naming Rules",
+                       #"tool_tip": "How to use the naming rules to create names for your ToolBits & Libraries",
+                       #"action": display_readme},
                    9: {"name": "Show config and script file locations",
                        "tool_tip": "So you can tailor CSV importing and examples to your requirements",
                        "action": get_user_config},
