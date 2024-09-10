@@ -15,15 +15,8 @@ from functools import partial
 ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
 TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources/translations")
 
-# TODO think about menu links to open installed DIR so user can read files.... (Dir as 3x scripts & 3xlibs = lotta file links)
-#   hmm DIR open = some file tool - rely on any-OS-default ...or just copy path to clipboard & tell user?
-
-# TODO translations - at least test works ...at THINK if should at extend to script messages...& libs???
-# credit ...BASED on FS addon for code
 __dir__ = os.path.dirname(__file__)
 iconPath = os.path.join( __dir__, 'Icons' )
-
-#init_complete = False
 
 import importlib
 
@@ -43,9 +36,7 @@ class LazyLoader () :
         
         return getattr (me._mod, attr)
     
-#import freecad.cam_scripts.CamFullProcessExample as cfp
-#import freecad.cam_scripts.CamTbAddExample as ctba
-#import freecad.cam_scripts.CamTbAdd_Importing as ctba_import
+
 cfp = LazyLoader('freecad.cam_scripts.CamFullProcessExample')
 ctba = LazyLoader('freecad.cam_scripts.CamTbAddExample')
 ctba_import = LazyLoader('freecad.cam_scripts.CamTbAdd_Importing')
@@ -57,9 +48,7 @@ from pathlib import Path as osPath
 
 
 
-# cmds in sep file??
 class GenericCmd(object):
-    # def __init__(self, cmdfunction, MenuTxt, ToolTip, icon=''):
     def __init__(self, cmd):
         self.cmdfunction = cmd['action']
         self.MenuTxt = cmd["name"]
@@ -84,17 +73,21 @@ class GenericCmd(object):
         """
         resources which are used by buttons and menu-items
         """
-        # NO ICONS ATM!!
         return {'Pixmap': getIcon(os.path.join(ICONPATH, "camscripts")), 'MenuText': self.MenuTxt, 'ToolTip': self.ToolTip}
 
     def Activated(self):
         """
         the function to be handled, when a user starts the command
         """
-        # print(self.MenuTxt + " Activated")
-        # FIXME: update for last 2 menu items????
         if self.MenuTxt.startswith("README"):
-            self.cmdfunction(self.MenuTxt)
+            if running_under_windows:
+                self.cmdfunction(self.MenuTxt)
+            elif running_under_macos:
+                # Fingers crossed works on Mac
+                self.cmdfunction(self.MenuTxt)
+            else:
+                # assume Linux
+                self.cmdfunction(self.MenuTxt)
         else:
             self.cmdfunction()
 
@@ -108,20 +101,18 @@ def running_under_macos() -> bool:
 
 
 def display_readme(readme_name=""):
-    # git_repo_url = "https://github.com/spanner888/CamScripts/"
-    # git_repo_url = "https://github.com/spanner888/CamScripts/tree/main/"
-    # git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
-    git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
-    mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
-    print(mod_dir, readme_name)
-    
     if readme_name == "":
         readme_name = "README.md"
 
     if not readme_name.endswith(".md"):
         readme_name += ".md"
 
-    subprocess.run(['open', git_repo_url + readme_name])
+    git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
+    # mod_dir = osPath(App.getUserAppDataDir() + 'Mod/')
+    file_url = git_repo_url + readme_name
+    print(file_url, readme_name)
+    
+    subprocess.run(['open', file_url])
 
 
 def get_user_config(printing=True):
@@ -233,25 +224,6 @@ def copy_files():
 
 def getIcon(iconName):
      return os.path.join( iconPath , iconName)
-
-
-def create_action_submenu(addonMenu, addon_dict):
-    # create an action (becomes sub-menu) for this addon
-    action = QtGui.QAction(addonMenu)
-    action.setText(addon_dict["name"])
-    # action.setIcon(QtGui.QPixmap(getIcon('camscripts')))
-    action.setStatusTip(addon_dict["tool_tip"])
-
-    if addon_dict["action"] == display_readme:
-        # partial allows passing parameter in this situation
-        action.triggered.connect(partial(addon_dict["action"], addon_dict["name"] + '.md'))
-    elif addon_dict["action"] == get_user_config:
-        action.triggered.connect(partial(addon_dict["action"], printing=True))
-    else:
-        action.triggered.connect(addon_dict["action"])
-
-    # append this action/submenu item to wb-addon menu
-    addonMenu.addAction(action)
 
 
 def updateMenu(workbench):
