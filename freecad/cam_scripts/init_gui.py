@@ -1,9 +1,16 @@
+# -*- coding: utf-8 -*-
+
+# Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
+# V0.3  2024/09/10
+__version__ = "2024-09-10"
+
 import os
 import FreeCADGui as Gui
 import FreeCAD as App
 from PySide import QtGui
 from freecad.cam_scripts.translate_utils import translate
 from functools import partial
+
 
 ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
 TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources/translations")

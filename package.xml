@@ -3,9 +3,9 @@
 
   <name>CamScripts</name>
 
-  <description>CamScripts macros create and configure *every* step of FreeCAD CAM process.</description>
+  <description>CamScripts ToolBit import or script creation and configure *every* step of FreeCAD CAM process.</description>
 
-  <version>v0.0.2 2024.9.01</version>
+  <version>v0.0.3 2024.9.10</version>
 
   <author email="spanner888@usabledevices.com">spanner888</author>
 
@@ -21,8 +21,8 @@
 
   <content>
     <workbench>
-      <name>TEST</name>
-      <description>FreeCad CAM automation of ToolBit import and creation, with very flexible naming rules.
+      <name>CamScripts</name>
+      <description>Automation of ToolBit import and scripted creation, with very flexible naming rules.
         Automation of every step of the CAM process, from tool creation to G-code generation.
         Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
         Additional demonstration of Materials Machinability model to provide data for Speeds and Feeds,

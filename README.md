@@ -187,12 +187,19 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 
 ## Release notes:
 
-* V0.0.2  2024-08-??
+* V0.0.3  2024-09-10
 
-- Install using FreeCAD Addon Manager, but only via FC Prefs - Addon Manager add repo at present.
-- Add menu "Scripts" to FreeCAD menu bar, to run scripts, show readme's, Tool Shape, Material and script file info.
+- Bug fix related to FreeCAD AddonManager not loading
+- Improving Example 4 to reduce duplicate tool messages (still WIP)
+- Documented and tested how to get new Materials-Model inheritance working for user folder
+- README's menu fixes, which need github release for test confirmation
+- Still possible blocking issue related to FC toolbars being closed and more duplicate tool etc msgs to fix.
+
+* V0.0.2  2024-09-02
+
+- Install using FreeCAD Addon Manager, but only via FC Prefs - Addon Manager add repo at present
+- Add menu "Scripts" to FreeCAD menu bar, to run scripts, show readme's, Tool Shape, Material and script file info
 - Early draft README's for Import, ToolBit Add and Full Process
--
 
 * V0..01  2024-08-31:
 
@@ -200,7 +207,7 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 - CSV Tool import
 - Scripted tool bit creation
 - Creates start to finish FreeCAD CAM process
-- Demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations.
+- Demo of FreeCAD WIP Machinability materials properties and sample Speeds and Feeds calculations
 - Extended machinability with Fz in equation form
 
 
