@@ -58,7 +58,17 @@ Example macro code is simplified by use of supplied python libraries and one exc
 
 ## Installing and using
 
-CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager
+CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager - Custom Repositories - "plus button" to 'https://github.com/spanner888/CamScripts' and also set the branch to 'main'.
+
+Then use the Addon Manager to install CamScripts.
+
+If you have not used the CAM workbench before and setup the default Tool directory and files, then:
+- Create and empty FreeCAD document
+- Open the CAM workbench
+- Open Tool Library menu to trigger first time setup & copy. If you are not sure, accept all of the defaults inclduing creating directories and copying files.
+- This is also a good time to use the top left side + button to create a "Test" Tool table, so the example scripts doo not clutter the default ToolBit entires provided.
+
+Before running any of the Scripts menu scripts (the first three items), run the last item "Once only setup" to copy sample Tool shapes to your Tools Library and setup the Extended Machinability Material and model.
 
 [!CAUTION]
 Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
@@ -188,6 +198,11 @@ There are no checks when saving ToolBit files or while adding a ToolBit to the c
 
 
 ## Release notes:
+
+* V0.0.4  ...NOT released yet
+
+- Once only setup completed
+-
 
 * V0.0.3  2024-09-10
 

@@ -12,7 +12,6 @@ from freecad.cam_scripts.translate_utils import translate
 from functools import partial
 import webbrowser
 
-
 ICONPATH = os.path.join(os.path.dirname(__file__), "resources")
 TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources/translations")
 
@@ -37,16 +36,12 @@ class LazyLoader () :
         
         return getattr (me._mod, attr)
     
-
 cfp = LazyLoader('freecad.cam_scripts.CamFullProcessExample')
 ctba = LazyLoader('freecad.cam_scripts.CamTbAddExample')
 ctba_import = LazyLoader('freecad.cam_scripts.CamTbAdd_Importing')
 
-
 import os, platform, subprocess
 from pathlib import Path as osPath
-
-
 
 
 class GenericCmd(object):
@@ -147,53 +142,80 @@ def get_user_config(printing=True):
     return cfg_info
 
 
-def copy_files():
-    print("copy files = TODO")
-
+def one_time_setup():
     cfg_info = get_user_config(printing=False)
-    print(cfg_info)
+
+
+    # FIXME: nasty
+    #     if User tools not setup...copies insode squashfs/usr/Mod/Cam/Tools ...INTO DEFUALT TOOLS DIR
+    #     ??Appiamgae whne uncompressed = READONLY!!!!
+    #
+    # consider triggering check working dir????
+    # OR just chk if valid (reasonable???) dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
+    #
+    # ***check BOTH tool & mat conditions then msg/bail out or proceed BOTH!!!!
+    # ???++message already done if - shpe files PRESNET...but have to check all AND date stamps...
+    #                                 & mat boolen and dir set???
+
+    # preconditions_failed = True
+    # CHECK EACH DIR & set flag DO CHECK ALL in one pass ...avoid multiple fixes & pos FC restarts
+    # source_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
+    # dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
+    # print(source_dir)
+    # print(dest_dir)
+    #
+    #
+    # CHECK EACH ITEM
+    # mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
+    # cust_mat_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data"
+    # current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_dir)
+    #
+    #
+    # if preconditions_failed:
+    #     FINAL fail message...ie above can have 1x msg at each step
+    #     return
+    # else:
+    #     pass
+
+    import shutil
+
+    src_files = os.listdir(source_dir)
+    for file_name in src_files:
+        full_file_name = os.path.join(source_dir, file_name)
+        if os.path.isfile(full_file_name):
+            shutil.copy(full_file_name, dest_dir)
     print()
-    print(cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"])
+    print("Example Tool shape files copied to ", dest_dir)
     print()
 
+    # Update Mat setting LAST, so last msg is restart FC.
     # NB Change of Materials pref requires restart FreeCAD,
     #   as does changing Macro directory.
     if not cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"]:
-        mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
-        mat_prefs.SetString("CustomMaterialsDir",
-                            cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data")
+        print("Updating Material preference to use a Usere defined custom directory "
+            "for Full Process Example - Machining Materials "
+            "and extended Speeds Feeds calculations.")
+        if len(current_val) > 0:
+            print("Current dir: ", current_val)
+
+        mat_prefs.SetString("CustomMaterialsDir", cust_mat_dir)
         mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
-        print("CamScripts configured Materials Custom Directory")
+        #FIXME at least while testin gvalidate above actually sET!!!!
+
+
+        print("New dir:     ", cust_mat_dir)
+        print("CamScripts configured Materials User defined custom Directory")
+        print("Note: Current and New dirs are 'different', "
+            "Please restart FreeCAD to enable this change!")
     else:
         print("CamScripts attempted to set Materials Custom Directory, but")
         print("found this directory flagged as already in use!")
+        print("Current dir: ", current_val)
         print("You should change preference to use Material custom directory to be False,")
-        print("then rerun the CamScripts 'Once only setup', or manualy copy the example files.")
-        print("Settings have NOT been changed.")
+        print("then rerun the CamScripts 'Once only setup'.")
+        print("Custom Dir setting has NOT been changed.")
 
-    # import shutil
-    # # Copy only files of default Path/Tool folder to working directory (targeting the README.md help file)
-    # example_user_tool_shape_dir = os.listdir(defaultdir)
-    #
-    # for file_name in src_toolfiles:
-    #     if file_name in ["README.md"]:
-    #         full_file_name = os.path.join(defaultdir, file_name)
-    #         if os.path.isfile(full_file_name):
-    #             shutil.copy(full_file_name, workingdir)
-
-
-    # ex CAM-Path-Tool-Gui-BitLibrary
-
-    # tb_files = ["roughing_HRangles.fcstd", "pcb corncutters.fcstd", "Pcb drill.fcstd",
-    #             "roughing.fcstd", "slotdrill.fcstd"]
-    print(cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape")
-
-    # src = "{}{}{}".format(defaultdir, os.path.sep, dir)
-    # src_files = os.listdir(src)
-    # for file_name in src_files:
-    #     full_file_name = os.path.join(src, file_name)
-    #     if os.path.isfile(full_file_name):
-    #         shutil.copy(full_file_name, subdir)
+    print("Setup completed, remember to switch to a TEST Tool Library Table!.")
 
 
 def getIcon(iconName):
@@ -201,73 +223,78 @@ def getIcon(iconName):
 
 
 def updateMenu(workbench):
-    wb_name = ""
     # WB names not translated: https://forum.freecad.org/viewtopic.php?t=90237&sid=5e5774ab5aa5813fc764fc360061d7c5
-    if workbench == 'PathWorkbench':
-        wb_name = "Path"
-    elif workbench == 'CAMWorkbench':
-        wb_name = "CAM"
-    else:
-        return
+    wb_name = 'CAM'
+    # TODO setup to translate below.
+    wb_tail = 'Workbench'
+    addonMenu = None
 
-    if len(wb_name) > 0:
+    if not workbench == wb_name + wb_tail:
+        return
+    else:
+
         # TODO setup to translate below.
-        addonMenu = None
-        wb_tail = "Workbench"
-        addon_tail = "Scripts"
-        dressupMenuName = "Path Dressup"
-        action_tool_tip =" automation scripts"
+        addon_tail = 'Scripts'
+        # dressupMenuName = "Path Dressup"
+        action_tool_tip = ' automation scripts'
         loaded_text = ' WB-addon GUI menus loaded into :'
 
-        # Note for READMEs, name must match file name, less '.md'.
-        scripts = {1: {"name": "CSV Import", 
-                       "tool_tip": "CSV bulk Import with naming rules", 
-                       "action": ctba_import.tba_import},
-                   2: {"name": "ToolBit Examples", 
-                       "tool_tip": "Create ranges of ToolBits", 
-                       "action": ctba.ctba_example},
-                   3: {"name": "Full Process Example",
-                       "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation", 
-                       "action": cfp.cfp_example},
-                   4: {"name": "README files in github repo",
-                       "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
-                       "action": display_readme},
-                   #5: {"name": "README Import CSV Tool data",
-                       #"tool_tip": "How to import Tool data from CSV, and add to current Library Tool Table",
-                       #"action": display_readme},
-                   #6: {"name": "README Tool Bits Add Example",
-                       #"tool_tip": "Create ToolBits and add to current Library Tool Table",
-                       #"action": display_readme},
-                   #7: {"name": "README Cam Full Process Example",
-                       #"tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
-                       #"action": display_readme},
-                   #8: {"name": "README Naming Rules",
-                       #"tool_tip": "How to use the naming rules to create names for your ToolBits & Libraries",
-                       #"action": display_readme},
-                   9: {"name": "Show config and script file locations",
-                       "tool_tip": "So you can tailor CSV importing and examples to your requirements",
-                       "action": get_user_config},
-                  10: {"name": "Once only setup",
-                       "tool_tip": "Copy example ToolShapes, Material and Material Model", 
-                       "action": copy_files}
-                   }
-        
-        addon_menu_title = wb_name + " " + addon_tail
-        # ================================================================
-        # Add Menus to very TOP FreeCAD menu strip/bar.
-        menu_actions = []
-        for k, v in scripts.items():
-            cmd_name = wb_name + '_Scripts_' + v["name"].replace(" ", "")
-            # To register the command in FreeCAD:
-            cmd = GenericCmd(v)
-            Gui.addCommand(cmd_name, GenericCmd(v))
-            menu_actions.append(cmd_name)
+        mw = Gui.getMainWindow()
+        cam_scripts_menu = mw.findChild(QtGui.QMenu, '&' + addon_tail)
+        # Creating menus twice caused all FC toolbars to hide
+        # So only create once
+        if cam_scripts_menu is None:
+            # Note for READMEs, name must match file name, less '.md'.
+            scripts = {1: {"name": "CSV Import",
+                        "tool_tip": "CSV bulk Import with naming rules",
+                        "action": ctba_import.tba_import},
+                    2: {"name": "ToolBit Examples",
+                        "tool_tip": "Create ranges of ToolBits",
+                        "action": ctba.ctba_example},
+                    3: {"name": "Full Process Example",
+                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
+                        "action": cfp.cfp_example},
+                    4: {"name": "README files in github repo",
+                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
+                        "action": display_readme},
+                    # windows failed open individual files with all methods tried
+                    # No just open github repo url, not specific file.
+                    #5: {"name": "README Import CSV Tool data",
+                        #"tool_tip": "How to import Tool data from CSV, and add to current Library Tool Table",
+                        #"action": display_readme},
+                    #6: {"name": "README Tool Bits Add Example",
+                        #"tool_tip": "Create ToolBits and add to current Library Tool Table",
+                        #"action": display_readme},
+                    #7: {"name": "README Cam Full Process Example",
+                        #"tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
+                        #"action": display_readme},
+                    #8: {"name": "README Naming Rules",
+                        #"tool_tip": "How to use the naming rules to create names for your ToolBits & Libraries",
+                        #"action": display_readme},
+                    9: {"name": "Show config and script file locations",
+                        "tool_tip": "So you can tailor CSV importing and examples to your requirements",
+                        "action": get_user_config},
+                    10: {"name": "Once only setup",
+                        "tool_tip": "Copy example ToolShapes, Material and Material Model",
+                        "action": one_time_setup}
+                    }
 
-        c=Gui.activeWorkbench()
-        c.appendMenu("&Scripts", menu_actions)
-        c.reloadActive()
-        # ================================================================
-        print(addon_menu_title + loaded_text, workbench)
+            addon_menu_title = wb_name + " " + addon_tail
+            # ================================================================
+            # Add Menus to very TOP FreeCAD menu strip/bar.
+            menu_actions = []
+            for k, v in scripts.items():
+                cmd_name = wb_name + '_Scripts_' + v["name"].replace(" ", "")
+                # To register the command in FreeCAD:
+                cmd = GenericCmd(v)
+                Gui.addCommand(cmd_name, GenericCmd(v))
+                menu_actions.append(cmd_name)
+
+            camwb=Gui.activeWorkbench()
+            camwb.appendMenu("&Scripts", menu_actions)
+            camwb.reloadActive()
+            # ================================================================
+            print(addon_menu_title + loaded_text, workbench)
 
 
 Gui.getMainWindow().workbenchActivated.connect(updateMenu)
