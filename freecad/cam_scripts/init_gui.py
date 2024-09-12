@@ -5,8 +5,8 @@
 __version__ = "2024-09-10"
 
 import os
-import FreeCADGui as Gui
 import FreeCAD as App
+import FreeCADGui as Gui
 from PySide import QtGui
 from freecad.cam_scripts.translate_utils import translate
 from functools import partial
@@ -36,9 +36,12 @@ class LazyLoader () :
         
         return getattr (me._mod, attr)
     
-cfp = LazyLoader('freecad.cam_scripts.CamFullProcessExample')
-ctba = LazyLoader('freecad.cam_scripts.CamTbAddExample')
-ctba_import = LazyLoader('freecad.cam_scripts.CamTbAdd_Importing')
+# cfp = LazyLoader('freecad.cam_scripts.CamFullProcessExample')
+# ctba = LazyLoader('freecad.cam_scripts.CamTbAddExample')
+# ctba_import = LazyLoader('freecad.cam_scripts.CamTbAdd_Importing')
+import freecad.cam_scripts.CamFullProcessExample as cfp
+import freecad.cam_scripts.CamTbAddExample as ctba
+import freecad.cam_scripts.CamTbAdd_Importing as ctba_import
 
 import os, platform, subprocess
 from pathlib import Path as osPath
@@ -157,65 +160,64 @@ def one_time_setup():
     # ???++message already done if - shpe files PRESNET...but have to check all AND date stamps...
     #                                 & mat boolen and dir set???
 
-    # preconditions_failed = True
-    # CHECK EACH DIR & set flag DO CHECK ALL in one pass ...avoid multiple fixes & pos FC restarts
-    # source_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
-    # dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
-    # print(source_dir)
-    # print(dest_dir)
-    #
-    #
+    preconditions_failed = True
+    # CHECK all conditions, output all messages for user to act on, less FC srestarts...
+    # so code assumes
+    source_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
+    dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
+    print(source_dir)
+    print(dest_dir)
+    # TODO does source dir exist (??whith files?), does dest exist AND IS WRITAABLE?????
+
     # CHECK EACH ITEM
-    # mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
-    # cust_mat_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data"
-    # current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_dir)
+    mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
+    cust_mat_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data"
+    current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_dir)
     #
     #
-    # if preconditions_failed:
-    #     FINAL fail message...ie above can have 1x msg at each step
-    #     return
-    # else:
-    #     pass
-
-    import shutil
-
-    src_files = os.listdir(source_dir)
-    for file_name in src_files:
-        full_file_name = os.path.join(source_dir, file_name)
-        if os.path.isfile(full_file_name):
-            shutil.copy(full_file_name, dest_dir)
-    print()
-    print("Example Tool shape files copied to ", dest_dir)
-    print()
-
-    # Update Mat setting LAST, so last msg is restart FC.
-    # NB Change of Materials pref requires restart FreeCAD,
-    #   as does changing Macro directory.
-    if not cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"]:
-        print("Updating Material preference to use a Usere defined custom directory "
-            "for Full Process Example - Machining Materials "
-            "and extended Speeds Feeds calculations.")
-        if len(current_val) > 0:
-            print("Current dir: ", current_val)
-
-        mat_prefs.SetString("CustomMaterialsDir", cust_mat_dir)
-        mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
-        #FIXME at least while testin gvalidate above actually sET!!!!
-
-
-        print("New dir:     ", cust_mat_dir)
-        print("CamScripts configured Materials User defined custom Directory")
-        print("Note: Current and New dirs are 'different', "
-            "Please restart FreeCAD to enable this change!")
+    if preconditions_failed:
+        print("Please fix above issue(s), then run the 'CAM Scripts Once only setup' again.")
+        return
     else:
-        print("CamScripts attempted to set Materials Custom Directory, but")
-        print("found this directory flagged as already in use!")
-        print("Current dir: ", current_val)
-        print("You should change preference to use Material custom directory to be False,")
-        print("then rerun the CamScripts 'Once only setup'.")
-        print("Custom Dir setting has NOT been changed.")
+        import shutil
 
-    print("Setup completed, remember to switch to a TEST Tool Library Table!.")
+        src_files = os.listdir(source_dir)
+        for file_name in src_files:
+            full_file_name = os.path.join(source_dir, file_name)
+            if os.path.isfile(full_file_name):
+                shutil.copy(full_file_name, dest_dir)
+        print()
+        print("Example Tool shape files copied to ", dest_dir)
+        print()
+
+        # Update Mat setting LAST, so last msg is restart FC.
+        # NB Change of Materials pref requires restart FreeCAD,
+        #   as does changing Macro directory.
+        if not cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"]:
+            print("Updating Material preference to use a Usere defined custom directory "
+                "for Full Process Example - Machining Materials "
+                "and extended Speeds Feeds calculations.")
+            if len(current_val) > 0:
+                print("Current dir: ", current_val)
+
+            mat_prefs.SetString("CustomMaterialsDir", cust_mat_dir)
+            mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
+            #FIXME at least while testin gvalidate above actually sET!!!!
+
+
+            print("New dir:     ", cust_mat_dir)
+            print("CamScripts configured Materials User defined custom Directory")
+            print("Note: Current and New dirs are 'different', "
+                "Please restart FreeCAD to enable this change!")
+        else:
+            print("CamScripts attempted to set Materials Custom Directory, but")
+            print("found this directory flagged as already in use!")
+            print("Current dir: ", current_val)
+            print("You should change preference to use Material custom directory to be False,")
+            print("then rerun the CamScripts 'Once only setup'.")
+            print("Custom Dir setting has NOT been changed.")
+
+        print("Setup completed, remember to switch to a TEST Tool Library Table!.")
 
 
 def getIcon(iconName):
@@ -232,7 +234,7 @@ def updateMenu(workbench):
     if not workbench == wb_name + wb_tail:
         return
     else:
-
+        print("In CAM CHECKING for existing CS menu")
         # TODO setup to translate below.
         addon_tail = 'Scripts'
         # dressupMenuName = "Path Dressup"
@@ -241,21 +243,20 @@ def updateMenu(workbench):
 
         mw = Gui.getMainWindow()
         cam_scripts_menu = mw.findChild(QtGui.QMenu, '&' + addon_tail)
-        # Creating menus twice caused all FC toolbars to hide
         # So only create once
         if cam_scripts_menu is None:
             # Note for READMEs, name must match file name, less '.md'.
             scripts = {1: {"name": "CSV Import",
                         "tool_tip": "CSV bulk Import with naming rules",
                         "action": ctba_import.tba_import},
-                    2: {"name": "ToolBit Examples",
+                    2: {"name": "ToolBit Add Examples",
                         "tool_tip": "Create ranges of ToolBits",
                         "action": ctba.ctba_example},
                     3: {"name": "Full Process Example",
                         "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
                         "action": cfp.cfp_example},
-                    4: {"name": "README files in github repo",
-                        "tool_tip": "Create and recreate every step of the CAM process, from tool creation to G-code generation",
+                    4: {"name": "README files",
+                        "tool_tip": "README files in github repo website.",
                         "action": display_readme},
                     # windows failed open individual files with all methods tried
                     # No just open github repo url, not specific file.
@@ -271,10 +272,10 @@ def updateMenu(workbench):
                     #8: {"name": "README Naming Rules",
                         #"tool_tip": "How to use the naming rules to create names for your ToolBits & Libraries",
                         #"action": display_readme},
-                    9: {"name": "Show config and script file locations",
+                    9: {"name": "Show info",
                         "tool_tip": "So you can tailor CSV importing and examples to your requirements",
                         "action": get_user_config},
-                    10: {"name": "Once only setup",
+                    10: {"name": "Setup",
                         "tool_tip": "Copy example ToolShapes, Material and Material Model",
                         "action": one_time_setup}
                     }
@@ -289,12 +290,13 @@ def updateMenu(workbench):
                 cmd = GenericCmd(v)
                 Gui.addCommand(cmd_name, GenericCmd(v))
                 menu_actions.append(cmd_name)
-
+            print("about to add menu actions: ", menu_actions)
             camwb=Gui.activeWorkbench()
-            camwb.appendMenu("&Scripts", menu_actions)
-            camwb.reloadActive()
+            # camwb.appendMenu("&Scripts", menu_actions)
+            # camwb.reloadActive()
             # ================================================================
             print(addon_menu_title + loaded_text, workbench)
-
+        else:
+            print("cam_scripts_menu EXISTS {ie was NOT None}..NOT adding menu again")
 
 Gui.getMainWindow().workbenchActivated.connect(updateMenu)

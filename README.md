@@ -73,8 +73,23 @@ Before running any of the Scripts menu scripts (the first three items), run the 
 [!CAUTION]
 Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
 
-- .......
-- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
+You may notice that the FreeCAD cursor flashes and nothing else seems to be happening when running any of the scripts.
+This is because these scripts are providing extended features including:
+
+- Extracting all available Tool Shape properties, involves opening every default and user shape file , which are actually FreeCAD documents. This allows creation of ToolBits and setting values of any custom properties, including custom properties.
+- CSV Import example also opens CSV file and attempts to create 70 ToolBit files and Tool Library entries
+- Full Process Example, tends to have more visible activity on screen, but can take a few seconds
+- First run adds compile time, later runs are much faster
+- Running Import and TB Add scripts, without removing ToolBit files and Library enties, will also significantly slow the execution times as now FreeCAD is reporting a LOT of warning messages about duplicates!! Running more than twice without cleanup multiples both the number of warnings and the slowness.
+
+The example import attempting to create 90 ToolBits take longest of all the scripts at about 25 seconds.
+The above items can each add up to a 10 or more second delay for *each* added reason above.
+A test that created 1600 ToolBits took about 20 minutes and it was obvioius that the script finsihed well before the warning messages stopped printing.
+
+The approximate timing of above was on two Debian computers about 12 years old and one approx 6 year old low end Windows netbook which probably took more than twice as long as the older Debian computers.
+
+- .......???????
+- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench caused it to be hidden and could not be restored.
 - It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
 - ???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
 - A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
@@ -202,6 +217,7 @@ There are no checks when saving ToolBit files or while adding a ToolBit to the c
 * V0.0.4  ...NOT released yet
 
 - Once only setup completed
+- fixed FreeCAD ToolBars being hidden sometimes
 -
 
 * V0.0.3  2024-09-10
