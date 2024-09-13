@@ -75,7 +75,8 @@ Please remember to create a test Library Tool Table before you run any of the sc
 
 Output of the scripts:
 
-- ToolbitAdd and Import scripts output messages to indicate ToolBits created, or skipped and also the actual ToolBit files in tools/Tool folder and Tools in the active Tool Library ToolTable
+- ToolbitAdd and Import scripts output messages to indicate ToolBits created, or skipped and also the actual
+- ToolBit files in tools/Tool folder and Tools in the active Tool Library ToolTable
 - FullProcess also creates a FreeCAD document with a simple shape CAM Job, Operations, Toolbits and many specific settings/properties
 - Messages in report or notifications, often a lot, in part because the macros do a lot, and if run multiple times, or similar Tool data and naming rules can cause duplicates, which may result in a LOT of warnings. Some more information is below.
 
@@ -224,8 +225,8 @@ There are no checks when saving ToolBit files or while adding a ToolBit to the c
 
 * V0.0.4  ...NOT released yet
 
-- Once only setup completed
-- fixed FreeCAD ToolBars being hidden sometimes
+- Once only setup partially completed
+- Using FreeCAD macros for user to launch scripts, abandoning both menu attempts
 -
 
 * V0.0.3  2024-09-10

@@ -5,7 +5,7 @@
 
   <description>CamScripts ToolBit import or script creation and configure *every* step of FreeCAD CAM process.</description>
 
-  <version>v0.0.3 2024.9.10</version>
+  <version>v0.0.4 2024.9.13</version>
 
   <author email="spanner888@usabledevices.com">spanner888</author>
 
@@ -45,6 +45,36 @@
       <tag>Report</tag>
       <tag>Gcode</tag>
     </workbench>
+    <macro>
+      <name>CamScripts CSV Import</name>
+      <description>CSV bulk Import with naming rules</description>
+      <subdirectory>./</subdirectory>
+      <file>CamScripts_1CSV_Import.FCMacro</file>
+    </macro>
+    <macro>
+      <name>CamScripts Add Tool Bits</name>
+      <description>Create ranges of ToolBits with naming rules</description>
+      <subdirectory>./</subdirectory>
+      <file>CamScripts_2TbAddExample.FCMacro</file>
+    </macro>
+    <macro>
+      <name>CamScripts Full Process Example</name>
+      <description>Create and recreate every step of the CAM process, from tool creation to G-code generation</description>
+      <subdirectory>./</subdirectory>
+      <file>CamScripts_3FullProcessExample.FCMacro</file>
+    </macro>
+    <macro>
+      <name>READMEs</name>
+      <description>Readmes and also find naming rules and CSV files</description>
+      <subdirectory>./</subdirectory>
+      <file>CamScripts_1CSV_Import.FCMacro</file>
+    </macro>
+    <macro>
+      <name>Once only setup</name>
+      <description></description>
+      <subdirectory>./</subdirectory>
+      <file>CamScripts_1CSV_Import.FCMacro</file>
+    </macro>
   </content>
 
 </package>
