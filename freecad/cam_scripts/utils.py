@@ -4,6 +4,7 @@
 # V0.0.4  2024/09/13
 __version__ = "V0.0.4  2024/09/13"
 
+import FreeCAD as App
 from freecad.cam_scripts.translate_utils import translate
 import webbrowser
 import os, platform, subprocess
@@ -59,78 +60,201 @@ def get_user_config(printing=True):
 
     return cfg_info
 
+# modded from: FreeCAD - Mod/CAM/Path/Tool/Gui/BitLibrarycheckWorkingDir()
+def checkDir(workingdir):
+    # Does dir exist & is writable
+
+    return os.access(workingdir, os.W_OK)
+
+    # if dirOK():
+    #     return True
+    # else:
+    #     return False
+
+    # below for ref ATM
+    qm = PySide.QtGui.QMessageBox
+    ret = qm.question(
+        None,
+        "",
+        translate("CAM_ToolBit", "Toolbit working directory not set up. Do that now?"),
+        qm.Yes | qm.No,
+    )
+
+    if ret == qm.No:
+        return False
+
+    msg = translate("CAM_ToolBit", "Choose a writable location for your toolbits")
+    while not dirOK():
+        workingdir = PySide.QtGui.QFileDialog.getExistingDirectory(
+            None, msg, Path.Preferences.filePath()
+        )
+
+    if workingdir[-8:] == os.path.sep + "Library":
+        workingdir = workingdir[:-8]  # trim off trailing /Library if user chose it
+
+    Path.Preferences.setLastPathToolLibrary("{}{}Library".format(workingdir, os.path.sep))
+    Path.Preferences.setLastPathToolBit("{}{}Bit".format(workingdir, os.path.sep))
+    Path.Log.debug("setting workingdir to: {}".format(workingdir))
+
+    # Copy only files of default Path/Tool folder to working directory (targeting the README.md help file)
+    src_toolfiles = os.listdir(defaultdir)
+    for file_name in src_toolfiles:
+        if file_name in ["README.md"]:
+            full_file_name = os.path.join(defaultdir, file_name)
+            if os.path.isfile(full_file_name):
+                shutil.copy(full_file_name, workingdir)
+
+    # Determine which subdirectories are missing
+    subdirlist = ["Bit", "Library", "Shape"]
+    mode = 0o777
+    for dir in subdirlist.copy():
+        subdir = "{}{}{}".format(workingdir, os.path.sep, dir)
+        if os.path.exists(subdir):
+            subdirlist.remove(dir)
+
+    # Query user for creation permission of any missing subdirectories
+    if len(subdirlist) >= 1:
+        needed = ", ".join([str(d) for d in subdirlist])
+        qm = PySide.QtGui.QMessageBox
+        ret = qm.question(
+            None,
+            "",
+            translate(
+                "CAM_ToolBit",
+                "Toolbit Working directory {} needs these sudirectories:\n {} \n Create them?",
+            ).format(workingdir, needed),
+            qm.Yes | qm.No,
+        )
+
+        if ret == qm.No:
+            return False
+        else:
+            # Create missing subdirectories if user agrees to creation
+            for dir in subdirlist:
+                subdir = "{}{}{}".format(workingdir, os.path.sep, dir)
+                os.mkdir(subdir, mode)
+                # Query user to copy example files into subdirectories created
+                if dir != "Shape":
+                    qm = PySide.QtGui.QMessageBox
+                    ret = qm.question(
+                        None,
+                        "",
+                        translate("CAM_ToolBit", "Copy example files to new {} directory?").format(
+                            dir
+                        ),
+                        qm.Yes | qm.No,
+                    )
+                    if ret == qm.Yes:
+                        src = "{}{}{}".format(defaultdir, os.path.sep, dir)
+                        src_files = os.listdir(src)
+                        for file_name in src_files:
+                            full_file_name = os.path.join(src, file_name)
+                            if os.path.isfile(full_file_name):
+                                shutil.copy(full_file_name, subdir)
+
+    # if no library is set, choose the first one in the Library directory
+    if Path.Preferences.lastFileToolLibrary() is None:
+        libFiles = [
+            f for f in glob.glob(Path.Preferences.lastPathToolLibrary() + os.path.sep + "*.fctl")
+        ]
+        Path.Preferences.setLastFileToolLibrary(libFiles[0])
+
+    return True
 
 def one_time_setup():
-    cfg_info = get_user_config(printing=True)
+    cfg_info = get_user_config(printing=False)
 
-
-    # FIXME: nasty
-    #     if User tools not setup...copies insode squashfs/usr/Mod/Cam/Tools ...INTO DEFUALT TOOLS DIR
-    #     ??Appiamgae whne uncompressed = READONLY!!!!
-    #
-    # consider triggering check working dir????
-    # OR just chk if valid (reasonable???) dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
-    #
-    # ***check BOTH tool & mat conditions then msg/bail out or proceed BOTH!!!!
-    # ???++message already done if - shpe files PRESNET...but have to check all AND date stamps...
-    #                                 & mat boolen and dir set???
-
-    preconditions_failed = True
-    # CHECK all conditions, output all messages for user to act on, less FC srestarts...
-    # so code assumes
+    # Check shape files source & dest directories
+    preconditions_OK = True
     source_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
-    dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
-    print(source_dir)
-    print(dest_dir)
-    # TODO does source dir exist (??whith files?), does dest exist AND IS WRITAABLE?????
-
-    # CHECK EACH ITEM
-    mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
-    cust_mat_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data"
-    current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_dir)
-    #
-    #
-    if preconditions_failed:
-        print("Please fix above issue(s), then run the 'CAM Scripts Once only setup' again.")
-        return
+    if not checkDir(source_dir):
+        preconditions_OK = False
+        print("source_dir issue not exist or not writable: ", source_dir)
     else:
-        import shutil
+        print("source_dir is OK: ", source_dir)
 
+    dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
+    if not checkDir(dest_dir):
+        preconditions_OK = False
+        print("dest_dir issue not exist or not writable: ", dest_dir)
+    else:
+        print("dest_dir is OK: ", dest_dir)
+
+    cust_mat_source_dir = cfg_info["cam_script_dir"] + os.path.sep +\
+        "cutting_tool_data" + os.path.sep + "Resources"
+    if not checkDir(cust_mat_source_dir):
+        preconditions_OK = False
+        print("cust_mat_source_dir issue not exist or not writable: ", cust_mat_source_dir)
+    else:
+        print("cust_mat_source_dir is OK: ", cust_mat_source_dir)
+
+
+    # Check Materials CustomUserDir Ok to change, warn if going to change.
+    mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
+    if not mat_prefs.GetBool("UseMaterialsFromCustomDir", True):
+        preconditions_OK = False
+        print("CamScripts attempted to set Materials Custom Directory, but")
+        print("found this directory flagged as already in use!")
+        if len(current_val) == 0:
+            print("Current custom dir value is empty and will be set once enabled via above setting.")
+        else:
+            print("Current custom dir value is: ", current_val)
+        print("You should change preference to use Material custom directory to be False,")
+        print("then rerun the CamScripts 'Once only setup'.")
+        print("Custom Dir setting has NOT been changed.")
+
+
+    if preconditions_OK:
+        # Update Mat setting LAST, so last msg is restart FC.
+        # NB Change of Materials pref requires restart FreeCAD,
+        #   as does changing Macro directory.
+        current_val = ''
+        # if not cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"]:
+        #     mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
+        #     print("Enabled Materials to use Custom Dir")
+        #
+        # current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_source_dir)
+        # mat_prefs.SetString("CustomMaterialsDir", cust_mat_source_dir)
+        # print("Changed Materials CustomMaterialsDir:")
+        # print("From : ", current_val)
+        # print("  To :", cust_mat_source_dir)
+        # print("Please note the above 'From' directory location if you wish to restore it later.")
+        print("Updating Material preference to use User defined custom directory "
+            "for Full Process Example - Machining Materials "
+            "and extended Speeds Feeds calculations.")
+        if len(current_val) > 0:
+            print("Current dir: ", current_val)
+
+        mat_prefs.SetString("CustomMaterialsDir", cust_mat_source_dir)
+        mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
+        #FIXME at least while testing validate above actually SET!!!!
+
+        print("New dir:     ", cust_mat_source_dir)
+        print("CamScripts configured Materials User defined custom Directory")
+        print("Note: Current and New dirs are 'different', "
+            "Please restart FreeCAD to enable this change!")
+
+        # now copy shape files
+        import shutil
         src_files = os.listdir(source_dir)
         for file_name in src_files:
             full_file_name = os.path.join(source_dir, file_name)
             if os.path.isfile(full_file_name):
-                shutil.copy(full_file_name, dest_dir)
+
+                FIXME no msg skipping!!!!!
+
+                full_file_dest = os.path.join(dest_dir, file_name)
+                if os.access(full_file_dest, os.F_OK):
+                    print(f"Shape {file_name} already exists in {dest_dir}, NOT copied")
+                else:
+                    shutil.copy(full_file_name, dest_dir)
         print()
         print("Example Tool shape files copied to ", dest_dir)
         print()
+        print("Setup completed, remember switch to a TEST Tool Library Table and restart FreeCAD!")
 
-        # Update Mat setting LAST, so last msg is restart FC.
-        # NB Change of Materials pref requires restart FreeCAD,
-        #   as does changing Macro directory.
-        if not cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"]:
-            print("Updating Material preference to use a Usere defined custom directory "
-                "for Full Process Example - Machining Materials "
-                "and extended Speeds Feeds calculations.")
-            if len(current_val) > 0:
-                print("Current dir: ", current_val)
-
-            mat_prefs.SetString("CustomMaterialsDir", cust_mat_dir)
-            mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
-            #FIXME at least while testin gvalidate above actually sET!!!!
-
-
-            print("New dir:     ", cust_mat_dir)
-            print("CamScripts configured Materials User defined custom Directory")
-            print("Note: Current and New dirs are 'different', "
-                "Please restart FreeCAD to enable this change!")
-        else:
-            print("CamScripts attempted to set Materials Custom Directory, but")
-            print("found this directory flagged as already in use!")
-            print("Current dir: ", current_val)
-            print("You should change preference to use Material custom directory to be False,")
-            print("then rerun the CamScripts 'Once only setup'.")
-            print("Custom Dir setting has NOT been changed.")
-
-        print("Setup completed, remember to switch to a TEST Tool Library Table!.")
+    else:
+        print("Please fix above issue(s), then run the 'CAM Scripts Once only setup' again.")
+        print()
+        return
 

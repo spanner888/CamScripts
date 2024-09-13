@@ -60,7 +60,20 @@ Example macro code is simplified by use of supplied python libraries and one exc
 
 CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager - Custom Repositories - "plus button" to 'https://github.com/spanner888/CamScripts' and also set the branch to 'main'.
 
-Then use the Addon Manager to install CamScripts.
+Then use the Addon Manager to install CamScripts. You must restart FreeCAD after installing CamScripts.
+
+[!CAUTION]
+Please create a test Library Tool Table before you run any of the scripts, which are the first three macros items. This stops test Tool data being added into your main ToolTable.
+
+Now open the FreeCAD macro manager to find the scripts, for example:
+
+![CamScripts Macros](./images/CamScriptsMacros.png)
+
+The fourth macro opens the github repository to show the main README information. There are more READMEs describing the import process and naming rules etc.
+
+This repo also contains the files for the extended Machinability demonstration (within the CamScripts_3Full Process Example) and the example custom user shapes, including one containing Helix and Rake angles.
+
+These latter files can be configured (the Materials) and copied (the Tool shapes) by running the macro "CamScripts_5Setup_Additional_Items"
 
 If you have not used the CAM workbench before and setup the default Tool directory and files, then:
 - Create and empty FreeCAD document
@@ -70,8 +83,6 @@ If you have not used the CAM workbench before and setup the default Tool directo
 
 Before running any of the Scripts menu scripts (the first three items), run the last item "Once only setup" to copy sample Tool shapes to your Tools Library and setup the Extended Machinability Material and model.
 
-[!CAUTION]
-Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
 
 Output of the scripts:
 
