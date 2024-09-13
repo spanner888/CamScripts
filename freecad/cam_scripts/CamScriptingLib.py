@@ -195,7 +195,7 @@ def _get_tool_by_number(number):
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict, toolDict["name"], s_dir)
                 if hasattr(toolBit, "ViewObject") and hasattr(
-                   FreeCAD toolBit.ViewObject, "Visibility"
+                   toolBit.ViewObject, "Visibility"
                 ):
                     toolBit.ViewObject.Visibility = False
                 return (toolNum, toolBit)
