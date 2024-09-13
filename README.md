@@ -212,6 +212,8 @@ Path and Material developers and forum users including russ4262, sliptonic, onek
 
 Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is: Version: 0.22.0dev.38553 (Git)
 
+See the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
+
 These scripts started out as an import and scripted Toolbit creation for personal use. Then I got excited about the new Materials Machinability capability and also remembered the existing JobUtils library by russ4262, hence so many features.
 
 However, while a lot of testing and polsihing has occured and the import work very well, there are still rough edges that you might find. One example is below and more up to date list is in the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
