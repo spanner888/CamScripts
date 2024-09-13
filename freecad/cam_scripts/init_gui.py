@@ -1,3 +1,17 @@
+
+
+so thought ATM
+1. all content her eto new file or current...
+2. file either empty or summary of why file here - ie for FC namespace imports
+3. Why no code ...ie could not be a WB or any type legacy/namespace..CAM WB needs to be active
+    ...sumamry of 2x menu tries/issues
+    ??install of many itesm & non-stand files to manually install ...=> more script/functions...
+
+>>DO QUICK local tests to see AM OK with empty/dummy calls in this file!!!!
+
+
+NB ATM menus disabled below.
+
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
@@ -298,5 +312,6 @@ def updateMenu(workbench):
             print(addon_menu_title + loaded_text, workbench)
         else:
             print("cam_scripts_menu EXISTS {ie was NOT None}..NOT adding menu again")
+
 
 Gui.getMainWindow().workbenchActivated.connect(updateMenu)

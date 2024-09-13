@@ -73,7 +73,15 @@ Before running any of the Scripts menu scripts (the first three items), run the 
 [!CAUTION]
 Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
 
-You may notice that the FreeCAD cursor flashes and nothing else seems to be happening when running any of the scripts.
+Output of the scripts:
+
+- ToolbitAdd and Import scripts output messages to indicate ToolBits created, or skipped and also the actual ToolBit files in tools/Tool folder and Tools in the active Tool Library ToolTable
+- FullProcess also creates a FreeCAD document with a simple shape CAM Job, Operations, Toolbits and many specific settings/properties
+- Messages in report or notifications, often a lot, in part because the macros do a lot, and if run multiple times, or similar Tool data and naming rules can cause duplicates, which may result in a LOT of warnings. Some more information is below.
+
+You may notice random shapes flashing breifly on screen while running the Import and ToolBitAdd macros. This is normal and due to the need to briefly open the all sytem default CAM Tool Shapes and any User shape files. The FullProcess macro does create a lot of FreeCAD document objects and temporary views, so it has very active scren 'flashes'.
+
+You may also notice that the FreeCAD cursor flashes and nothing else seems to be happening when running any of the scripts.
 This is because these scripts are providing extended features including:
 
 - Extracting all available Tool Shape properties, involves opening every default and user shape file , which are actually FreeCAD documents. This allows creation of ToolBits and setting values of any custom properties, including custom properties.
@@ -89,7 +97,7 @@ A test that created 1600 ToolBits took about 20 minutes and it was obvioius that
 The approximate timing of above was on two Debian computers about 12 years old and one approx 6 year old low end Windows netbook which probably took more than twice as long as the older Debian computers.
 
 - .......???????
-- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench caused it to be hidden and could not be restored.
+- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-standard approach, but using sub-menu in the main CAM menu only worked until changing Workbench caused it to be hidden and could not be restored.
 - It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
 - ???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
 - A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
