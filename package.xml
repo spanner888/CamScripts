@@ -70,10 +70,15 @@
       <file>CamScripts_4READMEs.FCMacro</file>
     </macro>
     <macro>
-      <name>Once only setup</name>
+      <name>SetupCustomMaterialCfg</name>
       <description></description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_5Setup_Additional_Items.FCMacro</file>
+      <file>CamScripts_5Setup_CustomMaterialCfg.FCMacro</file>
+    </macro>    <macro>
+      <name>SetupCustomToolShapes</name>
+      <description></description>
+      <subdirectory>./</subdirectory>
+      <file>CamScripts_6Setup_CustomToolShapes.FCMacro</file>
     </macro>
   </content>
 

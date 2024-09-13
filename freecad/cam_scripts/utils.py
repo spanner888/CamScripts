@@ -14,14 +14,6 @@ __dir__ = os.path.dirname(__file__)
 TRANSLATIONSPATH = os.path.join(os.path.dirname(__file__), "resources/translations")
 
 
-def running_under_windows() -> bool:
-    return os.name in ['nt', 'ce']
-
-
-def running_under_macos() -> bool:
-    return "darwin" in platform.system().casefold()
-
-
 def display_readme():
     #git_repo_url = "https://github.com/spanner888/CamScripts/blob/main/"
     file_url = "https://github.com/spanner888/CamScripts/"
@@ -32,36 +24,8 @@ def display_readme():
         print(e)
 
 
-def get_user_config(printing=True):
-    import Path.Preferences as p_pref
-    workingdir = os.path.dirname(p_pref.lastPathToolLibrary())
-    s_dir_name = os.path.sep + "Shape" + os.path.sep
-
-    from freecad.cam_scripts.CamScriptingLib\
-        import users_material_cfg_summary as users_mat_cfg_summary
-    mat_cfg_summary = users_mat_cfg_summary(printing)
-
-
-    cfg_info = {"Tools_wd": workingdir, "Tools_sd": s_dir_name,
-            "cam_script_dir": os.path.dirname(os.path.realpath(__file__))}
-    cfg_info.update(mat_cfg_summary)
-
-    if printing:
-        print()
-        print("User Tool Shape folder location: ", workingdir + s_dir_name)
-        print()
-
-        print(mat_cfg_summary)
-
-        print()
-        script_dir = osPath(App.getUserAppDataDir() + '/Mod/CamScripts/freecad/cam_scripts/')
-        print(script_dir)
-        print("Script support data in folders: '/cutting_tool_data' and '/naming_rules'")
-
-    return cfg_info
-
-# modded from: FreeCAD - Mod/CAM/Path/Tool/Gui/BitLibrarycheckWorkingDir()
-def checkDir(workingdir):
+# FIXME DELETE modded from: FreeCAD - Mod/CAM/Path/Tool/Gui/BitLibrarycheckWorkingDir()
+def checkDirWritableXXX(workingdir):
     # Does dir exist & is writable
 
     return os.access(workingdir, os.W_OK)
@@ -161,35 +125,23 @@ def checkDir(workingdir):
 
     return True
 
-def one_time_setup():
-    cfg_info = get_user_config(printing=False)
 
-    # Check shape files source & dest directories
+def setup_custom_material_cfg():
+    from freecad.cam_scripts.CamScriptingLib\
+        import users_material_cfg_summary as users_mat_cfg_summary
+    mat_cfg_summary = users_mat_cfg_summary(printing)
+
     preconditions_OK = True
-    source_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
-    if not checkDir(source_dir):
-        preconditions_OK = False
-        print("source_dir issue not exist or not writable: ", source_dir)
-    else:
-        print("source_dir is OK: ", source_dir)
-
-    dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
-    if not checkDir(dest_dir):
-        preconditions_OK = False
-        print("dest_dir issue not exist or not writable: ", dest_dir)
-    else:
-        print("dest_dir is OK: ", dest_dir)
-
     cust_mat_source_dir = cfg_info["cam_script_dir"] + os.path.sep +\
         "cutting_tool_data" + os.path.sep + "Resources"
-    if not checkDir(cust_mat_source_dir):
+    if not os.access(cust_mat_source_dir, os.W_OK):
         preconditions_OK = False
         print("cust_mat_source_dir issue not exist or not writable: ", cust_mat_source_dir)
     else:
         print("cust_mat_source_dir is OK: ", cust_mat_source_dir)
 
-
-    # Check Materials CustomUserDir Ok to change, warn if going to change.
+    # Check Materials prefs-CustomUserDir Ok to change,
+    # warn if going to change.
     mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
     if not mat_prefs.GetBool("UseMaterialsFromCustomDir", True):
         preconditions_OK = False
@@ -202,7 +154,6 @@ def one_time_setup():
         print("You should change preference to use Material custom directory to be False,")
         print("then rerun the CamScripts 'Once only setup'.")
         print("Custom Dir setting has NOT been changed.")
-
 
     if preconditions_OK:
         # Update Mat setting LAST, so last msg is restart FC.
@@ -231,30 +182,65 @@ def one_time_setup():
 
         print("New dir:     ", cust_mat_source_dir)
         print("CamScripts configured Materials User defined custom Directory")
-        print("Note: Current and New dirs are 'different', "
-            "Please restart FreeCAD to enable this change!")
+        print("Note: Current and New custom dirs are 'different'.")
+        print("Setup completed, remember switch to a TEST Tool Library Table and restart FreeCAD!")
+    else:
+        print("Please fix above issue(s), then run this setup again.")
+        print()
+        return
 
-        # now copy shape files
+
+def setup_custom_tool_shapes():
+    import Path.Preferences as p_pref
+    # CamScripts uses Last Tool Lib, not last ToolBit etc
+    # becasue NEW TB added to current Lib Tool Table
+    # which equates/equals Last Tool Lib
+    # AND because the other prefs can/often point to dif locations!
+    destTooldir = os.path.dirname(p_pref.lastPathToolLibrary())
+    s_dir_name = os.path.sep + "Shape" + os.path.sep
+
+    # Check shape files source & dest directories
+    preconditions_OK = True
+    source_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
+    if not os.access(source_dir, os.W_OK):
+        preconditions_OK = False
+        print("source_dir issue not exist or not writable: ", source_dir)
+    else:
+        print("source_dir is OK: ", source_dir)
+
+    dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
+    if not os.access(dest_dir, os.W_OK):
+        preconditions_OK = False
+        print("dest_dir issue not exist or not writable: ", dest_dir)
+    else:
+        print("dest_dir is OK: ", dest_dir)
+
+    if preconditions_OK:
+        # copy all shape files in source_dir,
+        # UNLESS file same name exists in dest.
         import shutil
         src_files = os.listdir(source_dir)
         for file_name in src_files:
-            full_file_name = os.path.join(source_dir, file_name)
-            if os.path.isfile(full_file_name):
+            s_full_file_name = os.path.join(source_dir, file_name)
+            if os.path.isfile(s_full_file_name):
 
                 FIXME no msg skipping!!!!!
+                ++split mat/shapes as users may need only DO one but not other
+                ++rename checkDir to checkDirWritable...or just do inline!!!
+                    becasue of below !!! ie inconsistent/confusings
 
                 full_file_dest = os.path.join(dest_dir, file_name)
                 if os.access(full_file_dest, os.F_OK):
                     print(f"Shape {file_name} already exists in {dest_dir}, NOT copied")
                 else:
-                    shutil.copy(full_file_name, dest_dir)
+                    shutil.copy(s_full_file_name, dest_dir)
         print()
         print("Example Tool shape files copied to ", dest_dir)
         print()
-        print("Setup completed, remember switch to a TEST Tool Library Table and restart FreeCAD!")
+        print("Setup completed, remember switch to a TEST Tool Library Table.")
 
     else:
-        print("Please fix above issue(s), then run the 'CAM Scripts Once only setup' again.")
+        print("Please fix above issue(s), then run this setup again.")
         print()
         return
 
