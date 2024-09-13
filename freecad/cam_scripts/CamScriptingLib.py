@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.3  2024/09/10
-__version__ = "V0.3  2024/09/10"
+# V0.4  2024/09/13
+__version__ = "V0.4  2024/09/13"
 
 import FreeCAD
 import Path
@@ -195,7 +195,7 @@ def _get_tool_by_number(number):
                 s_location, s_dir = CamTbAddLib.find_shape_location(s_name)
                 toolBit = Bit.Factory.CreateFromAttrs(toolDict, toolDict["name"], s_dir)
                 if hasattr(toolBit, "ViewObject") and hasattr(
-                    toolBit.ViewObject, "Visibility"
+                   toolBit.ViewObject, "Visibility"
                 ):
                     toolBit.ViewObject.Visibility = False
                 return (toolNum, toolBit)
@@ -474,6 +474,7 @@ def detailed_calcs(mat_uuid, print_machinability=False):
             print(f"Material does not have SOME properties for Machinability model")
             print("\t will attempt to calculate Speeds and Feeds!")
         else:
+            # TODO show material name & maybe path/location
             print(f"Material does not use Machinability model, skipping....")
             return
     try:
@@ -694,8 +695,8 @@ def saveSanityreport(job, sanity_report_name):
             fp.write(html)
     print("Sanity check report written to: {}\n".format(sanity_report))
 
-    webbrowser.open_new_tab(sanity_report)
-
+    # webbrowser.open_new_tab(sanity_report)
+    webbrowser.open(sanity_report, new=0, autoraise=True)
 
 def postProcSaveGcode(postProcessorOutputFile):
     users_current_policy = Path.Preferences.defaultOutputPolicy()

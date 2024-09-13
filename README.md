@@ -58,13 +58,47 @@ Example macro code is simplified by use of supplied python libraries and one exc
 
 ## Installing and using
 
-CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager
+CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager - Custom Repositories - "plus button" to 'https://github.com/spanner888/CamScripts' and also set the branch to 'main'.
+
+Then use the Addon Manager to install CamScripts.
+
+If you have not used the CAM workbench before and setup the default Tool directory and files, then:
+- Create and empty FreeCAD document
+- Open the CAM workbench
+- Open Tool Library menu to trigger first time setup & copy. If you are not sure, accept all of the defaults inclduing creating directories and copying files.
+- This is also a good time to use the top left side + button to create a "Test" Tool table, so the example scripts doo not clutter the default ToolBit entires provided.
+
+Before running any of the Scripts menu scripts (the first three items), run the last item "Once only setup" to copy sample Tool shapes to your Tools Library and setup the Extended Machinability Material and model.
 
 [!CAUTION]
 Please remember to create a test Library Tool Table before you run any of the scripts, which are the first three menu items.
 
-- .......
-- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-stasndard approach, but using sub-menu in the main CAM menu only worked until changing Workbench casued it to be hidden and could not be restored.
+Output of the scripts:
+
+- ToolbitAdd and Import scripts output messages to indicate ToolBits created, or skipped and also the actual
+- ToolBit files in tools/Tool folder and Tools in the active Tool Library ToolTable
+- FullProcess also creates a FreeCAD document with a simple shape CAM Job, Operations, Toolbits and many specific settings/properties
+- Messages in report or notifications, often a lot, in part because the macros do a lot, and if run multiple times, or similar Tool data and naming rules can cause duplicates, which may result in a LOT of warnings. Some more information is below.
+
+You may notice random shapes flashing breifly on screen while running the Import and ToolBitAdd macros. This is normal and due to the need to briefly open the all sytem default CAM Tool Shapes and any User shape files. The FullProcess macro does create a lot of FreeCAD document objects and temporary views, so it has very active scren 'flashes'.
+
+You may also notice that the FreeCAD cursor flashes and nothing else seems to be happening when running any of the scripts.
+This is because these scripts are providing extended features including:
+
+- Extracting all available Tool Shape properties, involves opening every default and user shape file , which are actually FreeCAD documents. This allows creation of ToolBits and setting values of any custom properties, including custom properties.
+- CSV Import example also opens CSV file and attempts to create 70 ToolBit files and Tool Library entries
+- Full Process Example, tends to have more visible activity on screen, but can take a few seconds
+- First run adds compile time, later runs are much faster
+- Running Import and TB Add scripts, without removing ToolBit files and Library enties, will also significantly slow the execution times as now FreeCAD is reporting a LOT of warning messages about duplicates!! Running more than twice without cleanup multiples both the number of warnings and the slowness.
+
+The example import attempting to create 90 ToolBits take longest of all the scripts at about 25 seconds.
+The above items can each add up to a 10 or more second delay for *each* added reason above.
+A test that created 1600 ToolBits took about 20 minutes and it was obvioius that the script finsihed well before the warning messages stopped printing.
+
+The approximate timing of above was on two Debian computers about 12 years old and one approx 6 year old low end Windows netbook which probably took more than twice as long as the older Debian computers.
+
+- .......???????
+- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-standard approach, but using sub-menu in the main CAM menu only worked until changing Workbench caused it to be hidden and could not be restored.
 - It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
 - ???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
 - A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
@@ -83,10 +117,9 @@ The extended model and material are included in [CamScripts/cutting_tool_data/Ma
 
 materials stuff ***TODO** where get/install
 
-
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
-Note: the 3x readme below are still WIP. They are also available from the Scripts menu and are included with the files that are installed.
+Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpfull detail in the exampe and import scripts and help will be available from the FreeCAD forum link.
 
 ![README 1 Import CSV Tool data](README 1 Import CSV Tool data.md)
 
@@ -180,13 +213,24 @@ Path and Material developers and forum users including russ4262, sliptonic, onek
 Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is: Version: 0.22.0dev.38553 (Git)
 
 See the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
+=======
+These scripts started out as an import and scripted Toolbit creation for personal use. Then I got excited about the new Materials Machinability capability and also remembered the existing JobUtils library by russ4262, hence so many features.
 
-There are no checks while adding a ToolBit to the current Tool table to see if the ToolTable number or the Tool name already exist. Duplicates do occur with current test data and cause warning like:
+However, while a lot of testing and polsihing has occured and the import work very well, there are still rough edges that you might find. One example is below and more up to date list is in the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
+
+There are no checks when saving ToolBit files or while adding a ToolBit to the current Tool table to see item of same name already exists. Duplicates do occur with current test data and can cause warning like:
 
 ```Tool number 28120 already exists for Tool 3F_D8.12-L50.0_endmill.```
 
 
 ## Release notes:
+
+=======
+* V0.0.4  ...NOT released yet
+
+- Once only setup partially completed
+- Using FreeCAD macros for user to launch scripts, abandoning both menu attempts
+-
 
 * V0.0.3  2024-09-10
 
@@ -214,6 +258,6 @@ There are no checks while adding a ToolBit to the current Tool table to see if t
 
 ## License
 
-JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](JobUtils.py)
+JobUtils Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>, see [JobUtils](./freecad/cam_scripts/JobUtils)
 
-All other files in CamScripts are Copyright 2024 Spanner888 and is licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
+All other files in CamScripts are Copyright 2024 Spanner888 and licensed under GNU GPL (v2+) license, see [LICENSE](LICENSE).
