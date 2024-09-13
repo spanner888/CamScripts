@@ -67,13 +67,13 @@
       <name>READMEs</name>
       <description>Readmes and also find naming rules and CSV files</description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_1CSV_Import.FCMacro</file>
+      <file>CamScripts_4READMEs.FCMacro</file>
     </macro>
     <macro>
       <name>Once only setup</name>
       <description></description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_1CSV_Import.FCMacro</file>
+      <file>CamScripts_5Setup_Additional_Items.FCMacro</file>
     </macro>
   </content>
 
