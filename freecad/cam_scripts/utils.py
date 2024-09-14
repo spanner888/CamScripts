@@ -140,7 +140,8 @@ def setup_custom_material_cfg():
     # Check Materials prefs-CustomUserDir Ok to change,
     # warn if going to change.
     mat_prefs = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Material/Resources")
-    if not mat_prefs.GetBool("UseMaterialsFromCustomDir", True):
+    use_custom_dir = mat_prefs.GetBool("UseMaterialsFromCustomDir", True)
+    if not use_custom_dir:
         preconditions_OK = False
         print("CamScripts attempted to set Materials Custom Directory, but")
         print("found this directory flagged as already in use!")
@@ -158,17 +159,15 @@ def setup_custom_material_cfg():
         print("Updating Material preference to use User defined custom directory "
             "for Full Process Example - Machining Materials "
             "and extended Speeds Feeds calculations.")
-        current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_source_dir)
+        current_val = mat_prefs.GetString("CustomMaterialsDir", "")
         if len(current_val) > 0:
-            print("Current dir: ", current_val)
-
+            print("Overwriting current Material Custom Dir!")
+        print("    Current dir: ", current_val)
         mat_prefs.SetString("CustomMaterialsDir", cust_mat_source_dir)
         mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
-        #FIXME at least while testing validate above actually SET!!!!
 
-        print("New dir:     ", cust_mat_source_dir)
+        print("    New dir:     ", cust_mat_source_dir)
         print("CamScripts configured Materials User defined custom Directory")
-        print("Note: Current and New custom dirs are 'different'.")
         print()
         print("Custom Material setup completed.")
         print("Do you need to run the Tool Shape setup? .")
@@ -225,10 +224,14 @@ def setup_custom_tool_shapes():
         print()
         print("Tool Shape Setup completed.")
         print("Do you need to run the Custom Material setup?")
-        print("Remember switch to a TEST Tool Library Table.")
+        print("Remember create/switch to a TEST Tool Library Table.")
 
     else:
-        print("Please fix above issue(s), then run this setup again.")
+        print("Issue(s) above found.")
+        print("If 'destToolShapedir' shows as being within the FreeCAD installation location,"
+            " check if you have you setup CAM WorkBench - Library directories.")
+        print("Remember create/switch to a TEST Tool Library Table.")
+        print("You can run this setup again once isuses fixed.")
         print()
         return
 
