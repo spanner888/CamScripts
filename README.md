@@ -65,24 +65,27 @@ Then use the Addon Manager to install CamScripts. You must restart FreeCAD after
 [!CAUTION]
 Please create a test Library Tool Table before you run any of the scripts, which are the first three macros items. This stops test Tool data being added into your main ToolTable.
 
-Now open the FreeCAD macro manager to find the scripts, for example:
+Before running any of the macros, it is best to open the CAM WorkBench.
+
+Then open the FreeCAD macro manager to find the scripts, for example:
 
 ![CamScripts Macros](./images/CamScriptsMacros.png)
 
 The fourth macro opens the github repository to show the main README information. There are more READMEs describing the import process and naming rules etc.
 
-This repo also contains the files for the extended Machinability demonstration (within the CamScripts_3Full Process Example) and the example custom user shapes, including one containing Helix and Rake angles.
-
-These latter files can be configured (the Materials) and copied (the Tool shapes) by running the macro "CamScripts_5Setup_Additional_Items"
-
 If you have not used the CAM workbench before and setup the default Tool directory and files, then:
+
 - Create and empty FreeCAD document
 - Open the CAM workbench
-- Open Tool Library menu to trigger first time setup & copy. If you are not sure, accept all of the defaults inclduing creating directories and copying files.
-- This is also a good time to use the top left side + button to create a "Test" Tool table, so the example scripts doo not clutter the default ToolBit entires provided.
+- Open Tool Library menu to trigger first time setup & copy. If you are not sure, accept all of the defaults including creating directories and copying files.
+- This is also a good time to use the top left side + button to create a "Test" Tool table, so the example scripts doo not clutter the default ToolBit entries provided.
 
-Before running any of the Scripts menu scripts (the first three items), run the last item "Once only setup" to copy sample Tool shapes to your Tools Library and setup the Extended Machinability Material and model.
+This repo also contains the files for the extended Machinability demonstration (within the CamScripts_3Full Process Example) and the example custom user shapes, including one containing Helix and Rake angles.
 
+These latter files can be configured (the Materials) and copied (the Tool shapes) by using the FreeCAD macro manager to run the macros:
+
+- CamScripts_5Setup_CustomToolShapes
+- CamScripts_6Setup_CustomMaterialCfg
 
 Output of the scripts:
 
@@ -104,15 +107,11 @@ This is because these scripts are providing extended features including:
 
 The example import attempting to create 90 ToolBits take longest of all the scripts at about 25 seconds.
 The above items can each add up to a 10 or more second delay for *each* added reason above.
-A test that created 1600 ToolBits took about 20 minutes and it was obvioius that the script finsihed well before the warning messages stopped printing.
+A test that created 1600 ToolBits took about 20 minutes and it was obvioius that the script finished well before the warning messages stopped printing.
 
 The approximate timing of above was on two Debian computers about 12 years old and one approx 6 year old low end Windows netbook which probably took more than twice as long as the older Debian computers.
 
-- .......???????
-- The menu "Scripts" is added to the right side of the CAM Workbench menu and each feature is available from a sub-menu. This is a non-standard approach, but using sub-menu in the main CAM menu only worked until changing Workbench caused it to be hidden and could not be restored.
-- It is installed as an Addon Workbench into the FreeCAD user's Mod directory, due to the number of scripts, libraries, rules files, CSV files and other support files.
-- ???File copy - manual or auto ...one/2 steps??? Questions/advice given on preferences???
-- A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
+A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
 2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981
 2024-08-18  metal cards with machining model  commit 70bb45430d30cb61d08ac0e7291d1b9a0e931a48
 2024-07-9   Machining model and materials     revision 38314
@@ -122,21 +121,21 @@ This limitation is due to the extent lot of changes in FreeCAD migrating Path to
 
 In addition the new Materials Workbench is undergoing extensive development and has been progressively enhanced during the second quarter 2024.
 
-Also more during creation of these macro scripts, the extended Machinability example for Vc and in particular Fz was created to test more advanced features. These require a new material model and sample material with appropriate properties and they need to be COPIED OR TEMP POINT MAT WB TO USE IN PLACE INSIDE CAMSCRIPTS???
+Also during creation of these macro scripts, the extended Machinability example for Vc and in particular Fz was created to test more advanced features. These require a new material model and sample material with appropriate properties and they need to be setup as described above.
 
 The extended model and material are included in [CamScripts/cutting_tool_data/Material]()
 
-materials stuff ***TODO** where get/install
-
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
-Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpfull detail in the exampe and import scripts and help will be available from the FreeCAD forum link.
+Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpfull detail in the example and import scripts and help will be available from the FreeCAD forum link.
 
 ![README 1 Import CSV Tool data](README 1 Import CSV Tool data.md)
 
 ![README 2 Tool Bits Add Example](README 2 Tool Bits Add Example.md)
 
 ![README 3 Cam Full Process Example](README 3 Cam Full Process Example.md)
+
+![README Naming Rules](README Naming Rules.md)
 
 ## Background informatiion
 
@@ -190,11 +189,34 @@ Also suggested is a way to simple store fz data as parameters from a linear or 2
 
 The biggest advantage of plotting the fz data, is that it highlights errors, are more common than expected, even from very high end manufacturers, and also make it easier to compare data from other sources as well as more confidently tailor the data to your needs.
 
-But does take some effort to setup, even with script support. Further automation of this task is on my long project list.
+Further automation of this task to plot source data, aid analysis and linear (etc) regression has commenced but on long waiting list.
 
 Note extended changes above change both the Machinability model and materials and provided example updates to CAM default shapes to hold the required Tool properties. This part of the work is entirely my own ideas and included purely to aid design thinking and feedback to FreeCAD.
 
+Output using Extended Machinability Model and Material, includes detailed Vc and Fz raw data.
+
+```
+19:00:02  material : AlCastAlloyINHERITED+fz
+19:00:02
+19:00:02  mat inf:  Material/Machining/AlCastAlloyINHERITED+fz.FCMat Custom /home/spanner888/.local/share/FreeCAD/Mod/CamScripts/freecad/cam_scripts/cutting_tool_data/Resources
+19:00:02  parent inf: Machining/AluminumCastAlloy.FCMat System /tmp/.mount_FC_wkl6UUQQf/usr/share/Mod/Material/Resources/Materials
+19:00:02  Vc array data [[0.0, 1333.3333333333335 mm/s], [1.0, 2000.0000000000002 mm/s], [2.0, 516.6666666666667 mm/s]]
+19:00:02  Vc for Tool Mat: HSS  is:  1333.3333333333335 mm/s 1333.3333333333335 mm/s
+19:00:02
+19:00:02  Fz.Array data:
+19:00:02  	 [0.0, -0.00024088, 0.00965887, -0.037093]
+19:00:02  	 [1.0, -0.00024088, 0.00965887, -0.037093]
+19:00:02  	 [2.0, -0.00024088, 0.00965887, -0.037093]
+19:00:02  Calculated Fz for Tool Mat: HSS  is:  0.014527940699999992 mm
+19:00:02
+19:00:02  electrical spindle power  0.238 kW
+19:00:02  Mc cutting torque 0.48121 Nm
+19:00:02  vf  233 mm/min
+19:00:02  mrr  74 mm^3/s
+```
+
 Note: The cutting machinability data and calculated RPM are real, usable values, but are not yet matched with background information on the expected machine capability and limitations. For example is the cutting machine:
+
 * a very rigid milling machine, with 20kW spindle @20,000 RPM (as seen in many tool catalogs)
 * a commercial hobby machine, by comparison not as rigid & maybe 1kW spindle @10,000 RPM
 * a DIY milling machine with even less capability & rigidity
@@ -238,9 +260,9 @@ There are no checks when saving ToolBit files or while adding a ToolBit to the c
 
 * V0.0.4  ...NOT released yet
 
-- Once only setup partially completed
+- Setup split into Materials and Tool Shape, in case user needs to preserve files or settings
 - Using FreeCAD macros for user to launch scripts, abandoning both menu attempts
--
+- More work on readme's
 
 * V0.0.3  2024-09-10
 

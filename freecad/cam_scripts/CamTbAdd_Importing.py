@@ -37,12 +37,13 @@ def tba_import():
     reload(ex_rules)
 
     # Two different naming rules schemes
+    # BoboxxRulesShape is set as default for all imports.
     boboxx_rulesShape = ex_rules.BoboxxRulesShape(shape_name='endmill')
     exagerated_rules_example = ex_rules.ExageratedRulesExample(shape_name='endmill')
 
-    # large test import file:
-    #    Imports 70 Tools & adds to current CAM Tool Library,  Skips or failed to import 21
-    #       Will only import 57 & skip 34 if example user shapes not copied to Users Tools/Shapes
+    # Large test import file:
+    #    Attempts to imports 90 Tools & adds to current CAM Tool Library
+    #       Imports 70/57 depending on whether example user shapes installed.
     # Other test files are in cutting_tool_data directory
     file1 = "cutting_tool_data/cuttingtools1.csv"
 
