@@ -127,13 +127,10 @@ def checkDirWritableXXX(workingdir):
 
 
 def setup_custom_material_cfg():
-    from freecad.cam_scripts.CamScriptingLib\
-        import users_material_cfg_summary as users_mat_cfg_summary
-    mat_cfg_summary = users_mat_cfg_summary(printing)
-
     preconditions_OK = True
-    cust_mat_source_dir = cfg_info["cam_script_dir"] + os.path.sep +\
-        "cutting_tool_data" + os.path.sep + "Resources"
+    cust_mat_source_dir = os.path.dirname(os.path.realpath(__file__)) +\
+                          os.path.sep + "cutting_tool_data" +\
+                          os.path.sep + "Resources"
     if not os.access(cust_mat_source_dir, os.W_OK):
         preconditions_OK = False
         print("cust_mat_source_dir issue not exist or not writable: ", cust_mat_source_dir)
@@ -156,23 +153,12 @@ def setup_custom_material_cfg():
         print("Custom Dir setting has NOT been changed.")
 
     if preconditions_OK:
-        # Update Mat setting LAST, so last msg is restart FC.
         # NB Change of Materials pref requires restart FreeCAD,
         #   as does changing Macro directory.
-        current_val = ''
-        # if not cfg_info["mat_cfg_summary"]["pref_use_mat_from_custom_dir"]:
-        #     mat_prefs.SetBool("UseMaterialsFromCustomDir", True)
-        #     print("Enabled Materials to use Custom Dir")
-        #
-        # current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_source_dir)
-        # mat_prefs.SetString("CustomMaterialsDir", cust_mat_source_dir)
-        # print("Changed Materials CustomMaterialsDir:")
-        # print("From : ", current_val)
-        # print("  To :", cust_mat_source_dir)
-        # print("Please note the above 'From' directory location if you wish to restore it later.")
         print("Updating Material preference to use User defined custom directory "
             "for Full Process Example - Machining Materials "
             "and extended Speeds Feeds calculations.")
+        current_val = mat_prefs.GetString("CustomMaterialsDir", cust_mat_source_dir)
         if len(current_val) > 0:
             print("Current dir: ", current_val)
 
@@ -183,7 +169,10 @@ def setup_custom_material_cfg():
         print("New dir:     ", cust_mat_source_dir)
         print("CamScripts configured Materials User defined custom Directory")
         print("Note: Current and New custom dirs are 'different'.")
-        print("Setup completed, remember switch to a TEST Tool Library Table and restart FreeCAD!")
+        print()
+        print("Custom Material setup completed.")
+        print("Do you need to run the Tool Shape setup? .")
+        print("Remember switch to a TEST Tool Library Table and restart FreeCAD!")
     else:
         print("Please fix above issue(s), then run this setup again.")
         print()
@@ -193,51 +182,50 @@ def setup_custom_material_cfg():
 def setup_custom_tool_shapes():
     import Path.Preferences as p_pref
     # CamScripts uses Last Tool Lib, not last ToolBit etc
-    # becasue NEW TB added to current Lib Tool Table
+    # because NEW TB added to current Lib Tool Table
     # which equates/equals Last Tool Lib
     # AND because the other prefs can/often point to dif locations!
     destTooldir = os.path.dirname(p_pref.lastPathToolLibrary())
-    s_dir_name = os.path.sep + "Shape" + os.path.sep
+    s_dir_name = "Shape"    # + os.path.sep
+    destToolShapedir = os.path.join(destTooldir, s_dir_name)
 
     # Check shape files source & dest directories
     preconditions_OK = True
-    source_dir = cfg_info["cam_script_dir"] + os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
+    source_dir = os.path.dirname(os.path.realpath(__file__)) +\
+                 os.path.sep + "cutting_tool_data" + os.path.sep + "Shape"
     if not os.access(source_dir, os.W_OK):
         preconditions_OK = False
         print("source_dir issue not exist or not writable: ", source_dir)
     else:
         print("source_dir is OK: ", source_dir)
 
-    dest_dir = cfg_info["Tools_wd"] + cfg_info["Tools_sd"]
-    if not os.access(dest_dir, os.W_OK):
+    if not os.access(destToolShapedir, os.W_OK):
         preconditions_OK = False
-        print("dest_dir issue not exist or not writable: ", dest_dir)
+        print("destToolShapedir issue not exist or not writable: ", destToolShapedir)
     else:
-        print("dest_dir is OK: ", dest_dir)
+        print("destToolShapedir is OK: ", destToolShapedir)
 
     if preconditions_OK:
         # copy all shape files in source_dir,
         # UNLESS file same name exists in dest.
         import shutil
         src_files = os.listdir(source_dir)
+        print(f"   Copying shape files....")
         for file_name in src_files:
             s_full_file_name = os.path.join(source_dir, file_name)
-            if os.path.isfile(s_full_file_name):
-
-                FIXME no msg skipping!!!!!
-                ++split mat/shapes as users may need only DO one but not other
-                ++rename checkDir to checkDirWritable...or just do inline!!!
-                    becasue of below !!! ie inconsistent/confusings
-
-                full_file_dest = os.path.join(dest_dir, file_name)
+            if os.access(s_full_file_name, os.F_OK):
+                full_file_dest = os.path.join(destToolShapedir, file_name)
                 if os.access(full_file_dest, os.F_OK):
-                    print(f"Shape {file_name} already exists in {dest_dir}, NOT copied")
+                    print("        Shape file already exists in destination,"
+                            f" file NOT copied: {full_file_dest}")
                 else:
-                    shutil.copy(s_full_file_name, dest_dir)
+                    print("        ", full_file_dest)
+                    shutil.copy(s_full_file_name, destToolShapedir)
+
         print()
-        print("Example Tool shape files copied to ", dest_dir)
-        print()
-        print("Setup completed, remember switch to a TEST Tool Library Table.")
+        print("Tool Shape Setup completed.")
+        print("Do you need to run the Custom Material setup?")
+        print("Remember switch to a TEST Tool Library Table.")
 
     else:
         print("Please fix above issue(s), then run this setup again.")
