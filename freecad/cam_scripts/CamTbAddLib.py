@@ -215,6 +215,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
         return
 
     if len(head) > 0:
+        # FIXME: FIXME: use that os.join? or at least os.sep
         tb_full_path_nr_name =  head + "/Bit/" + tool_props["name"] + ".fctb"
     else:
         print("Cannot find Tools Library parent directory!")

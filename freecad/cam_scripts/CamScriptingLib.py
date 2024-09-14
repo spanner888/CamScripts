@@ -345,8 +345,9 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
     # print(props)
 
     print("mat inf: ", mat_obj.Directory,
-                mat_obj.LibraryName,
-                mat_obj.LibraryRoot)
+                       "\n\t\t\t\t\t",
+                       mat_obj.LibraryName,
+                       mat_obj.LibraryRoot)
 
 
     fzp= MaterialManager.getMaterial(mat_obj.Parent)
