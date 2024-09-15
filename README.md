@@ -24,7 +24,7 @@ CamScripts automates many tasks in FreeCAD's CAM (Computer-Aided Manufacturing) 
 
 CamScripts provides a valuable toolkit for FreeCAD users seeking to improve efficiency and consistency in their CAM workflows.
 
-![Import, Rules, Full process condensed example](./images/Import_RulesFull_process.png)
+![Import, Rules, Full process condensed example](./images/Import_RulesFull_process3.png)
 
 ## Special mention:
 
@@ -129,13 +129,13 @@ Details of using each macro are in the following files and also within each macr
 
 Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpfull detail in the example and import scripts and help will be available from the FreeCAD forum link.
 
-![README 1 Import CSV Tool data](README 1 Import CSV Tool data.md)
+![README 1 Import CSV Tool data](README_1_ImportCSVToolData.md)
 
-![README 2 Tool Bits Add Example](README 2 Tool Bits Add Example.md)
+![README 2 Tool Bits Add Example](README_2_ToolBitsAddExample.md)
 
-![README 3 Cam Full Process Example](README 3 Cam Full Process Example.md)
+![README 3 Cam Full Process Example](README_3_CamFullProcessExample.md)
 
-![README Naming Rules](README Naming Rules.md)
+![README Naming Rules](README_NamingRules.md)
 
 ## Background informatiion
 

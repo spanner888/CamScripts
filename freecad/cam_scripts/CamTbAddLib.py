@@ -407,7 +407,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             print("\t\tWARNING: Warning 'Diameter' is NOT a valid number: ",
                 tool_props['parameter']['Diameter'])
     else:
-        print("\t ignoring shape name: {}. It is not in user shapes folder {}:"
+        print("\t ignoring shape : {}. It is not in user shapes folder {}:"
               .format(shape_name, os.path.dirname(Path.Preferences.lastPathToolLibrary())))
         return False
 
