@@ -460,6 +460,7 @@ def users_material_cfg_summary(printing=True):
                       }
     return mat_cfg_summary
 
+
 def detailed_calcs(mat_uuid, print_machinability=False):
     # Both of github user: baehr pr's below are VERY informative & worth the read!
     # https://github.com/FreeCAD/FreeCAD/pull/15910
@@ -487,13 +488,13 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
 
     # ---------------------------------------------------------
-    # PROPERTIES RETREIVED FROM specified Operation or TC-TB
+    # PROPERTIES RETRIEVED FROM specified Operation (see below) & related TC-TB
     # TODO instead pass in Op
 
     # FIXME need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
     # esp ToolRakeAngle, ToolHelixAngle
     doc = FreeCAD.ActiveDocument
-    op = doc.getObject("Profile001")
+    op = doc.getObject("Profile")
     # ToolDiameter = FreeCAD.Units.Quantity('3 mm')
     ToolDiameter = op.ToolController.Tool.Diameter
     # ToolNumberOfFlutes = 2
@@ -503,17 +504,23 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
     ap = op.StepDown
 
-    if "HelixAngle" in op.ToolController.PropertiesList:
+    if "HelixAngle" in op.ToolController.Tool.PropertiesList:
         ToolHelixAngle = op.ToolController.Tool.HelixAngle
+        print(f"ToolBit {op.ToolController.Tool.FullName}"
+              f"has HelixAngle, using value: {ToolHelixAngle}")
     else:
         ToolHelixAngle = FreeCAD.Units.Quantity('15°')
-        print("ToolBit has no HelixAngle property, defaulting to 15°")
+        print(f"ToolBit {op.ToolController.Tool.FullName}"
+              "has no HelixAngle property, defaulting to 15°")
 
-    if "RakeAngle" in op.ToolController.PropertiesList:
+    if "RakeAngle" in op.ToolController.Tool.PropertiesList:
         ToolRakeAngle = op.ToolController.Tool.RakeAngle
+        print(f"ToolBit {op.ToolController.Tool.FullName}"
+              f"has RakeAngle, using value: {ToolRakeAngle}")
     else:
         ToolRakeAngle = FreeCAD.Units.Quantity('30°')
-        print("ToolBit has no RakeAngle to property, defaulting 30°")
+        print(f"ToolBit {op.ToolController.Tool.FullName}"
+              "has no RakeAngle property, defaulting 30°")
     # ---------------------------------------------------------
 
 
@@ -698,6 +705,7 @@ def saveSanityreport(job, sanity_report_name):
 
     # webbrowser.open_new_tab(sanity_report)
     webbrowser.open(sanity_report, new=0, autoraise=True)
+
 
 def postProcSaveGcode(postProcessorOutputFile):
     users_current_policy = Path.Preferences.defaultOutputPolicy()

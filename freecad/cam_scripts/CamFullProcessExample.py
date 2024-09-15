@@ -65,7 +65,8 @@ def cfp_example():
     #   Example 1, 2 in CamTbAddExample.FCMacro
     tcProps1 = csl.tc_props()
                         
-    tcProps1.bitName = "28120.0_8.12D_3F_endmill"
+    # tcProps1.bitName = "28120.0_8.12D_3F_endmill"
+    tcProps1.bitName = "3F_D6.4-L50.0_roughing_HRangles"
     # tcProps1.lib_tool_nr =        # Not used as adding this TC by name, not number
     tcProps1.hfeed = '200 mm/min'
     tcProps1.vfeed = '100 mm/min'
