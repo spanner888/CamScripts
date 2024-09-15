@@ -4,8 +4,6 @@
 # V0.0.4  2024/09/13
 __version__ = "V0.0.4  2024/09/13"
 
-import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
-
 
 # Code derived from or inspired by:
 # FC sliptonic: toolbit-attributes.py & several more CAM-Path modules
@@ -21,6 +19,7 @@ import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
 # Rules "debug mode" pass in dbg_print=True and prnted to console are:
 #   toolprops and ordered list of rules WITH order >0.
 
+import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
 import freecad.cam_scripts.naming_rules.ex_naming_rules as ex_rules
 
 def ctba_example():

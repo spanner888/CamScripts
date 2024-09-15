@@ -19,28 +19,12 @@ from math import degrees, radians, pi
 
 __version__ = "2024-09-01"
 
-import importlib
-class LazyLoader () :
-    'thin shell class to wrap modules.  load real module on first access and pass thru'
-
-    def __init__ (me, modname) :
-        me._modname  = modname
-        me._mod      = None
-   
-    def __getattr__ (me, attr) :
-        'import module on first attribute access'
-
-        if me._mod is None :
-            me._mod = importlib.import_module (me._modname)
-        
-        return getattr (me._mod, attr)
    
 # ---------------------------------------------------------------------------
 # remove this block if get JobUtils updated to find Shape dir
 # ...and five marked functions further down...
 import Path.Tool.Bit as Bit
-CamTbAddLib = LazyLoader('freecad.cam_scripts.CamTbAddLib')
-
+import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
 
 if FreeCAD.GuiUp:
     import Path.Main.Gui.Job as JobGui
