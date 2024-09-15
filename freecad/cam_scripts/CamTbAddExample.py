@@ -44,7 +44,8 @@ def ctba_example():
     print()
     # -----------------------------------------------------------------------
     print("Example 1. Add single example default endmill to current Library.")
-    CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
+    # CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
+    CamTbAddLib.processUserToolInput(dbg_print=False)
     print("\t...Example 1 finished.\n")
     # -----------------------------------------------------------------------
 

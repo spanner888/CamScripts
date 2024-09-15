@@ -199,10 +199,19 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     library.temptool.Proxy.saveToFile(library.temptool, fullpath)
 
 
-def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False):
+def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules=None, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
-    tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
+
+    tb_name = ""
+    tb_nr = 1
+    if tb_name_rules is None:
+        tb_name = str(tool_props["parameter"]['Diameter']) +\
+                    "_" +  shape_name
+    else:
+        tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
+        tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
+
     tool_props["name"] = tb_name
 
     # As lastPathBitLibrary etc can be empty or point to entirely different library,
@@ -222,7 +231,6 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
         return
 
 
-    tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
 
     s_location, s_dir = find_shape_location(shape_name)
     shape_full_path_fname = s_dir + shape_name + ".fcstd"
@@ -272,7 +280,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
 def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props,
-                                tb_name_rules, dbg_print=False):
+                                tb_name_rules=None, dbg_print=False):
     if dbg_print:
         print("dbg_print addToolListToCurrentLibrary")
     for d in dia_list:
@@ -421,7 +429,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
 
 
 # TODO replace ALL tb_base_name var from default rules
-def processUserToolInput(tb_name_rules,
+def processUserToolInput(tb_name_rules=None,
                          shape_name="endmill",
                          tb_base_name="default_em",
                          tb_base_nr=20000,
@@ -487,7 +495,7 @@ def processUserToolInput(tb_name_rules,
             addToolListToCurrentLibrary(library, shape_name, dia_list,
                                         tb_base_name, tb_base_nr, tb_nr_inc,
                                         tool_props, tb_name_rules,
-                                        dbg_print=False
+                                        dbg_print
                                         )
         else:
             # create ONE ToolBit with diameter = dia
