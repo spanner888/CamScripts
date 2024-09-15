@@ -7,10 +7,8 @@ __version__ = "V0.0.4  2024/09/13"
 import FreeCAD
 import Materials
 
-# edit/save library without close/reopen FC.
-from importlib import reload
 import freecad.cam_scripts.CamScriptingLib as csl
-reload(csl)
+
 
 # Scripting Path workbench  https://forum.freecad.org/viewtopic.php?t=33328
 import freecad.cam_scripts.JobUtils as JobUtils

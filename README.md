@@ -103,13 +103,6 @@ This is because these scripts are providing extended features including:
 - CSV Import example also opens CSV file and attempts to create 70 ToolBit files and Tool Library entries
 - Full Process Example, tends to have more visible activity on screen, but can take a few seconds
 - First run adds compile time, later runs are much faster
-- Running Import and TB Add scripts, without removing ToolBit files and Library enties, will also significantly slow the execution times as now FreeCAD is reporting a LOT of warning messages about duplicates!! Running more than twice without cleanup multiples both the number of warnings and the slowness.
-
-The example import attempting to create 90 ToolBits take longest of all the scripts at about 25 seconds.
-The above items can each add up to a 10 or more second delay for *each* added reason above.
-A test that created 1600 ToolBits took about 20 minutes and it was obvioius that the script finished well before the warning messages stopped printing.
-
-The approximate timing of above was on two Debian computers about 12 years old and one approx 6 year old low end Windows netbook which probably took more than twice as long as the older Debian computers.
 
 A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
 2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981

@@ -266,10 +266,13 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules=None,
         for o in artifacts:
             FreeCAD.ActiveDocument.removeObject(o.Name)
 
-        for row in range(library.toolModel.rowCount()):
-            if float(library.toolModel.item(row,0).text()) == tb_nr:
-                FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
-                                                .format(tb_nr, tool_props["name"]))
+        # Disabling as repetitive searches of Library as slow, esp as table grows larger!
+        # Ultimately it is user cheoice to add duplicates or not.
+        # Also library tables can be sorted to aid management
+        # for row in range(library.toolModel.rowCount()):
+        #     if float(library.toolModel.item(row,0).text()) == tb_nr:
+        #         FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
+        #                                         .format(tb_nr, tool_props["name"]))
 
         # add tool to the model , ie current CAM Library & save Library
         try:

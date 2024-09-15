@@ -39,8 +39,6 @@ class LazyLoader () :
 # remove this block if get JobUtils updated to find Shape dir
 # ...and five marked functions further down...
 import Path.Tool.Bit as Bit
-# import CamTbAddLib
-#import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
 CamTbAddLib = LazyLoader('freecad.cam_scripts.CamTbAddLib')
 
 

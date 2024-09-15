@@ -4,10 +4,8 @@
 # V0.0.4  2024/09/13
 __version__ = "V0.0.4  2024/09/13"
 
-# allow edited library updates, without close/reopen FC.
-from importlib import reload
 import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
-reload(CamTbAddLib)
+
 
 # Code derived from or inspired by:
 # FC sliptonic: toolbit-attributes.py & several more CAM-Path modules
@@ -23,9 +21,7 @@ reload(CamTbAddLib)
 # Rules "debug mode" pass in dbg_print=True and prnted to console are:
 #   toolprops and ordered list of rules WITH order >0.
 
-from importlib import reload
 import freecad.cam_scripts.naming_rules.ex_naming_rules as ex_rules
-reload(ex_rules)
 
 def ctba_example():
     # create a naming rules object with DESIRED rules

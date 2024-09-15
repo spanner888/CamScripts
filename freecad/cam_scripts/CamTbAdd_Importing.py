@@ -24,17 +24,10 @@ class LazyLoader () :
 
 
 def tba_import():
-    # imports here so do not load during FC init.
-    #import CamTbAddLib
-    #import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
-    #from importlib import reload
-    #reload(CamTbAddLib)
     CamTbAddLib = LazyLoader('freecad.cam_scripts.CamTbAddLib')
 
-    from importlib import reload
-    #import naming_rules.ex_naming_rules as ex_rules
     import freecad.cam_scripts.naming_rules.ex_naming_rules as ex_rules
-    reload(ex_rules)
+
 
     # Two different naming rules schemes
     # BoboxxRulesShape is set as default for all imports.
