@@ -202,16 +202,24 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
 def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules=None, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
+    import freecad.cam_scripts.NamingRulesLib as nrl
+    # nrl.Rules
+    # <class 'freecad.cam_scripts.NamingRulesLib.Rules'>
 
     tb_name = ""
     tb_nr = 1
     if tb_name_rules is None:
         tb_name = str(tool_props["parameter"]['Diameter']) +\
                     "_" +  shape_name
-    else:
+    elif isinstance(tb_name_rules, str):
+        tb_name = tb_name_rules
+    elif isinstance(tb_name_rules, nrl.Rules):
         tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
         tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
-
+    else:
+        print("Warning skipping Tool: naming_rules type must be Empty(None), "
+              "String or Rules, not: ", type(tb_name_rules))
+        return
     tool_props["name"] = tb_name
 
     # As lastPathBitLibrary etc can be empty or point to entirely different library,

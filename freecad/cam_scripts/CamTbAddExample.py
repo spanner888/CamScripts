@@ -35,7 +35,7 @@ def ctba_example():
 
     # Six examples on adding a Default, One or a list of Tools to current Library,
     # with differing naming rule examples.
-    print("Examples 1 and 2 use a sample set of ToolBit naming rules.")
+    print("Examples 1 and 2 show different ways to create and name ToolBits.")
     print("     ToolBits created are ALSO used in CamFullProcessExample as properties of tcProps1 & tcProps2,")
     print("     and so these should not be changed, else CamFullProcessExample will fail.")
     print("Example 3 matches naming rules suggested by github user boboxx")
@@ -43,9 +43,20 @@ def ctba_example():
     print("Example 5 add Shape name to RHS of boboxx rules.")
     print()
     # -----------------------------------------------------------------------
-    print("Example 1. Add single example default endmill to current Library.")
-    # CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
+    print("Example 1. Create/Add SAME default endmill THREE times"
+          "Each time use a different way to name to ToolBit."
+          "    With and without using naming_rules. Default Name = dia_shape & #=1,"
+          "    Finally naming with string value.")
+
+    # Use the specified naming_rules to create TB name
+    CamTbAddLib.processUserToolInput(tb_class_naming_rules, dbg_print=False)
+
+    # no name rules or string, use default name of dia_shape
     CamTbAddLib.processUserToolInput(dbg_print=False)
+
+    # pass in ToolName
+    CamTbAddLib.processUserToolInput("Example1_string_name", dbg_print=False)
+
     print("\t...Example 1 finished.\n")
     # -----------------------------------------------------------------------
 

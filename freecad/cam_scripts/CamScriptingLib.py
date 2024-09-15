@@ -506,20 +506,20 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     if "HelixAngle" in op.ToolController.Tool.PropertiesList:
         ToolHelixAngle = op.ToolController.Tool.HelixAngle
-        print(f"ToolBit {op.ToolController.Tool.FullName}"
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
               f"has HelixAngle, using value: {ToolHelixAngle}")
     else:
         ToolHelixAngle = FreeCAD.Units.Quantity('15°')
-        print(f"ToolBit {op.ToolController.Tool.FullName}"
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
               "has no HelixAngle property, defaulting to 15°")
 
     if "RakeAngle" in op.ToolController.Tool.PropertiesList:
         ToolRakeAngle = op.ToolController.Tool.RakeAngle
-        print(f"ToolBit {op.ToolController.Tool.FullName}"
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
               f"has RakeAngle, using value: {ToolRakeAngle}")
     else:
         ToolRakeAngle = FreeCAD.Units.Quantity('30°')
-        print(f"ToolBit {op.ToolController.Tool.FullName}"
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
               "has no RakeAngle property, defaulting 30°")
     # ---------------------------------------------------------
 

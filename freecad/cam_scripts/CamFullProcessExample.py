@@ -65,8 +65,7 @@ def cfp_example():
     #   Example 1, 2 in CamTbAddExample.FCMacro
     tcProps1 = csl.tc_props()
                         
-    # tcProps1.bitName = "28120.0_8.12D_3F_endmill"
-    tcProps1.bitName = "3F_D6.4-L50.0_roughing_HRangles"
+    tcProps1.bitName = "28120.0_8.12D_3F_endmill"
     # tcProps1.lib_tool_nr =        # Not used as adding this TC by name, not number
     tcProps1.hfeed = '200 mm/min'
     tcProps1.vfeed = '100 mm/min'
@@ -132,6 +131,16 @@ def cfp_example():
     # Add Tools into Job as ToolControllers AFTER ALL operations,
     #   to avoid script pausing for user input to select desired ToolController.
     # This also reduces chance of error, as above sets SAME TC for ALL operations.
+
+    # If the Helix/Rake angle example ToolBit present, use it instead
+    hr_angles = "3F_D6.4-L50.0_roughing_HRangles"
+    if hr_angles in toolNames:
+        print(f"Using Helix/Rake angle test ToolBit {hr_angles}.")
+        tcProps1.bitName = hr_angles
+    else:
+        print(">>>>>>TEST USING WHATEVER TB ALERADY SET!!!!!")
+        print(toolNames)
+
     tc1 = csl.addTc(job, tcProps1, byNr=False)
     if tc1 is None:
         return
