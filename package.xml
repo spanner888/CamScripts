@@ -49,37 +49,37 @@
       <name>CamScripts CSV Import</name>
       <description>CSV bulk Import with naming rules</description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_1CSV_Import.FCMacro</file>
+      <file>script_run_macros/CamScripts_1CSV_Import.FCMacro</file>
     </macro>
     <macro>
       <name>CamScripts Add Tool Bits</name>
       <description>Create ranges of ToolBits with naming rules</description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_2TbAddExample.FCMacro</file>
+      <file>script_run_macros/CamScripts_2TbAddExample.FCMacro</file>
     </macro>
     <macro>
       <name>CamScripts Full Process Example</name>
       <description>Create and recreate every step of the CAM process, from tool creation to G-code generation</description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_3FullProcessExample.FCMacro</file>
+      <file>script_run_macros/CamScripts_3FullProcessExample.FCMacro</file>
     </macro>
     <macro>
       <name>READMEs</name>
       <description>Readmes and also find naming rules and CSV files</description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_4READMEs.FCMacro</file>
+      <file>script_run_macros/CamScripts_4READMEs.FCMacro</file>
     </macro>
     <macro>
       <name>SetupCustomToolShapes</name>
       <description></description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_5Setup_CustomToolShapes.FCMacro</file>
+      <file>script_run_macros/CamScripts_5Setup_CustomToolShapes.FCMacro</file>
     </macro>
     <macro>
       <name>SetupCustomMaterialCfg</name>
       <description></description>
       <subdirectory>./</subdirectory>
-      <file>CamScripts_6Setup_CustomMaterialCfg.FCMacro</file>
+      <file>script_run_macros/CamScripts_6Setup_CustomMaterialCfg.FCMacro</file>
     </macro>
   </content>
 
