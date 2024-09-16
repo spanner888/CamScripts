@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.0.4  2024/09/13
-__version__ = "V0.0.4  2024/09/13"
+# V0.0.4  2024/09/16
+__version__ = "V0.0.4  2024/09/16"
 
 import FreeCAD
 import Path
@@ -11,7 +11,7 @@ import freecad.cam_scripts.JobUtils as JobUtils
 import Path.Post.Utils as postutils
 from PySide import QtGui
 import webbrowser
-import sys, os
+import os
 
 import Materials;
 from math import sin, cos, acos, tan, atan, sqrt, pi
@@ -19,30 +19,12 @@ from math import degrees, radians, pi
 
 __version__ = "2024-09-01"
 
-import importlib
-class LazyLoader () :
-    'thin shell class to wrap modules.  load real module on first access and pass thru'
-
-    def __init__ (me, modname) :
-        me._modname  = modname
-        me._mod      = None
-   
-    def __getattr__ (me, attr) :
-        'import module on first attribute access'
-
-        if me._mod is None :
-            me._mod = importlib.import_module (me._modname)
-        
-        return getattr (me._mod, attr)
    
 # ---------------------------------------------------------------------------
 # remove this block if get JobUtils updated to find Shape dir
 # ...and five marked functions further down...
 import Path.Tool.Bit as Bit
-# import CamTbAddLib
-#import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
-CamTbAddLib = LazyLoader('freecad.cam_scripts.CamTbAddLib')
-
+import freecad.cam_scripts.CamTbAddLib as CamTbAddLib
 
 if FreeCAD.GuiUp:
     import Path.Main.Gui.Job as JobGui
@@ -281,8 +263,8 @@ def add_toolcontroller_by_filename(job, name):
     Returns tool controller object.
     """
     tn, tool = _get_tool_by_filename(name)
-    tc = _add_tool_to_job(job, tool)
-    return tc
+
+    return _add_tool_to_job(job, tool)
 
 
 #modding from JobUtils
@@ -318,15 +300,13 @@ def addTc(job, tcProps, byNr=False):
                 .format(tcProps.bitName))
 
             tc = add_toolcontroller_by_filename(job, tcProps.bitName)
-            tc.HorizFeed = tcProps.hfeed
-            tc.VertFeed = tcProps.vfeed
-            tc.SpindleSpeed = tcProps.spindleSpeed
     except:
         print("\t***Could NOT find above tool. Please review above \
 'Available tool files' list.")
-        #print("Exiting macro!")
-        #sys.exit(1)
 
+    tc.HorizFeed = tcProps.hfeed
+    tc.VertFeed = tcProps.vfeed
+    tc.SpindleSpeed = tcProps.spindleSpeed
     return tc
 
 
@@ -345,8 +325,9 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
     # print(props)
 
     print("mat inf: ", mat_obj.Directory,
-                mat_obj.LibraryName,
-                mat_obj.LibraryRoot)
+                       "\n\t\t\t\t\t",
+                       mat_obj.LibraryName,
+                       mat_obj.LibraryRoot)
 
 
     fzp= MaterialManager.getMaterial(mat_obj.Parent)
@@ -360,12 +341,6 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
     vc_t_mat = None
     fz_t_mat = None
     if mat_obj.hasPhysicalModel(uuids.Machinability):
-        # FIXME FIXME ++ BIG NOTE:
-        # At present the extended Machinability model used here:
-        # does inherit FC Machinability model, but
-        # only if placed in sytem...Models dir.
-        # Have not yet wroked out Model inheritance from a user directory.
-
         if "ToolMat" in props:
             toolMats = mat_obj.getPhysicalValue("ToolMat")
             tool_mat_nr = toolMats.index(tool_mat)
@@ -390,8 +365,10 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
             if "Fz" in props:
                 Fz = mat_obj.getPhysicalValue("Fz")
                 print("Fz.Array data:")
+                idx = 0
                 for row in Fz.Array:
-                    print("\t", row)
+                    print("\t", toolMats[idx], row)
+                    idx += 1
 
                 d = tool_dia.Value
                 # FC Quantity rightly complains at tool_dia^2 + tool_dia
@@ -459,6 +436,7 @@ def users_material_cfg_summary(printing=True):
                       }
     return mat_cfg_summary
 
+
 def detailed_calcs(mat_uuid, print_machinability=False):
     # Both of github user: baehr pr's below are VERY informative & worth the read!
     # https://github.com/FreeCAD/FreeCAD/pull/15910
@@ -486,13 +464,13 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
 
     # ---------------------------------------------------------
-    # PROPERTIES RETREIVED FROM specified Operation or TC-TB
+    # PROPERTIES RETRIEVED FROM specified Operation (see below) & related TC-TB
     # TODO instead pass in Op
 
-    # FIXME need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
+    # TODO need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
     # esp ToolRakeAngle, ToolHelixAngle
     doc = FreeCAD.ActiveDocument
-    op = doc.getObject("Profile001")
+    op = doc.getObject("Profile")
     # ToolDiameter = FreeCAD.Units.Quantity('3 mm')
     ToolDiameter = op.ToolController.Tool.Diameter
     # ToolNumberOfFlutes = 2
@@ -502,17 +480,23 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # ap = FreeCAD.Units.Quantity('5 mm') # depth of cut (axial)
     ap = op.StepDown
 
-    if "HelixAngle" in op.ToolController.PropertiesList:
+    if "HelixAngle" in op.ToolController.Tool.PropertiesList:
         ToolHelixAngle = op.ToolController.Tool.HelixAngle
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
+              f"has HelixAngle, using value: {ToolHelixAngle}")
     else:
         ToolHelixAngle = FreeCAD.Units.Quantity('15°')
-        print("ToolBit has no HelixAngle property, defaulting to 15°")
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
+              "has no HelixAngle property, defaulting to 15°")
 
-    if "RakeAngle" in op.ToolController.PropertiesList:
+    if "RakeAngle" in op.ToolController.Tool.PropertiesList:
         ToolRakeAngle = op.ToolController.Tool.RakeAngle
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
+              f"has RakeAngle, using value: {ToolRakeAngle}")
     else:
         ToolRakeAngle = FreeCAD.Units.Quantity('30°')
-        print("ToolBit has no RakeAngle to property, defaulting 30°")
+        print(f"ToolBit {op.ToolController.Tool.FullName} "
+              "has no RakeAngle property, defaulting 30°")
     # ---------------------------------------------------------
 
 
@@ -698,6 +682,7 @@ def saveSanityreport(job, sanity_report_name):
     # webbrowser.open_new_tab(sanity_report)
     webbrowser.open(sanity_report, new=0, autoraise=True)
 
+
 def postProcSaveGcode(postProcessorOutputFile):
     users_current_policy = Path.Preferences.defaultOutputPolicy()
     restore_users_current_policy = False
@@ -705,7 +690,7 @@ def postProcSaveGcode(postProcessorOutputFile):
         Path.Preferences.setOutputFileDefaults(postProcessorOutputFile, "Overwrite existing file")
         restore_users_current_policy = True
 
-    # FIXME pass doc & names ...use below
+    # TODO pass doc & names ...use below
     FreeCAD.Gui.Selection.addSelection('Test_JobUtils','Job')
     FreeCAD.Gui.runCommand('CAM_Post',1)
 

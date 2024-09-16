@@ -1,0 +1,10 @@
+# -*- coding: utf-8 -*-
+
+# Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
+# V0.0.4  2024/09/16
+__version__ = "V0.0.4  2024/09/16"
+
+
+from freecad.cam_scripts import utils
+
+utils.setup_custom_tool_shapes()

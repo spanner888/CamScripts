@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.0.4  2024/09/13
-__version__ = "V0.0.4  2024/09/13"
+# V0.0.4  2024/09/16
+__version__ = "V0.0.4  2024/09/16"
 
 
 import os
@@ -199,10 +199,27 @@ def toolBitNew(library, filename, shape_name, shape_full_path_fname, attrs):
     library.temptool.Proxy.saveToFile(library.temptool, fullpath)
 
 
-def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_print=False):
+def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules=None, dbg_print=False):
     # if dbg_print:
     #     print("dbg_print addToolToCurrentLibrary")
-    tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
+    import freecad.cam_scripts.NamingRulesLib as nrl
+    # nrl.Rules
+    # <class 'freecad.cam_scripts.NamingRulesLib.Rules'>
+
+    tb_name = ""
+    tb_nr = 1
+    if tb_name_rules is None:
+        tb_name = str(tool_props["parameter"]['Diameter']) +\
+                    "_" +  shape_name
+    elif isinstance(tb_name_rules, str):
+        tb_name = tb_name_rules
+    elif isinstance(tb_name_rules, nrl.Rules):
+        tb_name = tb_name_rules.create_tb_name(tool_props, dbg_print)
+        tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
+    else:
+        print("Warning skipping Tool: naming_rules type must be Empty(None), "
+              "String or Rules, not: ", type(tb_name_rules))
+        return
     tool_props["name"] = tb_name
 
     # As lastPathBitLibrary etc can be empty or point to entirely different library,
@@ -215,13 +232,13 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
         return
 
     if len(head) > 0:
-        tb_full_path_nr_name =  head + "/Bit/" + tool_props["name"] + ".fctb"
+        tb_full_path_nr_name =  head + os.sep + "Bit" + os.sep +\
+                                tool_props["name"] + ".fctb"
     else:
         print("Cannot find Tools Library parent directory!")
         return
 
 
-    tb_nr = tb_name_rules.create_tb_nr(tool_props, dbg_print)
 
     s_location, s_dir = find_shape_location(shape_name)
     shape_full_path_fname = s_dir + shape_name + ".fcstd"
@@ -249,10 +266,13 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
         for o in artifacts:
             FreeCAD.ActiveDocument.removeObject(o.Name)
 
-        for row in range(library.toolModel.rowCount()):
-            if float(library.toolModel.item(row,0).text()) == tb_nr:
-                FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
-                                                .format(tb_nr, tool_props["name"]))
+        # Disabling as repetitive searches of Library as slow, esp as table grows larger!
+        # Ultimately it is user cheoice to add duplicates or not.
+        # Also library tables can be sorted to aid management
+        # for row in range(library.toolModel.rowCount()):
+        #     if float(library.toolModel.item(row,0).text()) == tb_nr:
+        #         FreeCAD.Console.PrintWarning("Tool number {} already exists for Tool {}.\n"
+        #                                         .format(tb_nr, tool_props["name"]))
 
         # add tool to the model , ie current CAM Library & save Library
         try:
@@ -271,7 +291,7 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules, dbg_
 def addToolListToCurrentLibrary(library, shape_name, dia_list,
                                 tb_base_name, tb_base_nr, tb_nr_inc,
                                 tool_props,
-                                tb_name_rules, dbg_print=False):
+                                tb_name_rules=None, dbg_print=False):
     if dbg_print:
         print("dbg_print addToolListToCurrentLibrary")
     for d in dia_list:
@@ -381,7 +401,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             if tak in imported_t_props.keys():
                 ta[tak] = float(convert_imported_val(tak, imported_t_props[tak]))
 
-        # FIXME +++PROB need for other props like len & deg... - so make method!!!
+        # TODO +++PROB need for other props like len & deg... - so make method!!!
         dia = float(convert_imported_val('Diameter', tool_props['parameter']['Diameter']))
         try:
             # Keep FC:Quantity if possible for future unit management in Speeds & Feeds calculations
@@ -390,7 +410,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             print("\t\tWARNING: Warning 'Diameter' is NOT a valid number: ",
                 tool_props['parameter']['Diameter'])
     else:
-        print("\t ignoring shape name: {}. It is not in user shapes folder {}:"
+        print("\t ignoring shape : {}. It is not in user shapes folder {}:"
               .format(shape_name, os.path.dirname(Path.Preferences.lastPathToolLibrary())))
         return False
 
@@ -399,7 +419,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
         return False
     else:
         pass
-        # FIXME review @least location of this "rule" & other TB name rules
+        # TODO review @least location of this "rule" & other TB name rules
 
     if 'Flutes' in tool_props['attribute'].keys():
         tool_props['attribute']['Flutes'] =\
@@ -420,7 +440,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
 
 
 # TODO replace ALL tb_base_name var from default rules
-def processUserToolInput(tb_name_rules,
+def processUserToolInput(tb_name_rules=None,
                          shape_name="endmill",
                          tb_base_name="default_em",
                          tb_base_nr=20000,
@@ -486,7 +506,7 @@ def processUserToolInput(tb_name_rules,
             addToolListToCurrentLibrary(library, shape_name, dia_list,
                                         tb_base_name, tb_base_nr, tb_nr_inc,
                                         tool_props, tb_name_rules,
-                                        dbg_print=False
+                                        dbg_print
                                         )
         else:
             # create ONE ToolBit with diameter = dia
