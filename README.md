@@ -265,11 +265,13 @@ There are no checks when saving ToolBit files or while adding a ToolBit to the c
 
 ## Release notes:
 
-* V0.0.4  ...NOT released yet
+* V0.0.4 2024-09-16
 
 - Setup split into Materials and Tool Shape, in case user needs to preserve files or settings
 - Using FreeCAD macros for user to launch scripts, abandoning both menu attempts
-- More work on readme's
+- Removed duplicate ToolBit number warnings, really really slowed down for large ToolTables
+- Bug fix where CamScriptingLib.addTc() did not update properties.
+- More work on readme's and images
 
 * V0.0.3  2024-09-10
 

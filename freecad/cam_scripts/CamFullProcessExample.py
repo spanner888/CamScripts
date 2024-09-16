@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.0.4  2024/09/13
-__version__ = "V0.0.4  2024/09/13"
+# V0.0.4  2024/09/16
+__version__ = "V0.0.4  2024/09/16"
 
 import FreeCAD
 import Materials
