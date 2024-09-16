@@ -365,8 +365,10 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
             if "Fz" in props:
                 Fz = mat_obj.getPhysicalValue("Fz")
                 print("Fz.Array data:")
+                idx = 0
                 for row in Fz.Array:
-                    print("\t", row)
+                    print("\t", toolMats[idx], row)
+                    idx += 1
 
                 d = tool_dia.Value
                 # FC Quantity rightly complains at tool_dia^2 + tool_dia
