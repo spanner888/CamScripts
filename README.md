@@ -92,7 +92,7 @@ Output of the scripts:
 - ToolbitAdd and Import scripts output messages to indicate ToolBits created, or skipped and also the actual
 - ToolBit files in tools/Tool folder and Tools in the active Tool Library ToolTable
 - FullProcess also creates a FreeCAD document with a simple shape CAM Job, Operations, Toolbits and many specific settings/properties
-- Messages in report or notifications, often a lot, in part because the macros do a lot, and if run multiple times, or similar Tool data and naming rules can cause duplicates, which may result in a LOT of warnings. Some more information is below.
+- Messages in report or notifications, often a lot, in part because the macros do a lot. Some more information is below.
 
 You may notice random shapes flashing breifly on screen while running the Import and ToolBitAdd macros. This is normal and due to the need to briefly open the all sytem default CAM Tool Shapes and any User shape files. The FullProcess macro does create a lot of FreeCAD document objects and temporary views, so it has very active scren 'flashes'.
 
@@ -103,6 +103,20 @@ This is because these scripts are providing extended features including:
 - CSV Import example also opens CSV file and attempts to create 70 ToolBit files and Tool Library entries
 - Full Process Example, tends to have more visible activity on screen, but can take a few seconds
 - First run adds compile time, later runs are much faster
+
+Some apparent warnings and errors are shown in FreeCAD report view and an example is shown below. These arise while opening ToolShape documents to extract Tool properties. These files all open and close without error manually, so current theory is that files are being closed rapidly prior to sketcher completing checks after document opened. These warnings can be safely ignored.
+
+```
+10:32:29  	Adding ToolBit Shape: v-bit, Dia: 0.0 Name: 2F_D0.0-L20.0_v-bit
+10:32:29  Updating geometry: Error build geometry(6): Both points are equal
+10:32:29  Invalid solution from SQP(augmented system) solver.
+10:32:29  Sketch: Solving the sketch failed
+10:32:29  	Adding ToolBit Shape: endmill, Dia: 3.0 Name: 4F_D3.0-L50.0_endmill
+10:32:29  	Adding ToolBit Shape: endmill, Dia: 5.0 Name: 2F_D5.0-L50.0_endmill
+10:32:29  	Adding ToolBit Shape: endmill, Dia: 1.5 Name: 4F_D1.5-L50.0_endmill
+10:32:29  <Sketch> SketchObject.cpp(344): Edge too small: Edge4
+```
+
 
 A very recent development version of 22.0dev or the 1.0RC is currently required. Dates and features added on that date are listed below:
 2024-08-24  wood cards with machining model   commit bb01ec7f7c7eb54cf72a8fd2583de94e5cd22981

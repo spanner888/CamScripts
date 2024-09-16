@@ -11,7 +11,7 @@ import freecad.cam_scripts.JobUtils as JobUtils
 import Path.Post.Utils as postutils
 from PySide import QtGui
 import webbrowser
-import sys, os
+import os
 
 import Materials;
 from math import sin, cos, acos, tan, atan, sqrt, pi
@@ -306,8 +306,6 @@ def addTc(job, tcProps, byNr=False):
     except:
         print("\t***Could NOT find above tool. Please review above \
 'Available tool files' list.")
-        #print("Exiting macro!")
-        #sys.exit(1)
 
     return tc
 
@@ -343,12 +341,6 @@ def get_extended_machinability(doc, mat_obj, tool_mat, tool_dia, printing=False)
     vc_t_mat = None
     fz_t_mat = None
     if mat_obj.hasPhysicalModel(uuids.Machinability):
-        # FIXME FIXME ++ BIG NOTE:
-        # At present the extended Machinability model used here:
-        # does inherit FC Machinability model, but
-        # only if placed in sytem...Models dir.
-        # Have not yet wroked out Model inheritance from a user directory.
-
         if "ToolMat" in props:
             toolMats = mat_obj.getPhysicalValue("ToolMat")
             tool_mat_nr = toolMats.index(tool_mat)
@@ -473,7 +465,7 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     # PROPERTIES RETRIEVED FROM specified Operation (see below) & related TC-TB
     # TODO instead pass in Op
 
-    # FIXME need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
+    # TODO need trap exceptions - NO TB is gaurenteed to have any of these Propeties!!!!
     # esp ToolRakeAngle, ToolHelixAngle
     doc = FreeCAD.ActiveDocument
     op = doc.getObject("Profile")
@@ -696,7 +688,7 @@ def postProcSaveGcode(postProcessorOutputFile):
         Path.Preferences.setOutputFileDefaults(postProcessorOutputFile, "Overwrite existing file")
         restore_users_current_policy = True
 
-    # FIXME pass doc & names ...use below
+    # TODO pass doc & names ...use below
     FreeCAD.Gui.Selection.addSelection('Test_JobUtils','Job')
     FreeCAD.Gui.runCommand('CAM_Post',1)
 

@@ -232,8 +232,8 @@ def addToolToCurrentLibrary(library, shape_name, tool_props, tb_name_rules=None,
         return
 
     if len(head) > 0:
-        # FIXME: FIXME: use that os.join? or at least os.sep
-        tb_full_path_nr_name =  head + "/Bit/" + tool_props["name"] + ".fctb"
+        tb_full_path_nr_name =  head + os.sep + "Bit" + os.sep +\
+                                tool_props["name"] + ".fctb"
     else:
         print("Cannot find Tools Library parent directory!")
         return
@@ -401,7 +401,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
             if tak in imported_t_props.keys():
                 ta[tak] = float(convert_imported_val(tak, imported_t_props[tak]))
 
-        # FIXME +++PROB need for other props like len & deg... - so make method!!!
+        # TODO +++PROB need for other props like len & deg... - so make method!!!
         dia = float(convert_imported_val('Diameter', tool_props['parameter']['Diameter']))
         try:
             # Keep FC:Quantity if possible for future unit management in Speeds & Feeds calculations
@@ -419,7 +419,7 @@ def createToolFromProps(tb_name_rules, imported_t_props, dbg_print=False):
         return False
     else:
         pass
-        # FIXME review @least location of this "rule" & other TB name rules
+        # TODO review @least location of this "rule" & other TB name rules
 
     if 'Flutes' in tool_props['attribute'].keys():
         tool_props['attribute']['Flutes'] =\
