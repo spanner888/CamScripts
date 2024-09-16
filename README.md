@@ -6,7 +6,7 @@ CamScripts automates many tasks in FreeCAD's CAM (Computer-Aided Manufacturing) 
 
     - Imported CSV tool data
     - Defined ranges of Diameter and Flute count, or list of Shape types
-    - Using very flexible naming rules and autonumbering for easy organization
+    - Using very flexible naming rules and autonumbering for easy organisation
     - ToolBits are added to current FreeCAD Library Tool table
 
 - Process Automation:
@@ -20,7 +20,7 @@ CamScripts automates many tasks in FreeCAD's CAM (Computer-Aided Manufacturing) 
     - Provides underlying data and structure for machining calculations, ie Speeds and Feeds
     - Includes dataset for common metal and wood and wood-like materials
     - Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
-    - Explore an extended Machinability model for improved data flexibilty through less code dependancies/changes and highlight areas for further development.
+    - Explore an extended Machinability model for improved data flexibility through less code dependencies/changes and highlight areas for further development.
 
 CamScripts provides a valuable toolkit for FreeCAD users seeking to improve efficiency and consistency in their CAM workflows.
 
@@ -28,7 +28,7 @@ CamScripts provides a valuable toolkit for FreeCAD users seeking to improve effi
 
 ## Special mention:
 
-1. An Extensive ToolBit rule based naming system which allows use of ANY ToolBit property and allows setting order of each component as well as leading/trailing seperators and abbreviations.
+1. An Extensive ToolBit rule based naming system which allows use of ANY ToolBit property and allows setting order of each component as well as leading/trailing separators and abbreviations.
 
 - For example:
   - 2F-D6.35-L31
@@ -37,7 +37,7 @@ CamScripts provides a valuable toolkit for FreeCAD users seeking to improve effi
   - 28600.0_8.6D_0F_860_em
   - Last item above also shows one example of an auto-numbered name.
 
-- A ridulous example used for testing imported Tools with uncommon properties:
+- A ridiculous example used for testing imported Tools with uncommon properties:
     - 30000.0_0.0D4F_0.0CL__HSS__60.0deg_0.0CL_54.2L_8.0ND_5.0NH_0.0DS_td5.0deg_dovetail__
     - 30000.0_0.0D0F_0.0CL__HSS__90.0deg_0.0CL_20.0L_0.0DS_td1.0deg_v-bit__v-bit
     - 40000.0_10.0D3F_0.0CL__HSS__60.0deg_0.0CL_30.0L_6.0DS_td5.0deg_chamfer__
@@ -58,9 +58,7 @@ Example macro code is simplified by use of supplied python libraries and one exc
 
 ## Installing and using
 
-CamScripts can be installed using the FreeCAD Addon Manager. At present while testing, you need to add the git repo to FreeCAD Preferences - Addon manager - Custom Repositories - "plus button" to 'https://github.com/spanner888/CamScripts' and also set the branch to 'main'.
-
-Then use the Addon Manager to install CamScripts. You must restart FreeCAD after installing CamScripts.
+CamScripts can be installed using the FreeCAD Addon Manager.  You must restart FreeCAD after installing CamScripts.
 
 [!CAUTION]
 Please create a test Library Tool Table before you run any of the scripts, which are the first three macros items. This stops test Tool data being added into your main ToolTable.
@@ -94,12 +92,12 @@ Output of the scripts:
 - FullProcess also creates a FreeCAD document with a simple shape CAM Job, Operations, Toolbits and many specific settings/properties
 - Messages in report or notifications, often a lot, in part because the macros do a lot. Some more information is below.
 
-You may notice random shapes flashing breifly on screen while running the Import and ToolBitAdd macros. This is normal and due to the need to briefly open the all sytem default CAM Tool Shapes and any User shape files. The FullProcess macro does create a lot of FreeCAD document objects and temporary views, so it has very active scren 'flashes'.
+You may notice random shapes flashing briefly on screen while running the Import and ToolBitAdd macros. This is normal and due to the need to briefly open the all system default CAM Tool Shapes and any User shape files. The FullProcess macro does create a lot of FreeCAD document objects and temporary views, so it has very active screen 'flashes'.
 
 You may also notice that the FreeCAD cursor flashes and nothing else seems to be happening when running any of the scripts.
 This is because these scripts are providing extended features including:
 
-- Extracting all available Tool Shape properties, involves opening every default and user shape file , which are actually FreeCAD documents. This allows creation of ToolBits and setting values of any custom properties, including custom properties.
+- Extracting all available Tool Shape properties, involves opening every default and user shape file, which are actually FreeCAD documents. This allows creation of ToolBits and setting values of any custom properties, including custom properties.
 - CSV Import example also opens CSV file and attempts to create 70 ToolBit files and Tool Library entries
 - Full Process Example, tends to have more visible activity on screen, but can take a few seconds
 - First run adds compile time, later runs are much faster
@@ -134,7 +132,7 @@ The extended model and material are included in [CamScripts/cutting_tool_data/Ma
 
 Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
 
-Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpfull detail in the example and import scripts and help will be available from the FreeCAD forum link.
+Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpful detail in the example and import scripts and help will be available from the FreeCAD forum link.
 
 ![README 1 Import CSV Tool data](README_1_ImportCSVToolData.md)
 
@@ -144,7 +142,7 @@ Note: the 3x readme below are still WIP. They are also available in the CamScrip
 
 ![README Naming Rules](README_NamingRules.md)
 
-## Background informatiion
+## Background information
 
 ### FreeCAD CAM Terminology:
 
@@ -243,20 +241,20 @@ These catalogs usually state that the data is "starting values" or some "maximum
 * Material forum in particular [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242)
 * JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecad.org/viewtopic.php?t=33328)
 
-The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by FreeCAD forum user russ4262. It demonstrates the work he did to further open the CAM workbench to scripting and provides excelent example code is provided in this library in the Test## functions. Those examples have been extended here with many aded features to give the full scripted end to end CAM process.
+The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by FreeCAD forum user russ4262. It demonstrates the work he did to further open the CAM workbench to scripting and provides excellent example code is provided in this library in the Test## functions. Those examples have been extended here with many aded features to give the full scripted end to end CAM process.
 
 Path and Material developers and forum users including russ4262, sliptonic, onekk, imm.
 
 
 ## Limitations, Feedback and Contributions
 
-Minimum FreeCAD version required for the ?? macro to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is: Version: 0.22.0dev.38553 (Git)
+Minimum FreeCAD version required to demonstrate Wood and Metal machinability materials with Speeds and Feeds calculations is: Version: 0.22.0dev.38553 (Git)
 
 See the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
 
 These scripts started out as an import and scripted Toolbit creation for personal use. Then I got excited about the new Materials Machinability capability and also remembered the existing JobUtils library by russ4262, hence so many features.
 
-However, while a lot of testing and polsihing has occured and the import work very well, there are still rough edges that you might find. One example is below and more up to date list is in the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
+However, while a lot of testing and polishing has occurred and the import work very well, there are still rough edges that you might find. One example is below and more up to date list is in the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
 
 There are no checks when saving ToolBit files or while adding a ToolBit to the current Tool table to see item of same name already exists. Duplicates do occur with current test data and can cause warning like:
 
