@@ -263,8 +263,8 @@ def add_toolcontroller_by_filename(job, name):
     Returns tool controller object.
     """
     tn, tool = _get_tool_by_filename(name)
-    tc = _add_tool_to_job(job, tool)
-    return tc
+
+    return _add_tool_to_job(job, tool)
 
 
 #modding from JobUtils
@@ -300,13 +300,13 @@ def addTc(job, tcProps, byNr=False):
                 .format(tcProps.bitName))
 
             tc = add_toolcontroller_by_filename(job, tcProps.bitName)
-            tc.HorizFeed = tcProps.hfeed
-            tc.VertFeed = tcProps.vfeed
-            tc.SpindleSpeed = tcProps.spindleSpeed
     except:
         print("\t***Could NOT find above tool. Please review above \
 'Available tool files' list.")
 
+    tc.HorizFeed = tcProps.hfeed
+    tc.VertFeed = tcProps.vfeed
+    tc.SpindleSpeed = tcProps.spindleSpeed
     return tc
 
 
