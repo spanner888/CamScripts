@@ -20,7 +20,7 @@ CamScripts automates many tasks in FreeCAD's CAM (Computer-Aided Manufacturing) 
     - Provides underlying data and structure for machining calculations, ie Speeds and Feeds
     - Includes dataset for common metal and wood and wood-like materials
     - Demonstrate speeds and feeds calculations using the newly released Machinability Materials.
-    - Explore an extended Machinability model for improved data flexibility through less code dependencies/changes and highlight areas for further development.
+    - Explore an extended Machinability model for improved data flexibility through less code dependencies/changes and highlight areas for further discussion.
 
 CamScripts provides a valuable toolkit for FreeCAD users seeking to improve efficiency and consistency in their CAM workflows.
 
@@ -54,14 +54,14 @@ A proof of concept Machinability model that could allow users to add new Tool ma
 
 So please consider reading and contributing to all aspects of this work. For example see the FreeCAD Materials forum [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242).
 
-Example macro code is simplified by use of supplied python libraries and one excellent JobUtils library from russ4262. The macros also include sample code from imm and jbaehr and of course FreeCAD developers of CAM new Materials workbenches.
+Example macro code is simplified by use of supplied python libraries and one excellent JobUtils library from russ4262. The macros also include use code from imm, jbaehr, russ4262 and of course FreeCAD developers of CAM and new Materials workbenches.
 
 ## Installing and using
 
 CamScripts can be installed using the FreeCAD Addon Manager.  You must restart FreeCAD after installing CamScripts.
 
-[!CAUTION]
-Please create a test Library Tool Table before you run any of the scripts, which are the first three macros items. This stops test Tool data being added into your main ToolTable.
+> [!CAUTION]
+> Please create a test Library Tool Table before you run any of the scripts, which are the first three macros items. This stops test Tool data being added into your main ToolTable.
 
 Before running any of the macros, it is best to open the CAM WorkBench.
 
@@ -98,7 +98,7 @@ You may also notice that the FreeCAD cursor flashes and nothing else seems to be
 This is because these scripts are providing extended features including:
 
 - Extracting all available Tool Shape properties, involves opening every default and user shape file, which are actually FreeCAD documents. This allows creation of ToolBits and setting values of any custom properties, including custom properties.
-- CSV Import example also opens CSV file and attempts to create 70 ToolBit files and Tool Library entries
+- CSV Import example also opens CSV file and attempts to create over 90 ToolBit files and Tool Library entries
 - Full Process Example, tends to have more visible activity on screen, but can take a few seconds
 - First run adds compile time, later runs are much faster
 
@@ -128,19 +128,12 @@ In addition the new Materials Workbench is undergoing extensive development and 
 
 Also during creation of these macro scripts, the extended Machinability example for Vc and in particular Fz was created to test more advanced features. These require a new material model and sample material with appropriate properties and they need to be setup as described above.
 
-The extended model and material are included in [CamScripts/cutting_tool_data/Material]()
+The extended model and material are included in the CamsScripts install directory in ```/cutting_tool_data/Ressources```
 
-Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
-
-Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpful detail in the example and import scripts and help will be available from the FreeCAD forum link.
+Some details of using and adapting each macro/example are within each macro, some in this file and some in:
 
 ![README 1 Import CSV Tool data](README_1_ImportCSVToolData.md)
 
-![README 2 Tool Bits Add Example](README_2_ToolBitsAddExample.md)
-
-![README 3 Cam Full Process Example](README_3_CamFullProcessExample.md)
-
-![README Naming Rules](README_NamingRules.md)
 
 ## Background information
 
@@ -201,23 +194,27 @@ Note extended changes above change both the Machinability model and materials an
 Output using Extended Machinability Model and Material, includes detailed Vc and Fz raw data.
 
 ```
-19:00:02  material : AlCastAlloyINHERITED+fz
-19:00:02
-19:00:02  mat inf:  Material/Machining/AlCastAlloyINHERITED+fz.FCMat Custom /home/spanner888/.local/share/FreeCAD/Mod/CamScripts/freecad/cam_scripts/cutting_tool_data/Resources
-19:00:02  parent inf: Machining/AluminumCastAlloy.FCMat System /tmp/.mount_FC_wkl6UUQQf/usr/share/Mod/Material/Resources/Materials
-19:00:02  Vc array data [[0.0, 1333.3333333333335 mm/s], [1.0, 2000.0000000000002 mm/s], [2.0, 516.6666666666667 mm/s]]
-19:00:02  Vc for Tool Mat: HSS  is:  1333.3333333333335 mm/s 1333.3333333333335 mm/s
-19:00:02
-19:00:02  Fz.Array data:
-19:00:02  	 [0.0, -0.00024088, 0.00965887, -0.037093]
-19:00:02  	 [1.0, -0.00024088, 0.00965887, -0.037093]
-19:00:02  	 [2.0, -0.00024088, 0.00965887, -0.037093]
-19:00:02  Calculated Fz for Tool Mat: HSS  is:  0.014527940699999992 mm
-19:00:02
-19:00:02  electrical spindle power  0.238 kW
-19:00:02  Mc cutting torque 0.48121 Nm
-19:00:02  vf  233 mm/min
-19:00:02  mrr  74 mm^3/s
+ToolBit: Test_JobUtils#_F_D6_4_L50_0_roughing_HRangles , has HelixAngle, using value: 17.2 deg
+ToolBit: Test_JobUtils#_F_D6_4_L50_0_roughing_HRangles , has RakeAngle, using value: 29.9 deg
+material : AlCastAlloyINHERITED+fz
+
+mat inf:  Material/Machining/AlCastAlloyINHERITED+fz.FCMat
+	 Custom /home/spanner888/.local/share/FreeCAD/Mod/CamScripts/freecad/cam_scripts/cutting_tool_data/Resources
+parent inf: Machining/AluminumCastAlloy.FCMat System /tmp/.mount_FC_wkljiUjBg/usr/share/Mod/Material/Resources/Materials
+Vc array data [[0.0, 1333.3333333333335 mm/s], [1.0, 2000.0000000000002 mm/s], [2.0, 516.6666666666667 mm/s]]
+Vc for Tool Mat: HSS  is:  1333.3333333333335 mm/s 1333.3333333333335 mm/s
+
+Fz.Array data:
+	 HSS [0.0, -0.00020581, 0.00861056, -0.03485845]
+	 Carbide [1.0, -0.00024088, 0.00965887, -0.037093]
+	 HSS coated [2.0, 0.0, 0.0, 0.0]
+Calculated Fz for Tool Mat: HSS  is:  0.011819156400000003 mm
+
+Calculated RPM = 3979
+electrical spindle power  0.153 kW
+Mc cutting torque 0.31204 Nm
+vf  141 mm/min
+mrr  45 mm^3/s
 ```
 
 Note: The cutting machinability data and calculated RPM are real, usable values, but are not yet matched with background information on the expected machine capability and limitations. For example is the cutting machine:
@@ -235,15 +232,15 @@ This is also demonstrated in Tool catalogs by all of the footnotes and asterix a
 These catalogs usually state that the data is "starting values" or some "maximum values" and maybe other.....
 
 
-## References and Credits
+## References
 
 * FreeCAD Forum announcement/discussion [thread](https://forum.freecadweb.org/)
 * Material forum in particular [Material overhaul](https://forum.freecad.org/viewtopic.php?t=78242)
+* Material Machinability [ Material: Add metal cards with machining model #15910 ](https://github.com/FreeCAD/FreeCAD/pull/15910)
 * JobUtils.py Library Russ's lib Forum announcement/discussion [thread](https://forum.freecad.org/viewtopic.php?t=33328)
+* csv flexible import imm [post with csv import code ](https://forum.freecad.org/viewtopic.php?t=59856&start=50#p549782)
 
-The third library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by FreeCAD forum user russ4262. It demonstrates the work he did to further open the CAM workbench to scripting and provides excellent example code is provided in this library in the Test## functions. Those examples have been extended here with many aded features to give the full scripted end to end CAM process.
-
-Path and Material developers and forum users including russ4262, sliptonic, onekk, imm.
+The jobutils library provides many of the core Job features for `CamFullProcessExample.FcMacro` was created by FreeCAD forum user russ4262. It demonstrates the work he did to further open the CAM workbench to scripting and provides excellent example code is provided in this library in the Test## functions. Those examples have been extended here with many aded features to give the full scripted end to end CAM process.
 
 
 ## Limitations, Feedback and Contributions
@@ -256,12 +253,22 @@ These scripts started out as an import and scripted Toolbit creation for persona
 
 However, while a lot of testing and polishing has occurred and the import work very well, there are still rough edges that you might find. One example is below and more up to date list is in the [github repo issues](https://github.com/spanner888/CamScripts/issues) for latest information.
 
-There are no checks when saving ToolBit files or while adding a ToolBit to the current Tool table to see item of same name already exists. Duplicates do occur with current test data and can cause warning like:
+There are no checks when saving ToolBit files or while adding a ToolBit to the current Tool table to see item of same name already exists.
+
+If a ToolBit file of the same name exists if will be overwritten.
+
+Duplicates do occur with current test data and can cause warning like:
 
 ```Tool number 28120 already exists for Tool 3F_D8.12-L50.0_endmill.```
 
 
 ## Release notes:
+
+* V0.0.5  2024/09/25
+
+- Requested CamScripts be added to FreeCAD Addons, so fully integratred Addon Manager install
+- minor print & bugs fixes related to FullProcess Example 5, only with Extended Material/Model
+- documentation updates, removed additional readme's outlines
 
 * V0.0.4 2024-09-16
 

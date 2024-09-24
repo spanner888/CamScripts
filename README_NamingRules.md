@@ -1,1 +1,0 @@
-- Note that rules must create a valid filename for the ToolBit. Also it is best if filename is valid on any of the three supported platforms, avoid using \/:*?"<>| and non-printable characters such as the ASCII control-characters. Also avoid spaces and graphic characters.
