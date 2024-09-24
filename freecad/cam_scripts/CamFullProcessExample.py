@@ -129,21 +129,20 @@ def cfp_example():
     # Add Tools into Job as ToolControllers AFTER ALL operations,
     #   to avoid script pausing for user input to select desired ToolController.
     # This also reduces chance of error, as above sets SAME TC for ALL operations.
-
     # If the Helix/Rake angle example ToolBit present, use it instead
     hr_angles = "3F_D6.4-L50.0_roughing_HRangles"
     if hr_angles in toolNames:
-        print(f"Using Helix/Rake angle test ToolBit {hr_angles}.")
+        print(f"Using Helix/Rake angle test ToolBit: {hr_angles}.")
         tcProps1.bitName = hr_angles
     else:
-        print(">>>>>>TEST USING WHATEVER TB ALERADY SET!!!!!")
-        print(toolNames)
+        print(">>>>>>TEST TB ALREADY SET: ", tcProps2.bitName)
 
     tc1 = csl.addTc(job, tcProps1, byNr=False)
     if tc1 is None:
         return
     print("Set profile_op.ToolController to above TC+user scripted settings")
     profile_op.ToolController = tc1
+
 
     tc2 = csl.addTc(job, tcProps2, byNr=True)
     if tc2 is None:
