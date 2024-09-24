@@ -482,21 +482,21 @@ def detailed_calcs(mat_uuid, print_machinability=False):
 
     if "HelixAngle" in op.ToolController.Tool.PropertiesList:
         ToolHelixAngle = op.ToolController.Tool.HelixAngle
-        print(f"ToolBit {op.ToolController.Tool.FullName} "
-              f"has HelixAngle, using value: {ToolHelixAngle}")
+        print(f"ToolBit: {op.ToolController.Tool.FullName} "
+              f", has HelixAngle, using value: {ToolHelixAngle}")
     else:
         ToolHelixAngle = FreeCAD.Units.Quantity('15°')
-        print(f"ToolBit {op.ToolController.Tool.FullName} "
-              "has no HelixAngle property, defaulting to 15°")
+        print(f"ToolBit: {op.ToolController.Tool.FullName} "
+              ", has no HelixAngle property, defaulting to 15°")
 
     if "RakeAngle" in op.ToolController.Tool.PropertiesList:
         ToolRakeAngle = op.ToolController.Tool.RakeAngle
-        print(f"ToolBit {op.ToolController.Tool.FullName} "
-              f"has RakeAngle, using value: {ToolRakeAngle}")
+        print(f"ToolBit: {op.ToolController.Tool.FullName} "
+              f", has RakeAngle, using value: {ToolRakeAngle}")
     else:
         ToolRakeAngle = FreeCAD.Units.Quantity('30°')
-        print(f"ToolBit {op.ToolController.Tool.FullName} "
-              "has no RakeAngle property, defaulting 30°")
+        print(f"ToolBit: {op.ToolController.Tool.FullName} "
+              ", has no RakeAngle property, defaulting 30°")
     # ---------------------------------------------------------
 
 
@@ -627,9 +627,12 @@ def detailed_calcs(mat_uuid, print_machinability=False):
     n_set.getValueAs("1/min")
 
     if n_set > n_max:
-        print("INFO: Limiting Calculated RPM of {} to max setting of {}."
+        print("Calculated RPM = {}, but limiting to max setting {}."
               .format(n_set.getValueAs("1/min").toStr(0),
                       n_max.getValueAs("1/min").toStr(0)))
+    else:
+        print("Calculated RPM = {}"
+              .format(n_set.getValueAs("1/min").toStr(0)))
 
     n = min(n_set, n_max)
     n.getValueAs("1/min")
