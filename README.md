@@ -128,19 +128,12 @@ In addition the new Materials Workbench is undergoing extensive development and 
 
 Also during creation of these macro scripts, the extended Machinability example for Vc and in particular Fz was created to test more advanced features. These require a new material model and sample material with appropriate properties and they need to be setup as described above.
 
-The extended model and material are included in [CamScripts/cutting_tool_data/Material]()
+The extended model and material are included in the CamsScripts install directory in ```/cutting_tool_data/Ressources```
 
-Details of using each macro are in the following files and also within each macro, including some information on adapting to your needs.
-
-Note: the 3x readme below are still WIP. They are also available in the CamScripts install directory and in the repo which is linked from the Scripts menu. In addition, there is plenty of helpful detail in the example and import scripts and help will be available from the FreeCAD forum link.
+Some details of using and adapting each macro/example are within each macro, some in this file and some in:
 
 ![README 1 Import CSV Tool data](README_1_ImportCSVToolData.md)
 
-![README 2 Tool Bits Add Example](README_2_ToolBitsAddExample.md)
-
-![README 3 Cam Full Process Example](README_3_CamFullProcessExample.md)
-
-![README Naming Rules](README_NamingRules.md)
 
 ## Background information
 
@@ -273,9 +266,9 @@ Duplicates do occur with current test data and can cause warning like:
 
 * V0.0.5  2024/09/25
 
-- More documentation updates, removed v draft readme's
 - Requested CamScripts be added to FreeCAD Addons, so fully integratred Addon Manager install
 - minor print & bugs fixes related to FullProcess Example 5, only with Extended Material/Model
+- documentation updates, removed additional readme's outlines
 
 * V0.0.4 2024-09-16
 
