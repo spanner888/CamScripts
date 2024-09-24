@@ -271,10 +271,10 @@ Duplicates do occur with current test data and can cause warning like:
 
 ## Release notes:
 
-* V0.0.5 2024-09-...NOT yet released
+* V0.0.5  2024/09/25
 
-- More documentation updates
-- Requested CamScriptsbe added to FreeCAD Addons, so fully integratred Addon Manager install
+- More documentation updates, removed v draft readme's
+- Requested CamScripts be added to FreeCAD Addons, so fully integratred Addon Manager install
 - minor print & bugs fixes related to FullProcess Example 5, only with Extended Material/Model
 
 * V0.0.4 2024-09-16

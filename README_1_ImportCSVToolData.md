@@ -206,12 +206,6 @@ Output:
 13:19:24  Skipped or failed to import 19 rows in csv file.
 
 
-
-Each valid CSV row....
-Invalid CSV row....
-
-Summary counts....
-
 Notes:
 
 - Sample data provided includes shapes with names roughing, PCB....
@@ -353,17 +347,3 @@ Every time script is run:
 so ...include my aldtready wrtten doc: re use empty test lib.
 or even an entire test Tool dir with default tools/shapes.
 
-
-
-# EXAMPLE OUTPUT ...started above???? search for summary
-
-ignoring shape name: v engrave. It is not in user shapes folder /home/spanner888/Documents/_APPS_lappy/FC_wkly-38553/squashfs-root/appd_mlappy/Tools:
-
-Adding ToolBit Shape: endmill, Dia: 3.175 Name: 2F_D3.175-L50.0_endmill
-
-Imported 57 Tool details & added to current library.
-Skipped or failed to import 34 rows in csv file.
-
-Multiple messages like:
-Sketcher::setUpSketch()-T:0.00035092
-May appear for each ToolBit added. These are not errors and can be ignored.

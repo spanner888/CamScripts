@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.0.4  2024/09/16
-__version__ = "V0.0.4  2024/09/16"
+# V0.0.5  2024/09/25
+__version__ = "V0.0.5  2024/09/25"
 
 import FreeCAD
 import Path
@@ -16,8 +16,6 @@ import os
 import Materials;
 from math import sin, cos, acos, tan, atan, sqrt, pi
 from math import degrees, radians, pi
-
-__version__ = "2024-09-01"
 
    
 # ---------------------------------------------------------------------------

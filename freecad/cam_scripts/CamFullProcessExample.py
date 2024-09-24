@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
-# V0.0.4  2024/09/16
-__version__ = "V0.0.4  2024/09/16"
+# V0.0.5  2024/09/25
+__version__ = "V0.0.5  2024/09/25"
 
 import FreeCAD
 import Materials
 
 import freecad.cam_scripts.CamScriptingLib as csl
 
-
 # Scripting Path workbench  https://forum.freecad.org/viewtopic.php?t=33328
 import freecad.cam_scripts.JobUtils as JobUtils
 
 from PySide import QtGui
+
 
 def cfp_example():
     print("ToolBits created using tcProps1 & tcProps2 rely on the Toolbits from")
