@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
-# -*- coding: utf-8 -*-
 # ***************************************************************************
 # *   Copyright (c) 2023 Russell Johnson (russ4262) <russ4262@gmail.com>    *
 # *                                                                         *

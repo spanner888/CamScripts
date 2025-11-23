@@ -1,7 +1,5 @@
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
-# -*- coding: utf-8 -*-
-
 # Copyright 2024 Spanner888 Licensed under GNU GPL (v2+)
 # V0.0.5  2024/09/25
 __version__ = "V0.0.5  2024/09/25"
