@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
 set(Namespace_SRCS
         freecad/cam_scripts/init_gui.py
         freecad/cam_scripts/__init__.py
