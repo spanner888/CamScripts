@@ -1,5 +1,8 @@
 ## CamScripts for FreeCAD CAM
 
+NOTE: 2026-04 Requires FreeCAd version between 0.22 and 1.0.0. 
+Newer versions implemented the new new Tool System which broke the underlying library used by CamScripts to manage ToolControllers and Tools. If there is sufficient interest work to update to work with later versions of FreeCAD might be considered.
+
 CamScripts automates many tasks in FreeCAD's CAM (Computer-Aided Manufacturing) environment including:
 
 - Bulk create ToolBits from:
