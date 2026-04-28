@@ -28,6 +28,7 @@
         Additional demonstration of Materials Machinability model to provide data for Speeds and Feeds,
         including exploring of fz (chipload) tables.</description>
       <freecadmin>0.22.0</freecadmin>
+      <freecadmax>0.1.0.0</freecadmax>
       <tag>CAM</tag>
       <tag>Import</tag>
       <tag>CSV</tag>
